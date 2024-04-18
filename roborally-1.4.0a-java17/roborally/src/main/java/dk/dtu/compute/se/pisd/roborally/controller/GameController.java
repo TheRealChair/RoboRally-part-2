@@ -79,6 +79,26 @@ public class GameController {
         }
     }
 
+    public void superFastForward(@NotNull Player player) {
+        for(int i = 0 ; i < 3 ; i++) {
+            if (player.board == board) {
+                Space space = player.getSpace();
+                Heading heading = player.getHeading();
+
+                Space target1 = board.getNeighbour(space, heading);
+                if (target1 != null) {
+                    try {
+                        moveToSpace(player, target1, heading);
+                    } catch (ImpossibleMoveException e) {
+                        // we don't do anything here  for now; we just catch the
+                        // exception so that we do no pass it on to the caller
+                        // (which would be very bad style).
+                    }
+                }
+            }
+        }
+    }
+
     // TODO Assignment A3
     public void turnRight(@NotNull Player player) {
         Heading heading = player.getHeading();
@@ -230,6 +250,9 @@ public class GameController {
                     break;
                 case FAST_FORWARD:
                     this.fastForward(player);
+                    break;
+                case SUPER_FAST_FORWARD:
+                    this.superFastForward(player);
                     break;
                 default:
                     // DO NOTHING (for now)

@@ -39,6 +39,7 @@ public enum Command {
     RIGHT("Turn Right"),
     LEFT("Turn Left"),
     FAST_FORWARD("Fast Fwd"),
+    SUPER_FAST_FORWARD("Super Fast Fwd"),
 
     OPTION_LEFT_RIGHT("Left OR Right", LEFT, RIGHT);
 
