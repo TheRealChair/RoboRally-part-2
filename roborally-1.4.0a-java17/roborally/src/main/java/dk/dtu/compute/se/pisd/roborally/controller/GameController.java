@@ -39,7 +39,11 @@ public class GameController {
     }
 
 
-
+    /**
+     * Moves the given player one step forward in the direction it is facing.
+     * @param player the player to move
+     * @Author: Balder, Elias, Karl and Viktor
+     */
     public void moveForward(@NotNull Player player) {
         if (player.board == board) {
             Space space = player.getSpace();
@@ -58,6 +62,11 @@ public class GameController {
         }
     }
 
+    /**
+     * Moves the given player two steps forward in the direction it is facing.
+     * @param player the player to move
+     * @Author: Balder, Elias, Karl and Viktor
+     */
     // TODO Assignment A3
     public void fastForward(@NotNull Player player) {
         for(int i = 0 ; i < 2 ; i++) {
@@ -78,7 +87,11 @@ public class GameController {
             }
         }
     }
-
+    /**
+     * Moves the given player three steps forward in the direction it is facing.
+     * @param player the player to move
+     * @Author: Balder, Elias and Viktor
+     */
     public void superFastForward(@NotNull Player player) {
         for(int i = 0 ; i < 3 ; i++) {
             if (player.board == board) {
@@ -99,6 +112,11 @@ public class GameController {
         }
     }
 
+    /**
+     * Turns the given player to the right.
+     * @param player the player to turn
+     * @Author: Balder, Elias, Karl and Viktor
+     */
     // TODO Assignment A3
     public void turnRight(@NotNull Player player) {
         Heading heading = player.getHeading();
@@ -106,6 +124,11 @@ public class GameController {
         player.setHeading(newHeading);
     }
 
+    /**
+     * Turns the given player to the left.
+     * @param player the player to turn
+     * @Author: Balder, Elias, Karl and Viktor
+     */
     // TODO Assignment A3
     public void turnLeft(@NotNull Player player) {
         Heading heading = player.getHeading();
@@ -113,6 +136,13 @@ public class GameController {
         player.setHeading(newHeading);
     }
 
+    /**
+     * Moves the given player to the given space in the given direction.
+     * @param player the player to move
+     * @param space the space the player is on / trying to move to
+     * @param heading the direction the player should face after the move
+     * @throws ImpossibleMoveException if the move is not possible
+     */
     void moveToSpace(@NotNull Player player, @NotNull Space space, @NotNull Heading heading) throws ImpossibleMoveException {
         assert board.getNeighbour(player.getSpace(), heading) == space; // make sure the move to here is possible in principle
         Player other = space.getPlayer();
@@ -136,9 +166,11 @@ public class GameController {
     }
 
 
-    // we don't do anything here  for now; we just catch the
-    // exception so that we do no pass it on to the caller
-    // (which would be very bad style).
+    /**
+     * Moves the current player to the given space, if the space is free.
+     * @param space, the space to move the player to
+     * @Author: Balder, Elias, Karl and Viktor
+     */
     public void moveCurrentPlayerToSpace(Space space) {
         Player currentPlayer = board.getCurrentPlayer();
         Player possiblePlayer = space.getPlayer();
@@ -232,6 +264,12 @@ public class GameController {
         }
     }
 
+    /**
+     * Executes the given command for the given player.
+     * @param player, the player to execute the command for
+     * @param command, the command to execute
+     * @Author: Balder, Elias, Karl and Viktor
+     */
     private void executeCommand(@NotNull Player player, Command command) {
         if (player != null && player.board == board && command != null) {
             // XXX This is a very simplistic way of dealing with some basic cards and

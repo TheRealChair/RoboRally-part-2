@@ -211,6 +211,20 @@ public class Board extends Subject {
         return result;
     }
 
+
+    /**
+     * Constructs a status message that summarizes the current state of the game or process.
+     * The message includes details about the current phase, the player, the step, and a counter.
+     * Each component of the status is concatenated into a single string.
+     * @Author: Balder, Elias, Karl and Viktor
+     * @return A string representation of the current status, formatted as:
+     *         "Phase: [phase name], Player: [player name], Step: [step], Counter: [counter value]".
+     *         Each part of the message is derived from the respective getters:
+     *         - Phase name from {@link #getPhase()},
+     *         - Player name from {@link #getCurrentPlayer()},
+     *         - Step information from {@link #getStep()},
+     *         - Counter value from {@link #getCounter()}.
+     */
     public String getStatusMessage() {
 
         return "Phase: " + getPhase().name() +
