@@ -254,6 +254,10 @@ public class GameController {
                 case SUPER_FAST_FORWARD:
                     this.superFastForward(player);
                     break;
+                case U_TURN:
+                    this.turnRight(player);
+                    this.turnRight(player);
+                    break;
                 default:
                     // DO NOTHING (for now)
             }
