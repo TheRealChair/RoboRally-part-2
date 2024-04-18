@@ -258,6 +258,13 @@ public class GameController {
                     this.turnRight(player);
                     this.turnRight(player);
                     break;
+                case BACK_UP:
+                    this.turnRight(player);
+                    this.turnRight(player);
+                    this.moveForward(player);
+                    this.turnRight(player);
+                    this.turnRight(player);
+                    break;
                 default:
                     // DO NOTHING (for now)
             }
