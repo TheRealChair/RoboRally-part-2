@@ -60,8 +60,23 @@ public class GameController {
 
     // TODO Assignment A3
     public void fastForward(@NotNull Player player) {
+        for(int i = 0 ; i < 2 ; i++) {
+            if (player.board == board) {
+                Space space = player.getSpace();
+                Heading heading = player.getHeading();
 
-
+                Space target1 = board.getNeighbour(space, heading);
+                if (target1 != null) {
+                    try {
+                        moveToSpace(player, target1, heading);
+                    } catch (ImpossibleMoveException e) {
+                        // we don't do anything here  for now; we just catch the
+                        // exception so that we do no pass it on to the caller
+                        // (which would be very bad style).
+                    }
+                }
+            }
+        }
     }
 
     // TODO Assignment A3
