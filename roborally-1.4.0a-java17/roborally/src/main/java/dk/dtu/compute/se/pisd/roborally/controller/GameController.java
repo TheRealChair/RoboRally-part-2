@@ -95,8 +95,22 @@ public class GameController {
         player.setSpace(space);
     }
 
+
+    // we don't do anything here  for now; we just catch the
+    // exception so that we do no pass it on to the caller
+    // (which would be very bad style).
     public void moveCurrentPlayerToSpace(Space space) {
-        // TODO: Import or Implement this method. This method is only for debugging purposes. Not useful for the game.
+        Player currentPlayer = board.getCurrentPlayer();
+        if (currentPlayer != null) {
+            currentPlayer.setSpace(space);
+            int nextPlayerNumber = board.getPlayerNumber(currentPlayer) + 1;
+            if (nextPlayerNumber < board.getPlayersNumber()) {
+                board.setCurrentPlayer(board.getPlayer(nextPlayerNumber));
+            } else {
+                board.setCurrentPlayer(board.getPlayer(0));
+            }
+            board.setStep(board.getStep()+1);
+        }
     }
 
     private void makeProgramFieldsVisible(int register) {
