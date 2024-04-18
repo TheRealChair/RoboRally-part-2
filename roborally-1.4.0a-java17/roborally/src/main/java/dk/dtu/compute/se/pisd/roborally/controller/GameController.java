@@ -61,16 +61,21 @@ public class GameController {
     // TODO Assignment A3
     public void fastForward(@NotNull Player player) {
 
+
     }
 
     // TODO Assignment A3
     public void turnRight(@NotNull Player player) {
-
+        Heading heading = player.getHeading();
+        Heading newHeading = heading.next();
+        player.setHeading(newHeading);
     }
 
     // TODO Assignment A3
     public void turnLeft(@NotNull Player player) {
-
+        Heading heading = player.getHeading();
+        Heading newHeading = heading.prev();
+        player.setHeading(newHeading);
     }
 
     void moveToSpace(@NotNull Player player, @NotNull Space space, @NotNull Heading heading) throws ImpossibleMoveException {
@@ -101,7 +106,8 @@ public class GameController {
     // (which would be very bad style).
     public void moveCurrentPlayerToSpace(Space space) {
         Player currentPlayer = board.getCurrentPlayer();
-        if (currentPlayer != null) {
+        Player possiblePlayer = space.getPlayer();
+        if (currentPlayer != null && possiblePlayer == null) {
             currentPlayer.setSpace(space);
             int nextPlayerNumber = board.getPlayerNumber(currentPlayer) + 1;
             if (nextPlayerNumber < board.getPlayersNumber()) {
@@ -110,6 +116,7 @@ public class GameController {
                 board.setCurrentPlayer(board.getPlayer(0));
             }
             board.setStep(board.getStep()+1);
+            board.incrementCounter();
         }
     }
 

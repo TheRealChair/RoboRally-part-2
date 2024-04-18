@@ -52,6 +52,7 @@ public class Board extends Subject {
     private Phase phase = INITIALISATION;
 
     private int step = 0;
+    private int counter = 0;
 
     private boolean stepMode;
 
@@ -212,6 +213,22 @@ public class Board extends Subject {
 
     public String getStatusMessage() {
 
-        return "";
+        return "Phase: " + getPhase().name() +
+                ", Player: " + getCurrentPlayer().getName() +
+                ", Step: " + getStep() +
+                ", Counter: " + getCounter();
     }
+
+    public void setCounter(int counter) {
+        this.counter = counter;
+    }
+
+    public int getCounter() {
+        return counter;
+    }
+
+    public void incrementCounter() {
+        this.counter++;
+    }
+
 }
