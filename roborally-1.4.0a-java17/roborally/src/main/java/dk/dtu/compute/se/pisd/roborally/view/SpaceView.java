@@ -30,6 +30,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeLineCap;
 import org.jetbrains.annotations.NotNull;
 
@@ -74,6 +75,7 @@ public class SpaceView extends StackPane implements ViewObserver {
 
     private void updatePlayer() {
         this.getChildren().clear();
+        drawWalls();
 
         Player player = space.getPlayer();
         if (player != null) {
@@ -91,6 +93,54 @@ public class SpaceView extends StackPane implements ViewObserver {
         }
     }
 
+    private void drawWalls() {
+        for (Heading heading : space.getWalls()) {
+            drawWall(heading);
+        }
+    }
+
+    private void drawWall(Heading heading) {
+        double wallThickness = 5;
+        Line line = new Line();
+        line.setStroke(Color.YELLOW);
+        line.setStrokeWidth(wallThickness);
+    
+        double offset = wallThickness / 2;
+        switch (heading) {
+            case NORTH:
+                line.setStartX(offset);
+                line.setEndX(SPACE_WIDTH - offset);
+                line.setStartY(0);
+                line.setEndY(0);
+                line.setTranslateY(-SPACE_HEIGHT / 2 + wallThickness / 2); 
+                break;
+            case SOUTH:
+                line.setStartX(offset);
+                line.setEndX(SPACE_WIDTH - offset);
+                line.setStartY(SPACE_HEIGHT - offset);
+                line.setEndY(SPACE_HEIGHT - offset);
+                line.setTranslateY(SPACE_HEIGHT / 2 - wallThickness / 2); 
+                break;
+            case EAST:
+                line.setStartX(SPACE_WIDTH - offset);
+                line.setEndX(SPACE_WIDTH - offset);
+                line.setStartY(offset);
+                line.setEndY(SPACE_HEIGHT - offset);
+                line.setTranslateX(SPACE_WIDTH / 2 - wallThickness / 2);
+                break;
+            case WEST:
+                line.setStartX(offset);
+                line.setEndX(offset);
+                line.setStartY(offset);
+                line.setEndY(SPACE_HEIGHT - offset);
+                line.setTranslateX(-SPACE_WIDTH / 2 + wallThickness / 2); 
+                break;
+        }
+        this.getChildren().add(line);
+    }
+    
+    
+    
     @Override
     public void updateView(Subject subject) {
         if (subject == this.space) {

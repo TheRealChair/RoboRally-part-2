@@ -52,6 +52,13 @@ public class Space extends Subject {
         player = null;
     }
 
+    public void addWall(Heading heading) {
+        if (!walls.contains(heading)) {
+            walls.add(heading);
+            notifyChange();
+        }
+    }
+
     public Player getPlayer() {
         return player;
     }
