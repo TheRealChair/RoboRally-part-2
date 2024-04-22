@@ -50,6 +50,8 @@ public class Space extends Subject {
         this.x = x;
         this.y = y;
         player = null;
+
+        
     }
 
     public Player getPlayer() {
@@ -62,7 +64,7 @@ public class Space extends Subject {
                 (player == null || board == player.board)) {
             this.player = player;
             if (oldPlayer != null) {
-                // this should actually not happen
+                // this should actually not happen  
                 oldPlayer.setSpace(null);
             }
             if (player != null) {
@@ -90,5 +92,6 @@ public class Space extends Subject {
     public void returnPlayerToStart(Player player){
         player.setSpace(board.getSpace(1, 1));
     }
+
 
 }
