@@ -135,6 +135,11 @@ public class GameController {
         Heading newHeading = heading.prev();
         player.setHeading(newHeading);
     }
+    public void leftOrRight(@NotNull Player player) {
+        Heading heading = player.getHeading();
+        Heading newHeading = heading.next();
+        player.setHeading(newHeading);
+    }
 
     /**
      * Moves the given player to the given space in the given direction.
@@ -270,6 +275,7 @@ public class GameController {
      * @param command, the command to execute
      * @Author: Balder, Elias, Karl and Viktor
      */
+    private Player playerToInteract;
     private void executeCommand(@NotNull Player player, Command command) {
         if (player != null && player.board == board && command != null) {
             // XXX This is a very simplistic way of dealing with some basic cards and
@@ -302,6 +308,10 @@ public class GameController {
                     this.moveForward(player);
                     this.turnRight(player);
                     this.turnRight(player);
+                    break;
+                case OPTION_LEFT_RIGHT:
+                    board.setPhase(Phase.PLAYER_INTERACTION);
+                    playerToInteract = player;
                     break;
                 default:
                     // DO NOTHING (for now)
@@ -373,5 +383,4 @@ public class GameController {
             this.heading = heading;
         }
     }
-
 }

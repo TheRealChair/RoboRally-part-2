@@ -1,21 +1,21 @@
 {
-  "width": 8,
-  "height": 8,
+  "width": 12,
+  "height": 3,
   "spaces": [],
   "players": [
     {
       "name": "Player 1",
       "color": "red",
-      "x": 6,
-      "y": 3,
-      "heading": "SOUTH"
+      "x": 0,
+      "y": 0,
+      "heading": "EAST"
     },
     {
       "name": "Player 2",
       "color": "green",
-      "x": 2,
-      "y": 3,
-      "heading": "SOUTH"
+      "x": 0,
+      "y": 2,
+      "heading": "EAST"
     }
   ]
 }
