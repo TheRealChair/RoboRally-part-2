@@ -33,6 +33,7 @@ import org.jetbrains.annotations.NotNull;
 public class GameController {
 
     final public Board board;
+    private Player playerToInteract;
 
     public GameController(Board board) {
         this.board = board;
@@ -246,17 +247,19 @@ public class GameController {
                     Command command = card.command;
                     executeCommand(currentPlayer, command);
                 }
-                int nextPlayerNumber = board.getPlayerNumber(currentPlayer) + 1;
-                if (nextPlayerNumber < board.getPlayersNumber()) {
-                    board.setCurrentPlayer(board.getPlayer(nextPlayerNumber));
-                } else {
-                    step++;
-                    if (step < Player.NO_REGISTERS) {
-                        makeProgramFieldsVisible(step);
-                        board.setStep(step);
-                        board.setCurrentPlayer(board.getPlayer(0));
+                if (board.getPhase() != Phase.PLAYER_INTERACTION) {
+                    int nextPlayerNumber = board.getPlayerNumber(currentPlayer) + 1;
+                    if (nextPlayerNumber < board.getPlayersNumber()) {
+                        board.setCurrentPlayer(board.getPlayer(nextPlayerNumber));
                     } else {
-                        startProgrammingPhase();
+                        step++;
+                        if (step < Player.NO_REGISTERS) {
+                            makeProgramFieldsVisible(step);
+                            board.setStep(step);
+                            board.setCurrentPlayer(board.getPlayer(0));
+                        } else {
+                            startProgrammingPhase();
+                        }
                     }
                 }
             } else {
@@ -269,13 +272,32 @@ public class GameController {
         }
     }
 
+    public void continueFromPlayerInteraction() {
+        // Reset the game phase to ACTIVATION
+        board.setPhase(Phase.ACTIVATION);
+
+        // Move to the next player
+        int nextPlayerNumber = board.getPlayerNumber(board.getCurrentPlayer()) + 1;
+        if (nextPlayerNumber < board.getPlayersNumber()) {
+            board.setCurrentPlayer(board.getPlayer(nextPlayerNumber));
+        } else {
+            int step = board.getStep() + 1;
+            if (step < Player.NO_REGISTERS) {
+                board.setStep(step);
+                board.setCurrentPlayer(board.getPlayer(0));
+            } else {
+                startProgrammingPhase();
+            }
+        }
+    }
+
     /**
      * Executes the given command for the given player.
      * @param player, the player to execute the command for
      * @param command, the command to execute
      * @Author: Balder, Elias, Karl and Viktor
      */
-    private Player playerToInteract;
+
     private void executeCommand(@NotNull Player player, Command command) {
         if (player != null && player.board == board && command != null) {
             // XXX This is a very simplistic way of dealing with some basic cards and
@@ -317,6 +339,10 @@ public class GameController {
                     // DO NOTHING (for now)
             }
         }
+    }
+
+    public Player getPlayerToInteract() {
+        return playerToInteract;
     }
 
     public boolean moveCards(@NotNull CommandCardField source, @NotNull CommandCardField target) {
