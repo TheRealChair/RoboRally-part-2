@@ -101,17 +101,33 @@ public class AppController implements Observer {
     }
 
     public void saveGame() {
-        LoadBoard.saveBoard(gameController.board, "savegame");
+        LoadBoard.saveBoard(gameController.board, "save");
 
 
         //new Alert(AlertType.INFORMATION, "Game saved!").showAndWait();
     }
 
     public void loadGame() {
-        LoadBoard.loadBoard("save");
-        if (gameController == null) {
-            newGame();
+        ChoiceDialog<Integer> dialog = new ChoiceDialog<>(PLAYER_NUMBER_OPTIONS.get(0), PLAYER_NUMBER_OPTIONS);
+        dialog.setTitle("Player number");
+        dialog.setHeaderText("Select number of players");
+        Optional<Integer> result = dialog.showAndWait();
+
+        Board board = LoadBoard.loadBoard("save");
+        gameController = new GameController(board);
+        int no = result.get();
+        for (int i = 0; i < no; i++) {
+            Player player = new Player(board, PLAYER_COLORS.get(i), "Player " + (i + 1));
+            board.addPlayer(player);
+            player.setSpace(board.getSpace(i % board.width, i));
+            System.out.println("Placed down player: " +player.getName());
         }
+
+        // XXX: V2
+        // board.setCurrentPlayer(board.getPlayer(0));
+        gameController.startProgrammingPhase();
+
+        roboRally.createBoardView(gameController);
     }
 
     /**

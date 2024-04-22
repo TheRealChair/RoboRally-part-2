@@ -54,47 +54,65 @@ public class LoadBoard {
         ClassLoader classLoader = LoadBoard.class.getClassLoader();
         InputStream inputStream = classLoader.getResourceAsStream(BOARDSFOLDER + "/" + boardname + "." + JSON_EXT);
         if (inputStream == null) {
-            loadBoard(DEFAULTBOARD);
+            // Handle the case when the input stream is null
+            return null;
         }
 
-		// In simple cases, we can create a Gson object with new Gson():
-        GsonBuilder simpleBuilder = new GsonBuilder().
-                registerTypeAdapter(FieldAction.class, new Adapter<FieldAction>());
-        Gson gson = simpleBuilder.create();
+        GsonBuilder gsonBuilder = new GsonBuilder()
+                .registerTypeAdapter(FieldAction.class, new Adapter<FieldAction>());
+        Gson gson = gsonBuilder.create();
 
-		Board result;
-		// FileReader fileReader = null;
         JsonReader reader = null;
-		try {
-			// fileReader = new FileReader(filename);
-			reader = gson.newJsonReader(new InputStreamReader(inputStream));
-			BoardTemplate template = gson.fromJson(reader, BoardTemplate.class);
+        try {
+            reader = gson.newJsonReader(new InputStreamReader(inputStream));
 
-			result = new Board(template.width, template.height);
-			for (SpaceTemplate spaceTemplate: template.spaces) {
-			    Space space = result.getSpace(spaceTemplate.x, spaceTemplate.y);
-			    if (space != null) {
+            BoardTemplate template = gson.fromJson(reader, BoardTemplate.class);
+            Board result = new Board(template.width, template.height);
+            for (SpaceTemplate spaceTemplate : template.spaces) {
+                Space space = result.getSpace(spaceTemplate.x, spaceTemplate.y);
+                if (space != null) {
                     space.getActions().addAll(spaceTemplate.actions);
                     space.getWalls().addAll(spaceTemplate.walls);
                 }
             }
-			reader.close();
-			return result;
-		} catch (IOException e1) {
+
+            for (PlayerTemplate playerTemplate : template.players) {
+                Player player = new Player(result, playerTemplate.color, playerTemplate.name);
+                int x = playerTemplate.x;
+                int y = playerTemplate.y;
+                if (x >= 0 && y >= 0 && x < result.width && y < result.height) {
+                    Space space = result.getSpace(x, y);
+                    if (space != null) {
+                        player.setSpace(space);
+                    }
+                }
+            }
+
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace(); // Print the stack trace for debugging purposes
+        } finally {
+            // Close the reader and input stream in the finally block
             if (reader != null) {
                 try {
                     reader.close();
-                    inputStream = null;
-                } catch (IOException e2) {}
+                } catch (IOException e) {
+                    e.printStackTrace(); // Print the stack trace for debugging purposes
+                }
             }
             if (inputStream != null) {
-				try {
-					inputStream.close();
-				} catch (IOException e2) {}
-			}
-		}
-		return null;
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace(); // Print the stack trace for debugging purposes
+                }
+            }
+        }
+
+        return null;
     }
+
+
 
     public static void saveBoard(Board board, String name) {
         BoardTemplate template = new BoardTemplate();
