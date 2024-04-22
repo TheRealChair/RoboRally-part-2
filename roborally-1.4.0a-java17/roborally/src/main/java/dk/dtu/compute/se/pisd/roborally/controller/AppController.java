@@ -55,6 +55,7 @@ public class AppController implements Observer {
 
     private GameController gameController;
 
+
     public AppController(@NotNull RoboRally roboRally) {
         this.roboRally = roboRally;
     }

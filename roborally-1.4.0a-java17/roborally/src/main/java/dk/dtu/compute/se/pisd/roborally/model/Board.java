@@ -67,14 +67,11 @@ public class Board extends Subject {
             }
         }
         this.stepMode = false;
-
     }
 
     public Integer getGameId() {
         return gameId;
     }
-
-    
 
     public void setGameId(int gameId) {
         if (this.gameId == null) {
@@ -204,7 +201,7 @@ public class Board extends Subject {
                 x = (x + 1) % width;
                 break;
         }
-            
+        
         Heading reverse = Heading.values()[(heading.ordinal() + 2)% Heading.values().length];
         Space result = getSpace(x, y);
         if (result != null) {
