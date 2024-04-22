@@ -56,10 +56,17 @@ public class Board extends Subject {
 
     private boolean stepMode;
 
+    private boolean[][] pits;
+
+    private static final int[][] prePitPos = {
+            {2, 3}, {4, 6}, {6,1}
+    };
+
     public Board(int width, int height) {
         this.width = width;
         this.height = height;
         spaces = new Space[width][height];
+        pits = new boolean[width][height];
         for (int x = 0; x < width; x++) {
             for(int y = 0; y < height; y++) {
                 Space space = new Space(this, x, y);
@@ -67,6 +74,23 @@ public class Board extends Subject {
             }
         }
         this.stepMode = false;
+    }
+
+    private void initializePrePitPos() {
+        for(int[] pitPos : prePitPos){
+            int x = pitPos[0];
+            int y = pitPos[1];
+            addPit(x, y);
+        }
+    }
+
+    public void addPit(int x, int y){
+        pits[x][y] = true;
+        spaces[x][y].setPit(true);
+    }
+
+    public boolean isPit(int x, int y){
+        return pits[x][y];
     }
 
     public Integer getGameId() {
