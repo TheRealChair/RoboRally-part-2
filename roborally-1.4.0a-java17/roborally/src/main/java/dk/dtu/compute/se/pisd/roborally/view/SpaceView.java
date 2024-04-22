@@ -30,6 +30,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeLineCap;
 import org.jetbrains.annotations.NotNull;
 
@@ -62,7 +63,7 @@ public class SpaceView extends StackPane implements ViewObserver {
         if ((space.x + space.y) % 2 == 0) {
             this.setStyle("-fx-background-color: white;");
         } else {
-            this.setStyle("-fx-background-color: black;");
+            this.setStyle("-fx-background-color: blue;");
         }
 
         // updatePlayer();
@@ -95,6 +96,14 @@ public class SpaceView extends StackPane implements ViewObserver {
     public void updateView(Subject subject) {
         if (subject == this.space) {
             updatePlayer();
+            updatePit();
+        }
+    }
+
+    public void updatePit(){
+        if(space.isPit()){
+            Rectangle pit = new Rectangle(SPACE_WIDTH, SPACE_HEIGHT, Color.BLACK);
+            this.getChildren().add(pit);
         }
     }
 

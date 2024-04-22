@@ -58,7 +58,7 @@ public class Board extends Subject {
 
     private boolean[][] pits;
 
-    private static final int[][] prePitPos = {
+    public static final int[][] prePitPos = {
             {2, 3}, {4, 6}, {6,1}
     };
 
@@ -73,10 +73,11 @@ public class Board extends Subject {
                 spaces[x][y] = space;
             }
         }
+        initializePrePitPos();
         this.stepMode = false;
     }
 
-    private void initializePrePitPos() {
+    public void initializePrePitPos() {
         for(int[] pitPos : prePitPos){
             int x = pitPos[0];
             int y = pitPos[1];
@@ -201,6 +202,7 @@ public class Board extends Subject {
         if (space.getWalls().contains(heading)) {
             return null;
         }
+
         // TODO needs to be implemented based on the actual spaces
         //      and obstacles and walls placed there. For now it,
         //      just calculates the next space in the respective
@@ -231,7 +233,15 @@ public class Board extends Subject {
             if (result.getWalls().contains(reverse)) {
                 return null;
             }
+            if(result.isPit()){
+                Player player = space.getPlayer();
+                if(player!= null){
+                    player.rebootPosition();
+                }
+                return null;
+            }
         }
+
         return result;
     }
 
