@@ -54,7 +54,7 @@ public class LoadBoard {
         ClassLoader classLoader = LoadBoard.class.getClassLoader();
         InputStream inputStream = classLoader.getResourceAsStream(BOARDSFOLDER + "/" + boardname + "." + JSON_EXT);
         if (inputStream == null) {
-            // Handle the case when the input stream is null
+            loadBoard(DEFAULTBOARD);
             return null;
         }
 
@@ -84,6 +84,8 @@ public class LoadBoard {
                     Space space = result.getSpace(x, y);
                     if (space != null) {
                         player.setSpace(space);
+                        // Add the player to the board after setting its space
+                        result.addPlayer(player);
                     }
                 }
             }
@@ -111,6 +113,7 @@ public class LoadBoard {
 
         return null;
     }
+
 
 
 

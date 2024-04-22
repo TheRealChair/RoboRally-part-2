@@ -6,15 +6,15 @@
     {
       "name": "Player 1",
       "color": "red",
-      "x": 0,
-      "y": 0,
+      "x": 6,
+      "y": 3,
       "heading": "SOUTH"
     },
     {
       "name": "Player 2",
       "color": "green",
-      "x": 1,
-      "y": 1,
+      "x": 2,
+      "y": 3,
       "heading": "SOUTH"
     }
   ]
