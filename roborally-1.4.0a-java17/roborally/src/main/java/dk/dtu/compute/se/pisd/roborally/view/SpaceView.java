@@ -97,6 +97,7 @@ public class SpaceView extends StackPane implements ViewObserver {
         if (subject == this.space) {
             updatePlayer();
             updatePit();
+            updateReboot();
         }
     }
 
@@ -104,6 +105,13 @@ public class SpaceView extends StackPane implements ViewObserver {
         if(space.isPit()){
             Rectangle pit = new Rectangle(SPACE_WIDTH, SPACE_HEIGHT, Color.BLACK);
             this.getChildren().add(pit);
+        }
+    }
+
+    public void updateReboot(){
+        if (space.x == 7 && space.y == 0) {
+            Rectangle reboot = new Rectangle(SPACE_WIDTH, SPACE_HEIGHT, Color.LIGHTGREEN);
+            this.getChildren().add(reboot);
         }
     }
 
