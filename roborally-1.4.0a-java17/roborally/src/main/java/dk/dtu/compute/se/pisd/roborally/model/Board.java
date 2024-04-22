@@ -198,11 +198,12 @@ public class Board extends Subject {
      * @param heading the heading of the neighbour
      * @return the space in the given direction; null if there is no (reachable) neighbour
      */
+
+
     public Space getNeighbour(@NotNull Space space, @NotNull Heading heading) {
         if (space.getWalls().contains(heading)) {
-            return null;
+            return null; // Hit a wall
         }
-
         // TODO needs to be implemented based on the actual spaces
         //      and obstacles and walls placed there. For now it,
         //      just calculates the next space in the respective
@@ -215,35 +216,47 @@ public class Board extends Subject {
         int y = space.y;
         switch (heading) {
             case SOUTH:
-                y = (y + 1) % height;
+                y = y + 1;
                 break;
             case WEST:
-                x = (x + width - 1) % width;
+                x = x - 1;
                 break;
             case NORTH:
-                y = (y + height - 1) % height;
+                y = y - 1;
                 break;
             case EAST:
-                x = (x + 1) % width;
+                x = x + 1;
                 break;
         }
-        Heading reverse = Heading.values()[(heading.ordinal() + 2)% Heading.values().length];
+
+        // Check if the new position is within bounds
+        if (x < 0 || x >= width || y < 0 || y >= height) {
+            // Treat out-of-bounds movement as falling into a pit
+            Player player = space.getPlayer();
+            if (player != null) {
+                player.rebootPosition(); // Reset player position
+            }
+            return null;
+        }
+
+        Heading reverse = Heading.values()[(heading.ordinal() + 2) % Heading.values().length];
         Space result = getSpace(x, y);
-        if (result != null) {
-            if (result.getWalls().contains(reverse)) {
-                return null;
+        if (result != null && result.getWalls().contains(reverse)) {
+            return null; // Hit a wall on the other side
+        }
+
+        // Check if the new position is a pit
+        if (result != null && result.isPit()) {
+            Player player = space.getPlayer();
+            if (player != null) {
+                player.rebootPosition(); // Reset player position
             }
-            if(result.isPit()){
-                Player player = space.getPlayer();
-                if(player!= null){
-                    player.rebootPosition();
-                }
-                return null;
-            }
+            return null;
         }
 
         return result;
     }
+
 
 
     /**
