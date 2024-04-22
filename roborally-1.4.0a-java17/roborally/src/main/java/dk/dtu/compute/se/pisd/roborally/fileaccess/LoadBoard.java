@@ -30,6 +30,7 @@ import dk.dtu.compute.se.pisd.roborally.fileaccess.model.PlayerTemplate;
 import dk.dtu.compute.se.pisd.roborally.fileaccess.model.SpaceTemplate;
 import dk.dtu.compute.se.pisd.roborally.controller.FieldAction;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
+import dk.dtu.compute.se.pisd.roborally.model.Phase;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
 
@@ -68,6 +69,10 @@ public class LoadBoard {
 
             BoardTemplate template = gson.fromJson(reader, BoardTemplate.class);
             Board result = new Board(template.width, template.height);
+            System.out.println("CURRENT PHASE: " +template.currentPhase); //DEBBUGGING
+            result.setPhase(Phase.valueOf(template.currentPhase));
+            System.out.println("CURRENT PHASE of Board: " +result.getPhase().toString()); //DEBBUGGING
+
             for (SpaceTemplate spaceTemplate : template.spaces) {
                 Space space = result.getSpace(spaceTemplate.x, spaceTemplate.y);
                 if (space != null) {
@@ -121,6 +126,7 @@ public class LoadBoard {
         BoardTemplate template = new BoardTemplate();
         template.width = board.width;
         template.height = board.height;
+        template.currentPhase = board.getPhase().toString();
 
         for (int i=0; i<board.width; i++) {
             for (int j=0; j<board.height; j++) {

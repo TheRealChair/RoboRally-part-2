@@ -38,7 +38,6 @@ public class Player extends Subject {
     final public static int NO_CARDS = 8;
 
     final public Board board;
-
     private String name;
     private String color;
 
@@ -131,6 +130,13 @@ public class Player extends Subject {
 
     public CommandCardField getCardField(int i) {
         return cards[i];
+    }
+
+    public CommandCardField[] getCards() {
+        return cards;
+    }
+    public void setCards(CommandCardField[] cards) {
+        this.cards = cards;
     }
 
 }

@@ -1,6 +1,8 @@
 package dk.dtu.compute.se.pisd.roborally.fileaccess.model;
 
+import dk.dtu.compute.se.pisd.roborally.model.CommandCard;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
+import java.util.List;
 
 public class PlayerTemplate {
     public String name;
@@ -17,3 +19,4 @@ public class PlayerTemplate {
         this.heading = player.getHeading().toString();
     }
 }
+

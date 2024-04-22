@@ -39,4 +39,5 @@ public class BoardTemplate {
     public List<SpaceTemplate> spaces = new ArrayList<>();
     public List<PlayerTemplate> players = new ArrayList<>();
 
+    public String currentPhase;
 }

@@ -28,6 +28,7 @@ import dk.dtu.compute.se.pisd.roborally.RoboRally;
 
 import dk.dtu.compute.se.pisd.roborally.fileaccess.LoadBoard;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
+import dk.dtu.compute.se.pisd.roborally.model.Phase;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 
 import javafx.application.Platform;
@@ -83,7 +84,7 @@ public class AppController implements Observer {
 
             // XXX the board should eventually be created programmatically or loaded from a file
             //     here we just create an empty board with the required number of players.
-            Board board = new Board(8 ,8);
+            Board board = new Board(5 ,5);
             gameController = new GameController(board);
             int no = result.get();
             for (int i = 0; i < no; i++) {
@@ -111,13 +112,25 @@ public class AppController implements Observer {
         Board board = LoadBoard.loadBoard("save");
         gameController = new GameController(board);
 
-        for(Player player : board.getPlayers()){
-            System.out.println("Player: " + player.getName());
-        }
+        // Set the phase of the game controller's board to the phase loaded from the JSON file
+        Phase loadedPhase = Phase.valueOf(board.getPhase().toString());
+        gameController.board.setPhase(loadedPhase);
 
-        // XXX: V2
-        // board.setCurrentPlayer(board.getPlayer(0));
-        gameController.startProgrammingPhase();
+        // Depending on the loaded phase, call the appropriate method
+        switch (loadedPhase) {
+            case INITIALISATION:
+                // Call method related to initialisation phase
+                break;
+            case PROGRAMMING:
+                    gameController.startProgrammingPhase();
+                break;
+            case ACTIVATION:
+                    gameController.finishProgrammingPhase();
+                break;
+            case PLAYER_INTERACTION:
+                // Call method related to player interaction phase
+                break;
+        }
 
         roboRally.createBoardView(gameController);
     }
