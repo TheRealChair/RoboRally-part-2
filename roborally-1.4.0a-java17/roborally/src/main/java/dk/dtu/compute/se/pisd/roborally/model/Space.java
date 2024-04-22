@@ -99,10 +99,5 @@ public class Space extends Subject {
         notifyChange();
     }
 
-    public void isPlayerInPit(){
-        if(player != null && isPit){
-            player.rebootPosition();
-        }
-    }
 
 }
