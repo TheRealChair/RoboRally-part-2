@@ -138,7 +138,7 @@ public class PlayerView extends Tab implements ViewObserver {
             for (int i = 0; i < Player.NO_REGISTERS; i++) {
                 CardFieldView cardFieldView = programCardViews[i];
                 if (cardFieldView != null) {
-                    if (player.board.getPhase() == Phase.PROGRAMMING ) {
+                    if (player.board.getPhase() == Phase.PROGRAMMING) {
                         cardFieldView.setBackground(CardFieldView.BG_DEFAULT);
                     } else {
                         if (i < player.board.getStep()) {
@@ -192,29 +192,39 @@ public class PlayerView extends Tab implements ViewObserver {
 
 
             } else {
-                if (!programPane.getChildren().contains(playerInteractionPanel)) {
-                    programPane.getChildren().remove(buttonPanel);
-                    programPane.add(playerInteractionPanel, Player.NO_REGISTERS, 0);
-                }
-                playerInteractionPanel.getChildren().clear();
+                if (player.board.getPhase() == Phase.PLAYER_INTERACTION) {
+                    if (!programPane.getChildren().contains(playerInteractionPanel)) {
+                        programPane.getChildren().remove(buttonPanel);
+                        programPane.add(playerInteractionPanel, Player.NO_REGISTERS, 0);
+                    }
+                    playerInteractionPanel.getChildren().clear();
 
-                if (player.board.getCurrentPlayer() == player) {
-                    // TODO Assignment A3: these buttons should be shown only when there is
-                    //      an interactive command card, and the buttons should represent
-                    //      the player's choices of the interactive command card. The
-                    //      following is just a mockup showing two options
-                    Button optionButton = new Button("Option1");
-                    optionButton.setOnAction( e -> gameController.notImplemented());
-                    optionButton.setDisable(false);
-                    playerInteractionPanel.getChildren().add(optionButton);
+                    if (player.board.getCurrentPlayer() == player) {
+                        CommandCard card = player.getProgramField(player.board.getStep()).getCard();
+                        if (card != null && card.command == Command.OPTION_LEFT_RIGHT) {
+                            // Create "Turn Left" button
+                            Button turnLeftButton = new Button("Turn Left");
+                            turnLeftButton.setOnAction(e -> {
+                                gameController.turnLeft(player);
+                                gameController.continueFromPlayerInteraction();
+                            });
+                            turnLeftButton.setDisable(false);
+                            playerInteractionPanel.getChildren().add(turnLeftButton);
 
-                    optionButton = new Button("Option 2");
-                    optionButton.setOnAction( e -> gameController.notImplemented());
-                    optionButton.setDisable(false);
-                    playerInteractionPanel.getChildren().add(optionButton);
+                            // Create "Turn Right" button
+                            Button turnRightButton = new Button("Turn Right");
+                            turnRightButton.setOnAction(e -> {
+                                gameController.turnRight(player);
+                                gameController.continueFromPlayerInteraction();
+                            });
+                            turnRightButton.setDisable(false);
+                            playerInteractionPanel.getChildren().add(turnRightButton);
+                        }
+                    }
                 }
+                
             }
+
         }
     }
-
 }

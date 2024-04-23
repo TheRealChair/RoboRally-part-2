@@ -1,90 +1,40 @@
 {
-  "width": 5,
-  "height": 5,
-  "spaces": [],
+  "width": 12,
+  "height": 10,
+  "spaces": [
+    {
+      "walls": [
+        "NORTH",
+        "EAST"
+      ],
+      "actions": [],
+      "x": 1,
+      "y": 1
+    },
+    {
+      "walls": [
+        "SOUTH",
+        "WEST"
+      ],
+      "actions": [],
+      "x": 4,
+      "y": 4
+    }
+  ],
   "players": [
     {
       "name": "Player 1",
       "color": "red",
       "x": 3,
-      "y": 3,
-      "heading": "SOUTH",
-      "cards": [
-        {
-          "card": "Turn Right",
-          "visible": true
-        },
-        {
-          "card": "Fwd",
-          "visible": true
-        },
-        {
-          "card": "Fast Fwd",
-          "visible": true
-        },
-        {
-          "card": "Turn Right",
-          "visible": true
-        },
-        {
-          "card": "Fwd",
-          "visible": true
-        },
-        {
-          "card": "Super Fast Fwd",
-          "visible": true
-        },
-        {
-          "card": "Super Fast Fwd",
-          "visible": true
-        },
-        {
-          "card": "U-Turn",
-          "visible": true
-        }
-      ]
+      "y": 0,
+      "heading": "SOUTH"
     },
     {
       "name": "Player 2",
       "color": "green",
       "x": 0,
-      "y": 3,
-      "heading": "SOUTH",
-      "cards": [
-        {
-          "card": "Turn Left",
-          "visible": true
-        },
-        {
-          "card": "Turn Right",
-          "visible": true
-        },
-        {
-          "card": "Left OR Right",
-          "visible": true
-        },
-        {
-          "card": "U-Turn",
-          "visible": true
-        },
-        {
-          "card": "Turn Left",
-          "visible": true
-        },
-        {
-          "card": "Turn Left",
-          "visible": true
-        },
-        {
-          "card": "Fwd",
-          "visible": true
-        },
-        {
-          "card": "Turn Left",
-          "visible": true
-        }
-      ]
+      "y": 2,
+      "heading": "EAST"
     }
-  ],
-  "currentPhase": "PROGRAMMING"
+  ]
 }
