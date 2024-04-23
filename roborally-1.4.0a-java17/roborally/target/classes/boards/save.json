@@ -1,12 +1,31 @@
 {
   "width": 12,
-  "height": 3,
-  "spaces": [],
+  "height": 10,
+  "spaces": [
+    {
+      "walls": [
+        "NORTH",
+        "EAST"
+      ],
+      "actions": [],
+      "x": 1,
+      "y": 1
+    },
+    {
+      "walls": [
+        "SOUTH",
+        "WEST"
+      ],
+      "actions": [],
+      "x": 4,
+      "y": 4
+    }
+  ],
   "players": [
     {
       "name": "Player 1",
       "color": "red",
-      "x": 0,
+      "x": 3,
       "y": 0,
       "heading": "SOUTH"
     },
