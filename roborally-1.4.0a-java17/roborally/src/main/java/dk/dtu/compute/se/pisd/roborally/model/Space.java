@@ -87,8 +87,4 @@ public class Space extends Subject {
         notifyChange();
     }
 
-    public void returnPlayerToStart(Player player){
-        player.setSpace(board.getSpace(1, 1));
-    }
-
 }
