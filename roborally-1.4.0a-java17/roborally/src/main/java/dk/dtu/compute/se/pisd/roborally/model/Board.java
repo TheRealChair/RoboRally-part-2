@@ -273,4 +273,7 @@ public class Board extends Subject {
         this.counter++;
     }
 
+    public Player[] getPlayers() {
+        return players.toArray(new Player[0]);
+    }
 }
