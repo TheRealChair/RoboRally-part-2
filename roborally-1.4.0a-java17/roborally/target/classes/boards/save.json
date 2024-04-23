@@ -1,9 +1,11 @@
 {
-  "width": 12,
-  "height": 10,
+  "width": 5,
+  "height": 5,
   "spaces": [
     {
       "walls": [
+        "NORTH",
+        "EAST",
         "NORTH",
         "EAST"
       ],
@@ -13,6 +15,8 @@
     },
     {
       "walls": [
+        "SOUTH",
+        "WEST",
         "SOUTH",
         "WEST"
       ],
@@ -25,16 +29,85 @@
     {
       "name": "Player 1",
       "color": "red",
-      "x": 3,
-      "y": 0,
-      "heading": "SOUTH"
+      "x": 1,
+      "y": 1,
+      "heading": "EAST",
+      "cards": [
+        {
+          "card": "Back Up",
+          "visible": true
+        },
+        {
+          "card": "U-Turn",
+          "visible": true
+        },
+        {
+          "card": "Fast Fwd",
+          "visible": true
+        },
+        {
+          "card": "U-Turn",
+          "visible": true
+        },
+        {
+          "card": "Left OR Right",
+          "visible": true
+        },
+        {
+          "card": "Turn Left",
+          "visible": true
+        },
+        {
+          "card": "Turn Right",
+          "visible": true
+        },
+        {
+          "card": "Left OR Right",
+          "visible": true
+        }
+      ]
     },
     {
       "name": "Player 2",
       "color": "green",
-      "x": 0,
-      "y": 2,
-      "heading": "EAST"
+      "x": 4,
+      "y": 4,
+      "heading": "EAST",
+      "cards": [
+        {
+          "card": "Turn Left",
+          "visible": true
+        },
+        {
+          "card": "Fwd",
+          "visible": true
+        },
+        {
+          "card": "Left OR Right",
+          "visible": true
+        },
+        {
+          "card": "Turn Right",
+          "visible": true
+        },
+        {
+          "card": "Super Fast Fwd",
+          "visible": true
+        },
+        {
+          "card": "Turn Left",
+          "visible": true
+        },
+        {
+          "card": "U-Turn",
+          "visible": true
+        },
+        {
+          "card": "Super Fast Fwd",
+          "visible": true
+        }
+      ]
     }
-  ]
+  ],
+  "currentPhase": "PROGRAMMING"
 }
