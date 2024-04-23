@@ -30,7 +30,6 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.scene.image.Image;
 
 /**
  * ...
@@ -55,16 +54,6 @@ public class RoboRally extends Application {
         stage = primaryStage;
 
         AppController appController = new AppController(this);
-
-        try {
-            Image windowIcon = new Image("/icon.jpg");
-            if (windowIcon.isError()) {
-                throw new RuntimeException("Failed to load window icon.");
-            }
-            stage.getIcons().add(windowIcon);
-        } catch (Exception e) {
-            System.err.println("Error loading icon: " + e.getMessage());
-        }
 
         // create the primary scene with the a menu bar and a pane for
         // the board view (which initially is empty); it will be filled
