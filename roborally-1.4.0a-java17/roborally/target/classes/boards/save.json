@@ -6,17 +6,85 @@
     {
       "name": "Player 1",
       "color": "red",
-      "x": 4,
-      "y": 1,
-      "heading": "SOUTH"
+      "x": 3,
+      "y": 3,
+      "heading": "SOUTH",
+      "cards": [
+        {
+          "card": "Turn Right",
+          "visible": true
+        },
+        {
+          "card": "Fwd",
+          "visible": true
+        },
+        {
+          "card": "Fast Fwd",
+          "visible": true
+        },
+        {
+          "card": "Turn Right",
+          "visible": true
+        },
+        {
+          "card": "Fwd",
+          "visible": true
+        },
+        {
+          "card": "Super Fast Fwd",
+          "visible": true
+        },
+        {
+          "card": "Super Fast Fwd",
+          "visible": true
+        },
+        {
+          "card": "U-Turn",
+          "visible": true
+        }
+      ]
     },
     {
       "name": "Player 2",
       "color": "green",
-      "x": 3,
-      "y": 2,
-      "heading": "SOUTH"
+      "x": 0,
+      "y": 3,
+      "heading": "SOUTH",
+      "cards": [
+        {
+          "card": "Turn Left",
+          "visible": true
+        },
+        {
+          "card": "Turn Right",
+          "visible": true
+        },
+        {
+          "card": "Left OR Right",
+          "visible": true
+        },
+        {
+          "card": "U-Turn",
+          "visible": true
+        },
+        {
+          "card": "Turn Left",
+          "visible": true
+        },
+        {
+          "card": "Turn Left",
+          "visible": true
+        },
+        {
+          "card": "Fwd",
+          "visible": true
+        },
+        {
+          "card": "Turn Left",
+          "visible": true
+        }
+      ]
     }
   ],
-  "currentPhase": "ACTIVATION"
+  "currentPhase": "PROGRAMMING"
 }

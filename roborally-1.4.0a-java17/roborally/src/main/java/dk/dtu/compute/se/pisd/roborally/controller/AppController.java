@@ -103,9 +103,6 @@ public class AppController implements Observer {
 
     public void saveGame() {
         LoadBoard.saveBoard(gameController.board, "save");
-
-
-        //new Alert(AlertType.INFORMATION, "Game saved!").showAndWait();
     }
 
     public void loadGame() {

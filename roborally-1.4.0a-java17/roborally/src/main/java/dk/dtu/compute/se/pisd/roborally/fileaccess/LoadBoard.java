@@ -69,9 +69,7 @@ public class LoadBoard {
 
             BoardTemplate template = gson.fromJson(reader, BoardTemplate.class);
             Board result = new Board(template.width, template.height);
-            System.out.println("CURRENT PHASE: " +template.currentPhase); //DEBBUGGING
             result.setPhase(Phase.valueOf(template.currentPhase));
-            System.out.println("CURRENT PHASE of Board: " +result.getPhase().toString()); //DEBBUGGING
 
             for (SpaceTemplate spaceTemplate : template.spaces) {
                 Space space = result.getSpace(spaceTemplate.x, spaceTemplate.y);
