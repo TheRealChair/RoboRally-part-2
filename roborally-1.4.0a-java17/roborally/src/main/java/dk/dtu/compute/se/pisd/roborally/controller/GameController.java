@@ -337,8 +337,21 @@ public class GameController {
                     board.setPhase(Phase.PLAYER_INTERACTION);
                     playerToInteract = player;
                     break;
-                default:
+                case AGAIN:
+                    if (player.getLastExecutedCommand() != null) {
+                        if (player.getLastExecutedCommand().command == Command.OPTION_LEFT_RIGHT){
+                            board.setPhase(Phase.PLAYER_INTERACTION);
+                            playerToInteract = player;
+                        } else {
+                            executeCommand(player, player.getLastExecutedCommand().command);
+                        }
+                    }
+                    break;
+                 default:
                     // DO NOTHING (for now)
+            }
+            if (command != Command.AGAIN) {
+                player.setLastExecutedCommand(new CommandCard(command));
             }
         }
     }

@@ -35,14 +35,15 @@ public enum Command {
 
     // This is a very simplistic way of realizing different commands.
 
-    FORWARD("Fwd"),
+    FORWARD("Move 1"),
     RIGHT("Turn Right"),
     LEFT("Turn Left"),
-    FAST_FORWARD("Fast Fwd"),
-    SUPER_FAST_FORWARD("Super Fast Fwd"),
+    FAST_FORWARD("Move 2"),
+    SUPER_FAST_FORWARD("Move 3"),
     U_TURN("U-Turn"),
     BACK_UP("Back Up"),
-    OPTION_LEFT_RIGHT("Left OR Right", LEFT, RIGHT);
+    OPTION_LEFT_RIGHT("Left OR Right", LEFT, RIGHT),
+    AGAIN("Again");
 
     final public String displayName;
 
