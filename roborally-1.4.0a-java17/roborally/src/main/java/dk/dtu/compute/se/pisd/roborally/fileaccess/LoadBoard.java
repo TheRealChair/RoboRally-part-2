@@ -77,6 +77,9 @@ public class LoadBoard {
                     for (Heading wall : spaceTemplate.walls) {
                         space.getWalls().add(wall);
                     }
+                    for (Checkpoint checkpoint : spaceTemplate.checkpoints) {
+                        space.addCheckpoint(checkpoint);
+                    }
                 }
             }
 
