@@ -28,11 +28,9 @@ import com.google.gson.stream.JsonWriter;
 import dk.dtu.compute.se.pisd.roborally.fileaccess.model.BoardTemplate;
 import dk.dtu.compute.se.pisd.roborally.fileaccess.model.PlayerTemplate;
 import dk.dtu.compute.se.pisd.roborally.fileaccess.model.SpaceTemplate;
+import dk.dtu.compute.se.pisd.roborally.fileaccess.model.CommandCardFieldTemplate;
 import dk.dtu.compute.se.pisd.roborally.controller.FieldAction;
-import dk.dtu.compute.se.pisd.roborally.model.Board;
-import dk.dtu.compute.se.pisd.roborally.model.Phase;
-import dk.dtu.compute.se.pisd.roborally.model.Player;
-import dk.dtu.compute.se.pisd.roborally.model.Space;
+import dk.dtu.compute.se.pisd.roborally.model.*;
 
 import java.io.*;
 
@@ -80,18 +78,9 @@ public class LoadBoard {
             }
 
             for (PlayerTemplate playerTemplate : template.players) {
-                Player player = new Player(result, playerTemplate.color, playerTemplate.name);
-                int x = playerTemplate.x;
-                int y = playerTemplate.y;
-                if (x >= 0 && y >= 0 && x < result.width && y < result.height) {
-                    Space space = result.getSpace(x, y);
-                    if (space != null) {
-                        player.setSpace(space);
-                        // Add the player to the board after setting its space
-                        result.addPlayer(player);
-                    }
-                }
+                LoadPlayers.loadPlayer(result, playerTemplate);
             }
+
 
             return result;
         } catch (Exception e) {

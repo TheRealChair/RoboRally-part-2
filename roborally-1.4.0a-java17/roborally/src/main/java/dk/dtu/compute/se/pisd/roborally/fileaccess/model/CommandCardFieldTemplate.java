@@ -9,8 +9,6 @@ public class CommandCardFieldTemplate {
     public CommandCardFieldTemplate(CommandCardField cardField) {
         if (cardField.getCard() != null) {
             this.card = cardField.getCard().getName();
-        } else {
-            this.card = null;
         }
         this.visible = cardField.isVisible();
     }

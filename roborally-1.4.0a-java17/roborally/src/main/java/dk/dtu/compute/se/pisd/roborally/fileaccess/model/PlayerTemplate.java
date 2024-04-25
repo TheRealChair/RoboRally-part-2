@@ -12,8 +12,8 @@ public class PlayerTemplate {
     public int x;
     public int y;
     public String heading;
-    public List<CommandCardFieldTemplate> cards = new ArrayList<>();
-
+    public List<CommandCardFieldTemplate> programmingCards = new ArrayList<>();
+    public List<CommandCardFieldTemplate> commandCards = new ArrayList<>();
 
     public PlayerTemplate(Player player) {
         this.name = player.getName();
@@ -21,8 +21,11 @@ public class PlayerTemplate {
         this.x = player.getSpace().x;
         this.y = player.getSpace().y;
         this.heading = player.getHeading().toString();
-        for (CommandCardField cardField : player.getCards()) {
-            this.cards.add(new CommandCardFieldTemplate(cardField));
+        for (int i = 0; i < Player.NO_REGISTERS; i++) {
+            this.programmingCards.add(new CommandCardFieldTemplate(player.getProgramField(i)));
+        }
+        for (int i = 0; i < Player.NO_CARDS; i++) {
+            this.commandCards.add(new CommandCardFieldTemplate(player.getCardField(i)));
         }
     }
 }
