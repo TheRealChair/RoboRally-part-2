@@ -239,6 +239,10 @@ public class GameController {
         } while (board.getPhase() == Phase.ACTIVATION && !board.isStepMode());
     }
 
+    public void startExecuteStep() {
+        board.setStepMode(true);
+        }
+
     private void executeNextStep() {
         Player currentPlayer = board.getCurrentPlayer();
         if (board.getPhase() == Phase.ACTIVATION && currentPlayer != null) {
@@ -357,11 +361,6 @@ public class GameController {
         } else {
             return false;
         }
-    }
-
-    public void loadPhases() {
-        board.setCurrentPlayer(board.getPlayer(0));
-        board.setStep(0);
     }
 
     public void startProgrammingPhase() {

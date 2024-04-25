@@ -113,8 +113,6 @@ public class AppController implements Observer {
         // Set the phase of the game controller's board to the phase loaded from the JSON file
         Phase loadedPhase = Phase.valueOf(board.getPhase().toString());
         gameController.board.setPhase(loadedPhase);
-        gameController.loadPhases();
-        gameController.board.setStep(board.getStep());
 
         // Depending on the loaded phase, call the appropriate method
         switch (loadedPhase) {
@@ -125,7 +123,7 @@ public class AppController implements Observer {
                 //Default, no action needed
                 break;
             case ACTIVATION:
-                    gameController.finishProgrammingPhase();
+                gameController.startExecuteStep();
                 break;
             case PLAYER_INTERACTION:
                 // Call method related to player interaction phase

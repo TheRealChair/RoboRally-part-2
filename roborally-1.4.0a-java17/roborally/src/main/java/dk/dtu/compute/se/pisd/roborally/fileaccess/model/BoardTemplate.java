@@ -41,4 +41,5 @@ public class BoardTemplate {
 
     public String currentPhase;
     public int currentStep;
+    public int currentPlayer;
 }
