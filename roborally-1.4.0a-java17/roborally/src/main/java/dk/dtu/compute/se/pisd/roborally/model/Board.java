@@ -67,18 +67,18 @@ public class Board extends Subject {
             }
         }
         this.stepMode = false;
-        setupWalls();
+        //setupWalls();
     }
-
-
-
+    /*
     public void setupWalls() {
         getSpace(1, 1).addWall(Heading.NORTH);
         getSpace(1, 1).addWall(Heading.EAST);
         getSpace(4, 4).addWall(Heading.SOUTH);
         getSpace(4, 4).addWall(Heading.WEST);
         // Ovenfor er væggene, og der kan tilføjes flere ved bare at indtaste koordinaterne
+
     }
+    */
 
     public boolean hasWall(Space space, Heading heading) {
         if (space.getWalls().contains(heading)) {

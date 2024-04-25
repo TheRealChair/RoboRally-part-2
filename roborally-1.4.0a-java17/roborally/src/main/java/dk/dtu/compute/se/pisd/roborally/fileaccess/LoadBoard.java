@@ -29,10 +29,7 @@ import dk.dtu.compute.se.pisd.roborally.fileaccess.model.BoardTemplate;
 import dk.dtu.compute.se.pisd.roborally.fileaccess.model.PlayerTemplate;
 import dk.dtu.compute.se.pisd.roborally.fileaccess.model.SpaceTemplate;
 import dk.dtu.compute.se.pisd.roborally.controller.FieldAction;
-import dk.dtu.compute.se.pisd.roborally.model.Board;
-import dk.dtu.compute.se.pisd.roborally.model.Phase;
-import dk.dtu.compute.se.pisd.roborally.model.Player;
-import dk.dtu.compute.se.pisd.roborally.model.Space;
+import dk.dtu.compute.se.pisd.roborally.model.*;
 
 import java.io.*;
 
@@ -75,7 +72,11 @@ public class LoadBoard {
                 Space space = result.getSpace(spaceTemplate.x, spaceTemplate.y);
                 if (space != null) {
                     space.getActions().addAll(spaceTemplate.actions);
-                    space.getWalls().addAll(spaceTemplate.walls);
+
+                    // Add walls to the space
+                    for (Heading wall : spaceTemplate.walls) {
+                        space.getWalls().add(wall);
+                    }
                 }
             }
 
@@ -116,7 +117,6 @@ public class LoadBoard {
 
         return null;
     }
-
 
 
 
