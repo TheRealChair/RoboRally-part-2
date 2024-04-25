@@ -3,6 +3,7 @@ package dk.dtu.compute.se.pisd.roborally.fileaccess;
 import dk.dtu.compute.se.pisd.roborally.fileaccess.model.CommandCardFieldTemplate;
 import dk.dtu.compute.se.pisd.roborally.fileaccess.model.PlayerTemplate;
 import dk.dtu.compute.se.pisd.roborally.model.*;
+import java.util.List;
 
 public class LoadPlayers {
 
@@ -18,15 +19,40 @@ public class LoadPlayers {
                 result.addPlayer(player);
             }
         }
-        loadPlayerCards(player, playerTemplate);
+        loadCommandCards(player, playerTemplate.commandCards);
+        loadProgrammingCards(player, playerTemplate.programmingCards);
     }
 
-    private static void loadPlayerCards(Player player, PlayerTemplate playerTemplate){
-        for (int i = 0; i < playerTemplate.programmingCards.size(); i++) {
-            CommandCardFieldTemplate cardTemplate = playerTemplate.programmingCards.get(i);
-            if (cardTemplate == null) continue;
+    private static void loadCommandCards(Player player, List<CommandCardFieldTemplate> commandCards){
+        int numFields = Math.min(player.getCards().length, commandCards.size());
+        for (int i = 0; i < numFields; i++) {
+            CommandCardFieldTemplate cardTemplate = commandCards.get(i);
+            if (cardTemplate == null || cardTemplate.card == null) continue;
             CommandCardField cardField = new CommandCardField(player);
-            cardField.setCard(new CommandCard(Command.valueOf(cardTemplate.card)));
+            try {
+                Command command = Command.fromDisplayName(cardTemplate.card);
+                cardField.setCard(new CommandCard(command));
+            } catch (IllegalArgumentException e) {
+                System.out.println("Invalid command card name: " + cardTemplate.card);
+                continue;
+            }
+            cardField.setVisible(cardTemplate.visible);
+            player.getCardField(i).setCard(cardField.getCard());
+        }
+    }
+    private static void loadProgrammingCards(Player player, List<CommandCardFieldTemplate> programmingCards){
+        int numFields = Math.min(player.getProgramFieldCount(), programmingCards.size());
+        for (int i = 0; i < numFields; i++) {
+            CommandCardFieldTemplate cardTemplate = programmingCards.get(i);
+            if (cardTemplate == null || cardTemplate.card == null) continue;
+            CommandCardField cardField = new CommandCardField(player);
+            try {
+                Command command = Command.fromDisplayName(cardTemplate.card);
+                cardField.setCard(new CommandCard(command));
+            } catch (IllegalArgumentException e) {
+                System.out.println("Invalid command card name: " + cardTemplate.card);
+                continue;
+            }
             cardField.setVisible(cardTemplate.visible);
             player.getProgramField(i).setCard(cardField.getCard());
         }

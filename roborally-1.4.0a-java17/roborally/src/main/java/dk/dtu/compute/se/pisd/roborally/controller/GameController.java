@@ -359,6 +359,10 @@ public class GameController {
         }
     }
 
+    public void loadPhases() {
+        board.setCurrentPlayer(board.getPlayer(0));
+        board.setStep(0);
+    }
 
     public void startProgrammingPhase() {
         board.setPhase(Phase.PROGRAMMING);

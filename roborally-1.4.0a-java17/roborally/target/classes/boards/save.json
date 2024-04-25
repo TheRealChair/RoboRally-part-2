@@ -5,6 +5,8 @@
     {
       "walls": [
         "NORTH",
+        "EAST",
+        "NORTH",
         "EAST"
       ],
       "actions": [],
@@ -13,6 +15,8 @@
     },
     {
       "walls": [
+        "SOUTH",
+        "WEST",
         "SOUTH",
         "WEST"
       ],
@@ -26,86 +30,48 @@
       "name": "Player 1",
       "color": "red",
       "x": 3,
-      "y": 1,
+      "y": 0,
       "heading": "EAST",
       "programmingCards": [
-        {
-          "visible": true
-        },
-        {
-          "visible": true
-        },
-        {
-          "visible": true
-        },
-        {
-          "visible": true
-        },
-        {
-          "visible": true
-        }
-      ],
-      "commandCards": [
         {
           "card": "Super Fast Fwd",
           "visible": true
         },
         {
-          "card": "U-Turn",
-          "visible": true
+          "card": "Left OR Right",
+          "visible": false
         },
         {
-          "card": "U-Turn",
-          "visible": true
+          "visible": false
         },
         {
-          "card": "Turn Left",
-          "visible": true
+          "visible": false
         },
         {
-          "card": "U-Turn",
-          "visible": true
-        },
-        {
-          "card": "Fwd",
-          "visible": true
-        },
-        {
-          "card": "Turn Right",
-          "visible": true
-        },
-        {
-          "card": "Turn Left",
-          "visible": true
-        }
-      ]
-    },
-    {
-      "name": "Player 2",
-      "color": "green",
-      "x": 2,
-      "y": 2,
-      "heading": "EAST",
-      "programmingCards": [
-        {
-          "visible": true
-        },
-        {
-          "visible": true
-        },
-        {
-          "visible": true
-        },
-        {
-          "visible": true
-        },
-        {
-          "visible": true
+          "visible": false
         }
       ],
       "commandCards": [
         {
-          "card": "Fwd",
+          "visible": true
+        },
+        {
+          "visible": true
+        },
+        {
+          "card": "Super Fast Fwd",
+          "visible": true
+        },
+        {
+          "card": "Fast Fwd",
+          "visible": true
+        },
+        {
+          "card": "Turn Left",
+          "visible": true
+        },
+        {
+          "card": "Turn Left",
           "visible": true
         },
         {
@@ -115,29 +81,68 @@
         {
           "card": "Back Up",
           "visible": true
+        }
+      ]
+    },
+    {
+      "name": "Player 2",
+      "color": "green",
+      "x": 0,
+      "y": 2,
+      "heading": "EAST",
+      "programmingCards": [
+        {
+          "card": "Turn Right",
+          "visible": true
+        },
+        {
+          "visible": false
+        },
+        {
+          "visible": false
+        },
+        {
+          "visible": false
+        },
+        {
+          "visible": false
+        }
+      ],
+      "commandCards": [
+        {
+          "visible": true
         },
         {
           "card": "Fwd",
           "visible": true
         },
         {
-          "card": "U-Turn",
+          "card": "Left OR Right",
           "visible": true
         },
         {
-          "card": "Turn Left",
+          "card": "Super Fast Fwd",
           "visible": true
         },
         {
-          "card": "Fwd",
+          "card": "Turn Right",
           "visible": true
         },
         {
           "card": "Fast Fwd",
           "visible": true
+        },
+        {
+          "card": "Fast Fwd",
+          "visible": true
+        },
+        {
+          "card": "Super Fast Fwd",
+          "visible": true
         }
       ]
     }
   ],
-  "currentPhase": "PROGRAMMING"
+  "currentPhase": "ACTIVATION",
+  "currentStep": 0
 }

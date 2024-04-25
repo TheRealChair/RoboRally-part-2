@@ -140,4 +140,8 @@ public class Player extends Subject {
         this.cards = cards;
     }
 
+    public int getProgramFieldCount() {
+        return program.length;
+    }
+
 }
