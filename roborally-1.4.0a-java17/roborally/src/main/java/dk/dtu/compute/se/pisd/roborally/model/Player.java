@@ -41,7 +41,6 @@ public class Player extends Subject {
     final public Board board;
     private String name;
     private String color;
-
     private Space space;
     private Heading heading = EAST;
 

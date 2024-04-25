@@ -173,7 +173,6 @@ public class GameController {
         player.setSpace(space);
     }
 
-
     /**
      * Moves the current player to the given space, if the space is free.
      * @param space, the space to move the player to
