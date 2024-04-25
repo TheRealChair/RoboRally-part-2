@@ -56,44 +56,47 @@ public class Board extends Subject {
 
     private boolean stepMode;
 
-    private boolean[][] pits;
-
-    public static final int[][] prePitPos = {
-            {2, 3}, {4, 6}, {6,1}
-    };
-
     public Board(int width, int height) {
         this.width = width;
         this.height = height;
         spaces = new Space[width][height];
-        pits = new boolean[width][height];
         for (int x = 0; x < width; x++) {
             for(int y = 0; y < height; y++) {
                 Space space = new Space(this, x, y);
                 spaces[x][y] = space;
             }
         }
-        initializePrePitPos();
         this.stepMode = false;
+        //setupWalls();
     }
+    /*
+    public void setupWalls() {
+        getSpace(1, 1).addWall(Heading.NORTH);
+        getSpace(1, 1).addWall(Heading.EAST);
+        getSpace(4, 4).addWall(Heading.SOUTH);
+        getSpace(4, 4).addWall(Heading.WEST);
+        // Ovenfor er væggene, og der kan tilføjes flere ved bare at indtaste koordinaterne
 
-    public void initializePrePitPos() {
-        for(int[] pitPos : prePitPos){
-            int x = pitPos[0];
-            int y = pitPos[1];
-            addPit(x, y);
+    }
+    */
+
+    public boolean hasWall(Space space, Heading heading) {
+        if (space.getWalls().contains(heading)) {
+            return true;
         }
+    
+        Space neighbor = getNeighbour(space, heading);
+        if (neighbor != null) {
+            Heading reverse = Heading.values()[(heading.ordinal() + 2) % Heading.values().length];
+            if (neighbor.getWalls().contains(reverse)) {
+                return true;
+            }
+        }
+        return false;
     }
+    
 
-    public void addPit(int x, int y){
-        pits[x][y] = true;
-        spaces[x][y].setPit(true);
-    }
-
-    public boolean isPit(int x, int y){
-        return pits[x][y];
-    }
-
+    
     public Integer getGameId() {
         return gameId;
     }
@@ -198,11 +201,9 @@ public class Board extends Subject {
      * @param heading the heading of the neighbour
      * @return the space in the given direction; null if there is no (reachable) neighbour
      */
-
-
     public Space getNeighbour(@NotNull Space space, @NotNull Heading heading) {
         if (space.getWalls().contains(heading)) {
-            return null; // Hit a wall
+            return null;
         }
         // TODO needs to be implemented based on the actual spaces
         //      and obstacles and walls placed there. For now it,
@@ -216,47 +217,27 @@ public class Board extends Subject {
         int y = space.y;
         switch (heading) {
             case SOUTH:
-                y = y + 1;
+                y = (y + 1) % height;
                 break;
             case WEST:
-                x = x - 1;
+                x = (x + width - 1) % width;
                 break;
             case NORTH:
-                y = y - 1;
+                y = (y + height - 1) % height;
                 break;
             case EAST:
-                x = x + 1;
+                x = (x + 1) % width;
                 break;
         }
-
-        // Check if the new position is within bounds
-        if (x < 0 || x >= width || y < 0 || y >= height) {
-            // Treat out-of-bounds movement as falling into a pit
-            Player player = space.getPlayer();
-            if (player != null) {
-                player.rebootPosition(); // Reset player position
-            }
-            return null;
-        }
-
-        Heading reverse = Heading.values()[(heading.ordinal() + 2) % Heading.values().length];
+        Heading reverse = Heading.values()[(heading.ordinal() + 2)% Heading.values().length];
         Space result = getSpace(x, y);
-        if (result != null && result.getWalls().contains(reverse)) {
-            return null; // Hit a wall on the other side
-        }
-
-        // Check if the new position is a pit
-        if (result != null && result.isPit()) {
-            Player player = space.getPlayer();
-            if (player != null) {
-                player.rebootPosition(); // Reset player position
+        if (result != null) {
+            if (result.getWalls().contains(reverse)) {
+                return null;
             }
-            return null;
         }
-
         return result;
     }
-
 
 
     /**
@@ -292,4 +273,7 @@ public class Board extends Subject {
         this.counter++;
     }
 
+    public Player[] getPlayers() {
+        return players.toArray(new Player[0]);
+    }
 }

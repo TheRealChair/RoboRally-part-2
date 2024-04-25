@@ -26,10 +26,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import dk.dtu.compute.se.pisd.roborally.fileaccess.model.BoardTemplate;
+import dk.dtu.compute.se.pisd.roborally.fileaccess.model.PlayerTemplate;
 import dk.dtu.compute.se.pisd.roborally.fileaccess.model.SpaceTemplate;
 import dk.dtu.compute.se.pisd.roborally.controller.FieldAction;
-import dk.dtu.compute.se.pisd.roborally.model.Board;
-import dk.dtu.compute.se.pisd.roborally.model.Space;
+import dk.dtu.compute.se.pisd.roborally.model.*;
 
 import java.io.*;
 
@@ -52,53 +52,79 @@ public class LoadBoard {
         ClassLoader classLoader = LoadBoard.class.getClassLoader();
         InputStream inputStream = classLoader.getResourceAsStream(BOARDSFOLDER + "/" + boardname + "." + JSON_EXT);
         if (inputStream == null) {
-            // TODO these constants should be defined somewhere
-            return new Board(8,8);
+            loadBoard(DEFAULTBOARD);
+            return null;
         }
 
-		// In simple cases, we can create a Gson object with new Gson():
-        GsonBuilder simpleBuilder = new GsonBuilder().
-                registerTypeAdapter(FieldAction.class, new Adapter<FieldAction>());
-        Gson gson = simpleBuilder.create();
+        GsonBuilder gsonBuilder = new GsonBuilder()
+                .registerTypeAdapter(FieldAction.class, new Adapter<FieldAction>());
+        Gson gson = gsonBuilder.create();
 
-		Board result;
-		// FileReader fileReader = null;
         JsonReader reader = null;
-		try {
-			// fileReader = new FileReader(filename);
-			reader = gson.newJsonReader(new InputStreamReader(inputStream));
-			BoardTemplate template = gson.fromJson(reader, BoardTemplate.class);
+        try {
+            reader = gson.newJsonReader(new InputStreamReader(inputStream));
 
-			result = new Board(template.width, template.height);
-			for (SpaceTemplate spaceTemplate: template.spaces) {
-			    Space space = result.getSpace(spaceTemplate.x, spaceTemplate.y);
-			    if (space != null) {
+            BoardTemplate template = gson.fromJson(reader, BoardTemplate.class);
+            Board result = new Board(template.width, template.height);
+            result.setPhase(Phase.valueOf(template.currentPhase));
+
+            for (SpaceTemplate spaceTemplate : template.spaces) {
+                Space space = result.getSpace(spaceTemplate.x, spaceTemplate.y);
+                if (space != null) {
                     space.getActions().addAll(spaceTemplate.actions);
-                    space.getWalls().addAll(spaceTemplate.walls);
+
+                    // Add walls to the space
+                    for (Heading wall : spaceTemplate.walls) {
+                        space.getWalls().add(wall);
+                    }
                 }
             }
-			reader.close();
-			return result;
-		} catch (IOException e1) {
+
+            for (PlayerTemplate playerTemplate : template.players) {
+                Player player = new Player(result, playerTemplate.color, playerTemplate.name);
+                int x = playerTemplate.x;
+                int y = playerTemplate.y;
+                if (x >= 0 && y >= 0 && x < result.width && y < result.height) {
+                    Space space = result.getSpace(x, y);
+                    if (space != null) {
+                        player.setSpace(space);
+                        // Add the player to the board after setting its space
+                        result.addPlayer(player);
+                    }
+                }
+            }
+
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace(); // Print the stack trace for debugging purposes
+        } finally {
+            // Close the reader and input stream in the finally block
             if (reader != null) {
                 try {
                     reader.close();
-                    inputStream = null;
-                } catch (IOException e2) {}
+                } catch (IOException e) {
+                    e.printStackTrace(); // Print the stack trace for debugging purposes
+                }
             }
             if (inputStream != null) {
-				try {
-					inputStream.close();
-				} catch (IOException e2) {}
-			}
-		}
-		return null;
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace(); // Print the stack trace for debugging purposes
+                }
+            }
+        }
+
+        return null;
     }
+
+
 
     public static void saveBoard(Board board, String name) {
         BoardTemplate template = new BoardTemplate();
         template.width = board.width;
         template.height = board.height;
+        template.currentPhase = board.getPhase().toString();
 
         for (int i=0; i<board.width; i++) {
             for (int j=0; j<board.height; j++) {
@@ -110,9 +136,14 @@ public class LoadBoard {
                     spaceTemplate.actions.addAll(space.getActions());
                     spaceTemplate.walls.addAll(space.getWalls());
                     template.spaces.add(spaceTemplate);
+
+                    }
                 }
             }
+        for (Player player : board.getPlayers()) {
+            template.players.add(new PlayerTemplate(player));
         }
+
 
         ClassLoader classLoader = LoadBoard.class.getClassLoader();
         // TODO: this is not very defensive, and will result in a NullPointerException

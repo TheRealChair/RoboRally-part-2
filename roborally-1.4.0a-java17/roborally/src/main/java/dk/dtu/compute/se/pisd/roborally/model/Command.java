@@ -42,7 +42,6 @@ public enum Command {
     SUPER_FAST_FORWARD("Super Fast Fwd"),
     U_TURN("U-Turn"),
     BACK_UP("Back Up"),
-
     OPTION_LEFT_RIGHT("Left OR Right", LEFT, RIGHT);
 
     final public String displayName;

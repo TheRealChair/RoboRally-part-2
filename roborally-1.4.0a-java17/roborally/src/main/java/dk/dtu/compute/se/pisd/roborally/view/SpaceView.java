@@ -25,13 +25,12 @@ import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
-import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeLineCap;
 import org.jetbrains.annotations.NotNull;
 
@@ -48,10 +47,6 @@ public class SpaceView extends StackPane implements ViewObserver {
 
     public final Space space;
 
-    private Group playerLayer;
-    private Group pitLayer;
-    private Group rebootLayer;
-
 
     public SpaceView(@NotNull Space space) {
         this.space = space;
@@ -65,17 +60,10 @@ public class SpaceView extends StackPane implements ViewObserver {
         this.setMinHeight(SPACE_HEIGHT);
         this.setMaxHeight(SPACE_HEIGHT);
 
-        playerLayer = new Group();
-        pitLayer = new Group();
-        rebootLayer = new Group();
-
-        // Add layers to the scene graph in the desired order
-        getChildren().addAll(pitLayer, rebootLayer, playerLayer);
-
         if ((space.x + space.y) % 2 == 0) {
             this.setStyle("-fx-background-color: white;");
         } else {
-            this.setStyle("-fx-background-color: blue;");
+            this.setStyle("-fx-background-color: black;");
         }
 
         // updatePlayer();
@@ -86,45 +74,78 @@ public class SpaceView extends StackPane implements ViewObserver {
     }
 
     private void updatePlayer() {
-        playerLayer.getChildren().clear();
+        this.getChildren().clear();
+        drawWalls();
 
         Player player = space.getPlayer();
         if (player != null) {
             Polygon arrow = new Polygon(0.0, 0.0,
                     10.0, 20.0,
-                    20.0, 0.0);
+                    20.0, 0.0 );
             try {
                 arrow.setFill(Color.valueOf(player.getColor()));
             } catch (Exception e) {
                 arrow.setFill(Color.MEDIUMPURPLE);
             }
 
-            arrow.setRotate((90 * player.getHeading().ordinal()) % 360);
-            playerLayer.getChildren().add(arrow);
+            arrow.setRotate((90*player.getHeading().ordinal())%360);
+            this.getChildren().add(arrow);
         }
     }
 
+    private void drawWalls() {
+        for (Heading heading : space.getWalls()) {
+            drawWall(heading);
+        }
+    }
 
+    private void drawWall(Heading heading) {
+        double wallThickness = 5;
+        Line line = new Line();
+        line.setStroke(Color.YELLOW);
+        line.setStrokeWidth(wallThickness);
+    
+        double offset = wallThickness / 2;
+        switch (heading) {
+            case NORTH:
+                line.setStartX(offset);
+                line.setEndX(SPACE_WIDTH - offset);
+                line.setStartY(0);
+                line.setEndY(0);
+                line.setTranslateY(-SPACE_HEIGHT / 2 + wallThickness / 2); 
+                break;
+            case SOUTH:
+                line.setStartX(offset);
+                line.setEndX(SPACE_WIDTH - offset);
+                line.setStartY(SPACE_HEIGHT - offset);
+                line.setEndY(SPACE_HEIGHT - offset);
+                line.setTranslateY(SPACE_HEIGHT / 2 - wallThickness / 2); 
+                break;
+            case EAST:
+                line.setStartX(SPACE_WIDTH - offset);
+                line.setEndX(SPACE_WIDTH - offset);
+                line.setStartY(offset);
+                line.setEndY(SPACE_HEIGHT - offset);
+                line.setTranslateX(SPACE_WIDTH / 2 - wallThickness / 2);
+                break;
+            case WEST:
+                line.setStartX(offset);
+                line.setEndX(offset);
+                line.setStartY(offset);
+                line.setEndY(SPACE_HEIGHT - offset);
+                line.setTranslateX(-SPACE_WIDTH / 2 + wallThickness / 2); 
+                break;
+        }
+        this.getChildren().add(line);
+    }
+    
+    
+    
     @Override
     public void updateView(Subject subject) {
         if (subject == this.space) {
-            updatePit();
-            updateReboot();
             updatePlayer();
         }
     }
 
-    public void updatePit() {
-        if (space.isPit()) {
-            Rectangle pit = new Rectangle(SPACE_WIDTH, SPACE_HEIGHT, Color.BLACK);
-            pitLayer.getChildren().add(pit);
-        }
-    }
-
-    public void updateReboot() {
-        if (space.x == 7 && space.y == 0) {
-            Rectangle reboot = new Rectangle(SPACE_WIDTH, SPACE_HEIGHT, Color.LIGHTGREEN);
-            rebootLayer.getChildren().add(reboot);
-        }
-    }
 }

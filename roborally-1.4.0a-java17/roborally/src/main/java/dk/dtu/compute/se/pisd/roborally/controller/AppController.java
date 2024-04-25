@@ -26,7 +26,9 @@ import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 
 import dk.dtu.compute.se.pisd.roborally.RoboRally;
 
+import dk.dtu.compute.se.pisd.roborally.fileaccess.LoadBoard;
 import dk.dtu.compute.se.pisd.roborally.model.Board;
+import dk.dtu.compute.se.pisd.roborally.model.Phase;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 
 import javafx.application.Platform;
@@ -35,10 +37,16 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import org.jetbrains.annotations.NotNull;
+import javafx.stage.FileChooser;
 
+import javax.swing.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.File;
+import java.io.FileReader;
 
 /**
  * ...
@@ -76,13 +84,14 @@ public class AppController implements Observer {
 
             // XXX the board should eventually be created programmatically or loaded from a file
             //     here we just create an empty board with the required number of players.
-            Board board = new Board(8,8);
+            Board board = new Board(12 ,10);
             gameController = new GameController(board);
             int no = result.get();
+            int[] startPoints = new int[]{0, 2, 3, 6, 7, 9};
             for (int i = 0; i < no; i++) {
                 Player player = new Player(board, PLAYER_COLORS.get(i), "Player " + (i + 1));
                 board.addPlayer(player);
-                player.setSpace(board.getSpace(i % board.width, i));
+                player.setSpace(board.getSpace(0, startPoints[i]));
             }
 
             // XXX: V2
@@ -94,15 +103,34 @@ public class AppController implements Observer {
     }
 
     public void saveGame() {
-        // XXX needs to be implemented eventually
+        LoadBoard.saveBoard(gameController.board, "save");
     }
 
     public void loadGame() {
-        // XXX needs to be implemented eventually
-        // for now, we just create a new game
-        if (gameController == null) {
-            newGame();
+        Board board = LoadBoard.loadBoard("save");
+        gameController = new GameController(board);
+
+        // Set the phase of the game controller's board to the phase loaded from the JSON file
+        Phase loadedPhase = Phase.valueOf(board.getPhase().toString());
+        gameController.board.setPhase(loadedPhase);
+
+        // Depending on the loaded phase, call the appropriate method
+        switch (loadedPhase) {
+            case INITIALISATION:
+                // Call method related to initialisation phase
+                break;
+            case PROGRAMMING:
+                    gameController.startProgrammingPhase();
+                break;
+            case ACTIVATION:
+                    gameController.finishProgrammingPhase();
+                break;
+            case PLAYER_INTERACTION:
+                // Call method related to player interaction phase
+                break;
         }
+
+        roboRally.createBoardView(gameController);
     }
 
     /**
