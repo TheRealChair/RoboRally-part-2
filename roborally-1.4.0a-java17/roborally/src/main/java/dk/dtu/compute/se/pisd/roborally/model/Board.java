@@ -68,6 +68,7 @@ public class Board extends Subject {
         }
         this.stepMode = false;
         //setupWalls();
+        setupCheckpoints();
     }
     /*
     public void setupWalls() {
@@ -79,6 +80,11 @@ public class Board extends Subject {
 
     }
     */
+    public void setupCheckpoints() {
+        getSpace(1, 1).addCheckpoint(new Checkpoint(1));
+        getSpace(4, 4).addCheckpoint(new Checkpoint(2));
+        // Ovenfor er checkpoints, og der kan tilføjes flere ved bare at indtaste koordinaterne
+    }
 
     public boolean hasWall(Space space, Heading heading) {
         if (space.getWalls().contains(heading)) {
@@ -94,7 +100,10 @@ public class Board extends Subject {
         }
         return false;
     }
-    
+
+    public boolean hasCheckpoint(Space space) {
+        return space.getCheckpoints().size() > 0;
+    }
 
     
     public Integer getGameId() {

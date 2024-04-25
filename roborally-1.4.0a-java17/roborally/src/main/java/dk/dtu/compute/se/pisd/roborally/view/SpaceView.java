@@ -22,6 +22,7 @@
 package dk.dtu.compute.se.pisd.roborally.view;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
+import dk.dtu.compute.se.pisd.roborally.model.Checkpoint;
 import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
@@ -76,6 +77,7 @@ public class SpaceView extends StackPane implements ViewObserver {
     private void updatePlayer() {
         this.getChildren().clear();
         drawWalls();
+        drawCheckpoints();
 
         Player player = space.getPlayer();
         if (player != null) {
@@ -137,6 +139,28 @@ public class SpaceView extends StackPane implements ViewObserver {
                 break;
         }
         this.getChildren().add(line);
+    }
+
+    public  void drawCheckpoints() {
+        for (Checkpoint checkpoint : space.getCheckpoints()) {
+            drawCheckpoint(checkpoint);
+        }
+    }
+    public void drawCheckpoint(Checkpoint checkpoint) {
+        double checkpointSize = 10;
+        Polygon polygon = new Polygon();
+        polygon.getPoints().addAll(new Double[]{
+            0.0, 0.0,
+            checkpointSize, 0.0,
+            checkpointSize, checkpointSize,
+            0.0, checkpointSize
+        });
+        polygon.setFill(Color.RED);
+        polygon.setStroke(Color.BLACK);
+        polygon.setStrokeWidth(1);
+        polygon.setTranslateX(SPACE_WIDTH / 2 - checkpointSize / 2);
+        polygon.setTranslateY(SPACE_HEIGHT / 2 - checkpointSize / 2);
+        this.getChildren().add(polygon);
     }
     
     
