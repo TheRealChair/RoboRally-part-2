@@ -22,6 +22,7 @@
 package dk.dtu.compute.se.pisd.roborally.controller;
 
 import dk.dtu.compute.se.pisd.roborally.model.*;
+import javafx.scene.control.Alert;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -347,7 +348,9 @@ public class GameController {
                     break;
                 }
             }
+            checkWinCondition(player);
         }
+
     }
 
     public Player getPlayerToInteract() {
@@ -395,6 +398,30 @@ public class GameController {
         return new CommandCard(commands[random]);
     }
 
+    private void checkWinCondition(Player player) {
+        // Get the total number of checkpoints
+        int totalCheckpoints = 0;
+        for (int x = 0; x < board.width; x++) {
+            for (int y = 0; y < board.height; y++) {
+                totalCheckpoints += board.getSpace(x, y).getCheckpoints().size();
+            }
+        }
+        // Print the player's points and total checkpoints for debugging
+        System.out.println("Player's points: " + player.getPoints());
+        System.out.println("Total checkpoints: " + totalCheckpoints);
+
+
+        // If the player's points are equal to the total number of checkpoints, the player has won
+        if (player.getPoints() == totalCheckpoints) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Game Over");
+            alert.setHeaderText(null);
+            alert.setContentText(player.getName() + " has won the game!");
+
+            alert.showAndWait();
+        }
+    }
+
     /**
      * A method called when no corresponding controller operation is implemented yet. This
      * should eventually be removed.
@@ -418,4 +445,5 @@ public class GameController {
             this.heading = heading;
         }
     }
+
 }
