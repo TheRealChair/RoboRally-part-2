@@ -21,6 +21,8 @@
  */
 package dk.dtu.compute.se.pisd.designpatterns.observer;
 
+import com.google.common.base.MoreObjects;
+
 import java.util.Collections;
 import java.util.Set;
 import java.util.WeakHashMap;
@@ -35,8 +37,7 @@ import java.util.WeakHashMap;
  *
  */
 public abstract class Subject {
-	
-	private Set<Observer> observers =
+    private Set<Observer> observers =
 			Collections.newSetFromMap(new WeakHashMap<>());
 	// Note: In JavaFX, the views do not have a way to know when they are
 	// removed from the window, and therefore cannot always unregister

@@ -44,6 +44,9 @@ public class Player extends Subject {
     private Space space;
     private Heading heading = EAST;
 
+    private int points = 0;
+    private int currentCheckpoint = 1;
+
     private CommandCardField[] program;
     private CommandCardField[] cards;
 
@@ -137,6 +140,23 @@ public class Player extends Subject {
     }
     public void setCards(CommandCardField[] cards) {
         this.cards = cards;
+    }
+
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void incrementPoints() {
+        this.points++;
+    }
+
+    public int getCurrentCheckpoint() {
+        return currentCheckpoint;
+    }
+
+    public void incrementCurrentCheckpoint() {
+        this.currentCheckpoint++;
     }
 
 }

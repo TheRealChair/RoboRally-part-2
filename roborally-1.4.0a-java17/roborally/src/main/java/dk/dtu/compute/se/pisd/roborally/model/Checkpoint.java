@@ -8,4 +8,8 @@ public class Checkpoint extends Subject {
     public Checkpoint(int id) {
         this.id = id;
     }
+
+    public int getId() {
+        return id;
+    }
 }

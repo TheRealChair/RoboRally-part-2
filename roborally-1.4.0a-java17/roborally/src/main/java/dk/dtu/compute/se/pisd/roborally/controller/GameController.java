@@ -339,6 +339,14 @@ public class GameController {
                 default:
                     // DO NOTHING (for now)
             }
+            Space space = player.getSpace();
+            for (Checkpoint checkpoint : space.getCheckpoints()) {
+                if (checkpoint.getId() == player.getCurrentCheckpoint()) {
+                    player.incrementPoints();
+                    player.incrementCurrentCheckpoint();
+                    break;
+                }
+            }
         }
     }
 
