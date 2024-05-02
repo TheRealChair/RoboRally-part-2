@@ -43,7 +43,7 @@ public class Board extends Subject {
 
     private Integer gameId;
 
-    private final Space[][] spaces;
+    public static Space[][] spaces;
 
     private final List<Player> players = new ArrayList<>();
 
@@ -56,16 +56,24 @@ public class Board extends Subject {
 
     private boolean stepMode;
 
+    public static boolean[][] pits;
+
+    public static final int[][] prePitPos = {
+            {2, 3}, {4, 6}, {6,1}
+    };
+
     public Board(int width, int height) {
         this.width = width;
         this.height = height;
         spaces = new Space[width][height];
+        pits = new boolean[width][height];
         for (int x = 0; x < width; x++) {
             for(int y = 0; y < height; y++) {
                 Space space = new Space(this, x, y);
                 spaces[x][y] = space;
             }
         }
+        initializePrePitPos();
         this.stepMode = false;
         //setupWalls();
     }
@@ -79,7 +87,17 @@ public class Board extends Subject {
 
     }
     */
-
+    public void initializePrePitPos() {
+        for(int[] pitPos : prePitPos){
+            int x = pitPos[0];
+            int y = pitPos[1];
+            if (x >= 0 && x < width && y >= 0 && y < height) {
+                Pits.addPit(x, y);
+            } else {
+                System.out.println("Pit coordinates out of bounds: " + x + ", " + y);
+            }
+        }
+    }
     public boolean hasWall(Space space, Heading heading) {
         if (space.getWalls().contains(heading)) {
             return true;

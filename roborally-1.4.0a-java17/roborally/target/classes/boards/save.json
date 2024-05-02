@@ -6,16 +6,12 @@
     {
       "name": "Player 1",
       "color": "red",
-      "x": 4,
+      "x": 1,
       "y": 0,
-      "heading": "WEST",
+      "heading": "EAST",
       "programmingCards": [
         {
-          "card": "Turn Left",
-          "visible": true
-        },
-        {
-          "card": "Fwd",
+          "card": "Back Up",
           "visible": true
         },
         {
@@ -27,7 +23,11 @@
           "visible": true
         },
         {
-          "card": "U-Turn",
+          "card": "Super Fast Fwd",
+          "visible": true
+        },
+        {
+          "card": "Back Up",
           "visible": true
         }
       ],
@@ -45,35 +45,6 @@
           "visible": true
         },
         {
-          "visible": true
-        },
-        {
-          "card": "Super Fast Fwd",
-          "visible": true
-        },
-        {
-          "card": "U-Turn",
-          "visible": true
-        },
-        {
-          "card": "U-Turn",
-          "visible": true
-        }
-      ]
-    },
-    {
-      "name": "Player 2",
-      "color": "green",
-      "x": 5,
-      "y": 2,
-      "heading": "NORTH",
-      "programmingCards": [
-        {
-          "card": "Fast Fwd",
-          "visible": true
-        },
-        {
-          "card": "Super Fast Fwd",
           "visible": true
         },
         {
@@ -81,11 +52,40 @@
           "visible": true
         },
         {
-          "card": "U-Turn",
+          "card": "Turn Right",
+          "visible": true
+        },
+        {
+          "card": "Fast Fwd",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "name": "Player 2",
+      "color": "green",
+      "x": 0,
+      "y": 2,
+      "heading": "EAST",
+      "programmingCards": [
+        {
+          "card": "Turn Left",
+          "visible": true
+        },
+        {
+          "card": "Left OR Right",
           "visible": true
         },
         {
           "card": "Fwd",
+          "visible": true
+        },
+        {
+          "card": "Left OR Right",
+          "visible": true
+        },
+        {
+          "card": "Turn Right",
           "visible": true
         }
       ],
@@ -106,21 +106,21 @@
           "visible": true
         },
         {
-          "card": "U-Turn",
+          "card": "Turn Right",
+          "visible": true
+        },
+        {
+          "card": "Left OR Right",
           "visible": true
         },
         {
           "card": "U-Turn",
-          "visible": true
-        },
-        {
-          "card": "Back Up",
           "visible": true
         }
       ]
     }
   ],
   "currentPhase": "ACTIVATION",
-  "currentStep": 4,
-  "currentPlayer": 1
+  "currentStep": 2,
+  "currentPlayer": 0
 }

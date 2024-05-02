@@ -22,6 +22,7 @@
 package dk.dtu.compute.se.pisd.roborally.model;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
+import dk.dtu.compute.se.pisd.roborally.controller.GameController;
 import org.jetbrains.annotations.NotNull;
 
 import static dk.dtu.compute.se.pisd.roborally.model.Heading.EAST;
@@ -48,11 +49,13 @@ public class Player extends Subject {
     private CommandCardField[] program;
     private CommandCardField[] cards;
 
-    public Player(@NotNull Board board, String color, @NotNull String name) {
+    public boolean hasBeenInPit = false;
+
+    public Player(@NotNull Board board, String color, @NotNull String name, boolean hasBeenInPit) {
         this.board = board;
         this.name = name;
         this.color = color;
-
+        this.hasBeenInPit = false;
         this.space = null;
 
         program = new CommandCardField[NO_REGISTERS];
@@ -125,10 +128,28 @@ public class Player extends Subject {
         }
     }
 
-    public void rebootPosition(){
+    public void rebootPosition() {
+        Player playerAtReboot = null;
+        if (this.board.getSpace(Reboot.getX(), Reboot.getY()) != null) {
+            playerAtReboot = this.board.getSpace(Reboot.getX(), Reboot.getY()).getPlayer();
+            if (playerAtReboot != null) {
+                GameController gameController = new GameController(board);
+                gameController.moveForward(playerAtReboot);
+            }
+        }
+        clearRegisters();
         this.space.setPlayer(null);
-        this.space = this.board.getSpace(7,0);
+        this.setHeading(SOUTH);
+        this.space = this.board.getSpace(Reboot.getX(), Reboot.getY());
         this.space.setPlayer(this);
+    }
+
+
+
+    public void clearRegisters(){
+        for (CommandCardField commandCardField : program) {
+            commandCardField.setCard(null);
+        }
     }
 
     public CommandCardField getProgramField(int i) {
