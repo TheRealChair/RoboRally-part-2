@@ -22,15 +22,19 @@
 package dk.dtu.compute.se.pisd.roborally.view;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
+import dk.dtu.compute.se.pisd.roborally.model.Checkpoint;
 import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
+import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.StackPane;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeLineCap;
 import org.jetbrains.annotations.NotNull;
 
@@ -47,6 +51,10 @@ public class SpaceView extends StackPane implements ViewObserver {
 
     public final Space space;
 
+    private Group playerLayer;
+    private Group pitLayer;
+    private Group rebootLayer;
+
 
     public SpaceView(@NotNull Space space) {
         this.space = space;
@@ -60,10 +68,29 @@ public class SpaceView extends StackPane implements ViewObserver {
         this.setMinHeight(SPACE_HEIGHT);
         this.setMaxHeight(SPACE_HEIGHT);
 
+        playerLayer = new Group();
+        pitLayer = new Group();
+        rebootLayer = new Group();
+
+        // Add layers to the scene graph in the desired order
+        getChildren().addAll(pitLayer, rebootLayer, playerLayer);
+
         if ((space.x + space.y) % 2 == 0) {
-            this.setStyle("-fx-background-color: white;");
+            double imageWidth = 60.0; // adjust to desired width in pixels
+            double imageHeight = 60.0; // adjust to desired height in pixels
+
+            BackgroundSize backgroundSize = new BackgroundSize(imageWidth, imageHeight, false, false, false, false);
+            Image image = new Image("BoardPics/empty.png");
+            BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, backgroundSize);
+            this.setBackground(new Background(backgroundImage));
         } else {
-            this.setStyle("-fx-background-color: black;");
+            Image image = new Image("BoardPics/empty.png");
+            double imageWidth = 60.0; // adjust to desired width in pixels
+            double imageHeight = 60.0; // adjust to desired height in pixels
+
+            BackgroundSize backgroundSize = new BackgroundSize(imageWidth, imageHeight, false, false, false, false);
+            BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, backgroundSize);
+            this.setBackground(new Background(backgroundImage));
         }
 
         // updatePlayer();
@@ -76,6 +103,7 @@ public class SpaceView extends StackPane implements ViewObserver {
     private void updatePlayer() {
         this.getChildren().clear();
         drawWalls();
+        drawCheckpoints();
 
         Player player = space.getPlayer();
         if (player != null) {
@@ -102,7 +130,7 @@ public class SpaceView extends StackPane implements ViewObserver {
     private void drawWall(Heading heading) {
         double wallThickness = 5;
         Line line = new Line();
-        line.setStroke(Color.YELLOW);
+        line.setStroke(Color.ORANGE);
         line.setStrokeWidth(wallThickness);
     
         double offset = wallThickness / 2;
@@ -138,14 +166,56 @@ public class SpaceView extends StackPane implements ViewObserver {
         }
         this.getChildren().add(line);
     }
+
+    /**
+     * Draw the checkpoints on the board.
+     * @Author Balder Jacobsen
+     */
+    public  void drawCheckpoints() {
+        for (Checkpoint checkpoint : space.getCheckpoints()) {
+            drawCheckpoint(checkpoint);
+        }
+    }
+    public void drawCheckpoint(Checkpoint checkpoint) {
+        double checkpointSize = 10;
+        Polygon polygon = new Polygon();
+        polygon.getPoints().addAll(new Double[]{
+                0.0, 0.0,
+                checkpointSize, 0.0,
+                checkpointSize, checkpointSize,
+                0.0, checkpointSize
+        });
+        double imageWidth = 60.0; // adjust to desired width in pixels
+        double imageHeight = 60.0;
+        BackgroundSize backgroundSize = new BackgroundSize(imageWidth, imageHeight, false, false, false, false);
+        String imagePath = "BoardPics/" + checkpoint.getId() + ".png";
+        Image image = new Image(imagePath);
+        BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, backgroundSize);
+        this.setBackground(new Background(backgroundImage));
+    }
     
     
     
     @Override
     public void updateView(Subject subject) {
         if (subject == this.space) {
+            updatePit();
+            updateReboot();
             updatePlayer();
         }
     }
 
+    public void updatePit() {
+        if (space.isPit()) {
+            Rectangle pit = new Rectangle(SPACE_WIDTH, SPACE_HEIGHT, Color.BLACK);
+            pitLayer.getChildren().add(pit);
+        }
+    }
+
+    public void updateReboot() {
+        if (space.x == 7 && space.y == 0) {
+            Rectangle reboot = new Rectangle(SPACE_WIDTH, SPACE_HEIGHT, Color.LIGHTGREEN);
+            rebootLayer.getChildren().add(reboot);
+        }
+    }
 }

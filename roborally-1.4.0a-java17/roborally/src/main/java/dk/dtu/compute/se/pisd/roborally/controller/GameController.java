@@ -22,6 +22,7 @@
 package dk.dtu.compute.se.pisd.roborally.controller;
 
 import dk.dtu.compute.se.pisd.roborally.model.*;
+import javafx.scene.control.Alert;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -50,7 +51,7 @@ public class GameController {
             Space space = player.getSpace();
             Heading heading = player.getHeading();
 
-
+            if (!board.hasWall(space, heading)) {
             Space target = board.getNeighbour(space, heading);
             if (target != null) {
                 try {
@@ -61,8 +62,8 @@ public class GameController {
                     // (which would be very bad style).
                 }
             }
-
         }
+    }
     }
 
     /**
@@ -88,6 +89,10 @@ public class GameController {
                     }
                 }
             }
+            if(player.hasBeenInPit){
+                player.hasBeenInPit = false;
+                break;
+            }
         }
     }
     /**
@@ -111,6 +116,10 @@ public class GameController {
                         // (which would be very bad style).
                     }
                 }
+            }
+            if(player.hasBeenInPit){
+                player.hasBeenInPit = false;
+                break;
             }
         }
     }
@@ -239,6 +248,10 @@ public class GameController {
         } while (board.getPhase() == Phase.ACTIVATION && !board.isStepMode());
     }
 
+    public void startExecuteStep() {
+        board.setStepMode(true);
+        }
+
     private void executeNextStep() {
         Player currentPlayer = board.getCurrentPlayer();
         if (board.getPhase() == Phase.ACTIVATION && currentPlayer != null) {
@@ -330,6 +343,10 @@ public class GameController {
                     this.turnRight(player);
                     this.turnRight(player);
                     this.moveForward(player);
+                    if (player.hasBeenInPit) {
+                        player.hasBeenInPit = false;
+                        break;
+                    }
                     this.turnRight(player);
                     this.turnRight(player);
                     break;
@@ -353,6 +370,15 @@ public class GameController {
             if (command != Command.AGAIN) {
                 player.setLastExecutedCommand(new CommandCard(command));
             }
+            Space space = player.getSpace();
+            for (Checkpoint checkpoint : space.getCheckpoints()) {
+                if (checkpoint.getId() == player.getCurrentCheckpoint()) {
+                    player.incrementPoints();
+                    player.incrementCurrentCheckpoint();
+                    break;
+                }
+            }
+            checkWinCondition(player);
         }
     }
 
@@ -399,6 +425,30 @@ public class GameController {
         Command[] commands = Command.values();
         int random = (int) (Math.random() * commands.length);
         return new CommandCard(commands[random]);
+    }
+
+    private void checkWinCondition(Player player) {
+        // Get the total number of checkpoints
+        int totalCheckpoints = 0;
+        for (int x = 0; x < board.width; x++) {
+            for (int y = 0; y < board.height; y++) {
+                totalCheckpoints += board.getSpace(x, y).getCheckpoints().size();
+            }
+        }
+        // Print the player's points and total checkpoints for debugging
+        System.out.println("Player's points: " + player.getPoints());
+        System.out.println("Total checkpoints: " + totalCheckpoints);
+
+
+        // If the player's points are equal to the total number of checkpoints, the player has won
+        if (player.getPoints() == totalCheckpoints) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Game Over");
+            alert.setHeaderText(null);
+            alert.setContentText(player.getName() + " has won the game!");
+
+            alert.showAndWait();
+        }
     }
 
     /**

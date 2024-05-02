@@ -1,22 +1,36 @@
 {
   "width": 12,
-  "height": 6,
+  "height": 5,
   "spaces": [
     {
-      "walls": [
-        "NORTH",
-        "EAST"
-      ],
+      "walls": [],
       "actions": [],
+      "checkpoints": [
+        {
+          "id": 1,
+          "observers": []
+        },
+        {
+          "id": 1,
+          "observers": []
+        }
+      ],
       "x": 1,
       "y": 1
     },
     {
-      "walls": [
-        "SOUTH",
-        "WEST"
-      ],
+      "walls": [],
       "actions": [],
+      "checkpoints": [
+        {
+          "id": 2,
+          "observers": []
+        },
+        {
+          "id": 2,
+          "observers": []
+        }
+      ],
       "x": 4,
       "y": 4
     }
@@ -25,12 +39,45 @@
     {
       "name": "Player 1",
       "color": "red",
-      "x": 1,
-      "y": 1,
+      "x": 5,
+      "y": 0,
       "heading": "EAST",
-      "cards": [
+      "programmingCards": [
+        {
+          "card": "Super Fast Fwd",
+          "visible": true
+        },
+        {
+          "card": "Fast Fwd",
+          "visible": true
+        },
+        {
+          "card": "Turn Left",
+          "visible": true
+        },
+        {
+          "card": "Super Fast Fwd",
+          "visible": false
+        },
         {
           "card": "Left OR Right",
+          "visible": false
+        }
+      ],
+      "commandCards": [
+        {
+          "visible": true
+        },
+        {
+          "visible": true
+        },
+        {
+          "visible": true
+        },
+        {
+          "visible": true
+        },
+        {
           "visible": true
         },
         {
@@ -38,23 +85,7 @@
           "visible": true
         },
         {
-          "card": "Again",
-          "visible": true
-        },
-        {
-          "card": "Again",
-          "visible": true
-        },
-        {
-          "card": "Left OR Right",
-          "visible": true
-        },
-        {
-          "card": "Back Up",
-          "visible": true
-        },
-        {
-          "card": "Turn Left",
+          "card": "Fwd",
           "visible": true
         },
         {
@@ -66,28 +97,12 @@
     {
       "name": "Player 2",
       "color": "green",
-      "x": 1,
+      "x": 10,
       "y": 2,
       "heading": "EAST",
-      "cards": [
+      "programmingCards": [
         {
-          "card": "Move 3",
-          "visible": true
-        },
-        {
-          "card": "Left OR Right",
-          "visible": true
-        },
-        {
-          "card": "Turn Left",
-          "visible": true
-        },
-        {
-          "card": "Left OR Right",
-          "visible": true
-        },
-        {
-          "card": "Move 2",
+          "card": "Back Up",
           "visible": true
         },
         {
@@ -95,15 +110,50 @@
           "visible": true
         },
         {
-          "card": "Turn Right",
+          "card": "U-Turn",
           "visible": true
         },
         {
-          "card": "U-Turn",
+          "card": "Back Up",
+          "visible": false
+        },
+        {
+          "card": "Super Fast Fwd",
+          "visible": false
+        }
+      ],
+      "commandCards": [
+        {
+          "visible": true
+        },
+        {
+          "visible": true
+        },
+        {
+          "visible": true
+        },
+        {
+          "visible": true
+        },
+        {
+          "visible": true
+        },
+        {
+          "card": "Turn Left",
+          "visible": true
+        },
+        {
+          "card": "Super Fast Fwd",
+          "visible": true
+        },
+        {
+          "card": "Turn Left",
           "visible": true
         }
       ]
     }
   ],
-  "currentPhase": "PROGRAMMING"
+  "currentPhase": "ACTIVATION",
+  "currentStep": 2,
+  "currentPlayer": 0
 }

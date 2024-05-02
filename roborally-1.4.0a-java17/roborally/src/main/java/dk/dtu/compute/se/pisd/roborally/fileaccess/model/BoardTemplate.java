@@ -40,4 +40,6 @@ public class BoardTemplate {
     public List<PlayerTemplate> players = new ArrayList<>();
 
     public String currentPhase;
+    public int currentStep;
+    public int currentPlayer;
 }

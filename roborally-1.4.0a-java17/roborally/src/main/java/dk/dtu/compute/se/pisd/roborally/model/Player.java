@@ -22,6 +22,7 @@
 package dk.dtu.compute.se.pisd.roborally.model;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
+import dk.dtu.compute.se.pisd.roborally.controller.GameController;
 import org.jetbrains.annotations.NotNull;
 
 import static dk.dtu.compute.se.pisd.roborally.model.Heading.EAST;
@@ -45,16 +46,20 @@ public class Player extends Subject {
     private Space space;
     private Heading heading = EAST;
 
+    private int points = 0;
+    private int currentCheckpoint = 1;
+
     private CommandCardField[] program;
     private CommandCardField[] cards;
 
+    public boolean hasBeenInPit = false;
     private CommandCard lastExecutedCommand;
 
-    public Player(@NotNull Board board, String color, @NotNull String name) {
+    public Player(@NotNull Board board, String color, @NotNull String name, boolean hasBeenInPit) {
         this.board = board;
         this.name = name;
         this.color = color;
-
+        this.hasBeenInPit = false;
         this.space = null;
 
         program = new CommandCardField[NO_REGISTERS];
@@ -127,6 +132,30 @@ public class Player extends Subject {
         }
     }
 
+    public void rebootPosition() {
+        Player playerAtReboot = null;
+        if (this.board.getSpace(Reboot.getX(), Reboot.getY()) != null) {
+            playerAtReboot = this.board.getSpace(Reboot.getX(), Reboot.getY()).getPlayer();
+            if (playerAtReboot != null) {
+                GameController gameController = new GameController(board);
+                gameController.moveForward(playerAtReboot);
+            }
+        }
+        clearRegisters();
+        this.space.setPlayer(null);
+        this.setHeading(SOUTH);
+        this.space = this.board.getSpace(Reboot.getX(), Reboot.getY());
+        this.space.setPlayer(this);
+    }
+
+
+
+    public void clearRegisters(){
+        for (CommandCardField commandCardField : program) {
+            commandCardField.setCard(null);
+        }
+    }
+
     /**
      @Author Viktor,
      @return the last executed command
@@ -156,6 +185,27 @@ public class Player extends Subject {
     }
     public void setCards(CommandCardField[] cards) {
         this.cards = cards;
+    }
+
+    public int getProgramFieldCount() {
+        return program.length;
+    }
+
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void incrementPoints() {
+        this.points++;
+    }
+
+    public int getCurrentCheckpoint() {
+        return currentCheckpoint;
+    }
+
+    public void incrementCurrentCheckpoint() {
+        this.currentCheckpoint++;
     }
 
 }

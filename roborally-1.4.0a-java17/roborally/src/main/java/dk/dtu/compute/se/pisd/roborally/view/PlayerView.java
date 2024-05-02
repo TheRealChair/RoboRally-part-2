@@ -57,6 +57,8 @@ public class PlayerView extends Tab implements ViewObserver {
     private Button finishButton;
     private Button executeButton;
     private Button stepButton;
+    private Label pointLabel;
+    private Label activeCheckPointLabel;
 
     private VBox playerInteractionPanel;
 
@@ -108,6 +110,9 @@ public class PlayerView extends Tab implements ViewObserver {
         playerInteractionPanel.setAlignment(Pos.CENTER_LEFT);
         playerInteractionPanel.setSpacing(3.0);
 
+        pointLabel = new Label("Points: " + player.getPoints());
+        activeCheckPointLabel = new Label("Active Checkpoint: " + player.getCurrentCheckpoint());
+
         cardsLabel = new Label("Command Cards");
         cardsPane = new GridPane();
         cardsPane.setVgap(2.0);
@@ -125,6 +130,8 @@ public class PlayerView extends Tab implements ViewObserver {
         top.getChildren().add(programPane);
         top.getChildren().add(cardsLabel);
         top.getChildren().add(cardsPane);
+        top.getChildren().add(pointLabel);
+        top.getChildren().add(activeCheckPointLabel);
 
         if (player.board != null) {
             player.board.attach(this);
@@ -156,6 +163,12 @@ public class PlayerView extends Tab implements ViewObserver {
                         }
                     }
                 }
+            }
+            if (player != null) {
+                pointLabel.setText("Points: " + player.getPoints());
+            }
+            if (player != null) {
+                activeCheckPointLabel.setText("Active Checkpoint: " + player.getCurrentCheckpoint());
             }
 
             if (player.board.getPhase() != Phase.PLAYER_INTERACTION) {

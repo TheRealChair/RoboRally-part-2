@@ -62,4 +62,13 @@ public enum Command {
         return options;
     }
 
+    public static Command fromDisplayName(String displayName) {
+        for (Command command : Command.values()) {
+            if (command.displayName.equals(displayName)) {
+                return command;
+            }
+        }
+        throw new IllegalArgumentException("No enum constant with display name " + displayName);
+    }
+
 }

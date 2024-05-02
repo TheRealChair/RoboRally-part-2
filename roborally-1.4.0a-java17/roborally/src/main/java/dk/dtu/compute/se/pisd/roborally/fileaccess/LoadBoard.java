@@ -28,11 +28,9 @@ import com.google.gson.stream.JsonWriter;
 import dk.dtu.compute.se.pisd.roborally.fileaccess.model.BoardTemplate;
 import dk.dtu.compute.se.pisd.roborally.fileaccess.model.PlayerTemplate;
 import dk.dtu.compute.se.pisd.roborally.fileaccess.model.SpaceTemplate;
+import dk.dtu.compute.se.pisd.roborally.fileaccess.model.CommandCardFieldTemplate;
 import dk.dtu.compute.se.pisd.roborally.controller.FieldAction;
-import dk.dtu.compute.se.pisd.roborally.model.Board;
-import dk.dtu.compute.se.pisd.roborally.model.Phase;
-import dk.dtu.compute.se.pisd.roborally.model.Player;
-import dk.dtu.compute.se.pisd.roborally.model.Space;
+import dk.dtu.compute.se.pisd.roborally.model.*;
 
 import java.io.*;
 
@@ -75,23 +73,23 @@ public class LoadBoard {
                 Space space = result.getSpace(spaceTemplate.x, spaceTemplate.y);
                 if (space != null) {
                     space.getActions().addAll(spaceTemplate.actions);
-                    space.getWalls().addAll(spaceTemplate.walls);
+
+                    // Add walls to the space
+                    for (Heading wall : spaceTemplate.walls) {
+                        space.getWalls().add(wall);
+                    }
+                    for (Checkpoint checkpoint : spaceTemplate.checkpoints) {
+                        space.getCheckpoints().add(checkpoint);
+                    }
                 }
             }
 
             for (PlayerTemplate playerTemplate : template.players) {
-                Player player = new Player(result, playerTemplate.color, playerTemplate.name);
-                int x = playerTemplate.x;
-                int y = playerTemplate.y;
-                if (x >= 0 && y >= 0 && x < result.width && y < result.height) {
-                    Space space = result.getSpace(x, y);
-                    if (space != null) {
-                        player.setSpace(space);
-                        // Add the player to the board after setting its space
-                        result.addPlayer(player);
-                    }
-                }
+                LoadPlayers.loadPlayer(result, playerTemplate);
             }
+            result.setStep(template.currentStep);
+            result.setCurrentPlayer(result.getPlayer(template.currentPlayer));
+
 
             return result;
         } catch (Exception e) {
@@ -119,24 +117,25 @@ public class LoadBoard {
 
 
 
-
     public static void saveBoard(Board board, String name) {
         BoardTemplate template = new BoardTemplate();
         template.width = board.width;
         template.height = board.height;
         template.currentPhase = board.getPhase().toString();
+        template.currentStep = board.getStep();
+        template.currentPlayer = board.getPlayerNumber(board.getCurrentPlayer());
 
         for (int i=0; i<board.width; i++) {
             for (int j=0; j<board.height; j++) {
                 Space space = board.getSpace(i,j);
-                if (!space.getWalls().isEmpty() || !space.getActions().isEmpty()) {
+                if (!space.getWalls().isEmpty() || !space.getActions().isEmpty() || !space.getCheckpoints().isEmpty()) {
                     SpaceTemplate spaceTemplate = new SpaceTemplate();
                     spaceTemplate.x = space.x;
                     spaceTemplate.y = space.y;
                     spaceTemplate.actions.addAll(space.getActions());
                     spaceTemplate.walls.addAll(space.getWalls());
+                    spaceTemplate.checkpoints.addAll(space.getCheckpoints());
                     template.spaces.add(spaceTemplate);
-
                     }
                 }
             }
