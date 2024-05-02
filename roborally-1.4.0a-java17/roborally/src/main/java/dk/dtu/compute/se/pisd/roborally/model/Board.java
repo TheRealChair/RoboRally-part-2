@@ -22,6 +22,7 @@
 package dk.dtu.compute.se.pisd.roborally.model;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
+import dk.dtu.compute.se.pisd.roborally.controller.ConveyorBelt;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -67,6 +68,7 @@ public class Board extends Subject {
             }
         }
         this.stepMode = false;
+        setupConveyor();
         //setupWalls();
     }
     /*
@@ -79,6 +81,22 @@ public class Board extends Subject {
 
     }
     */
+    public void setupConveyor() {
+        addConveyorBelt(2, 2, Heading.EAST);
+        addConveyorBelt(3,2, Heading.SOUTH);
+        addConveyorBelt(3,3,Heading.WEST);
+        addConveyorBelt(2,3,Heading.NORTH);
+        // Ovenfor er conveyorbelts, og der kan tilføjes flere ved bare at indtaste koordinaterne
+    }
+
+    public void addConveyorBelt(int x, int y, Heading heading) {
+        Space space = getSpace(x, y);
+        if (space != null) {
+            ConveyorBelt conveyorBelt = new ConveyorBelt();
+            conveyorBelt.setHeading(heading);
+            space.addAction(conveyorBelt);
+        }
+    }
 
     public boolean hasWall(Space space, Heading heading) {
         if (space.getWalls().contains(heading)) {
