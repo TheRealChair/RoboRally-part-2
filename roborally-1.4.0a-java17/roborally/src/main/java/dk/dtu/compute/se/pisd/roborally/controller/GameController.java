@@ -50,7 +50,7 @@ public class GameController {
             Space space = player.getSpace();
             Heading heading = player.getHeading();
 
-            if (!board.hasWall(space, heading)) {
+
             Space target = board.getNeighbour(space, heading);
             if (target != null) {
                 try {
@@ -61,8 +61,8 @@ public class GameController {
                     // (which would be very bad style).
                 }
             }
+
         }
-    }
     }
 
     /**
