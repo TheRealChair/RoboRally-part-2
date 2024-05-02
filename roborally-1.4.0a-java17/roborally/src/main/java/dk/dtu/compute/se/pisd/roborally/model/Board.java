@@ -71,6 +71,10 @@ public class Board extends Subject {
         setupCheckpoints();
     }
 
+    /**
+     * Sets up the walls on the board.
+     * @Author Kasparas
+     */
     public void setupWalls() {
         getSpace(1, 1).addWall(Heading.NORTH);
         getSpace(1, 1).addWall(Heading.EAST);
@@ -80,7 +84,11 @@ public class Board extends Subject {
 
     }
 
-
+    /**
+     * Sets up the checkpoints on the board.
+     * @Param id the id of the checkpoint
+     * @Author Balder Jacobsen
+     */
     public void setupCheckpoints() {
         getSpace(1, 1).addCheckpoint(new Checkpoint(1));
         getSpace(4, 4).addCheckpoint(new Checkpoint(2));
@@ -89,6 +97,13 @@ public class Board extends Subject {
         // Ovenfor er checkpoints, og der kan tilføjes flere ved bare at indtaste koordinaterne
     }
 
+    /**
+     * Checks if a wall is present in the given space in the given direction.
+     * @param space
+     * @param heading
+     * @Author Kasparas
+     * @return
+     */
     public boolean hasWall(Space space, Heading heading) {
         if (space.getWalls().contains(heading)) {
             return true;

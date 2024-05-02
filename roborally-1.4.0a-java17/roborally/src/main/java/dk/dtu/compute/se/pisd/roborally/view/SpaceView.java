@@ -154,6 +154,10 @@ public class SpaceView extends StackPane implements ViewObserver {
         this.getChildren().add(line);
     }
 
+    /**
+     * Draw the checkpoints on the board.
+     * @Author Balder Jacobsen
+     */
     public  void drawCheckpoints() {
         for (Checkpoint checkpoint : space.getCheckpoints()) {
             drawCheckpoint(checkpoint);

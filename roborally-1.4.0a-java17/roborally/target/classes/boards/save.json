@@ -83,7 +83,7 @@
       ],
       "commandCards": [
         {
-          "card": "Fwd",
+          "card": "Back Up",
           "visible": true
         },
         {
@@ -91,15 +91,7 @@
           "visible": true
         },
         {
-          "card": "Back Up",
-          "visible": true
-        },
-        {
-          "card": "Turn Left",
-          "visible": true
-        },
-        {
-          "card": "Left OR Right",
+          "card": "Fwd",
           "visible": true
         },
         {
@@ -107,11 +99,19 @@
           "visible": true
         },
         {
-          "card": "Fwd",
+          "card": "Turn Left",
           "visible": true
         },
         {
-          "card": "Fast Fwd",
+          "card": "Super Fast Fwd",
+          "visible": true
+        },
+        {
+          "card": "Super Fast Fwd",
+          "visible": true
+        },
+        {
+          "card": "Turn Left",
           "visible": true
         }
       ]
@@ -141,15 +141,11 @@
       ],
       "commandCards": [
         {
-          "card": "Super Fast Fwd",
+          "card": "U-Turn",
           "visible": true
         },
         {
-          "card": "Turn Left",
-          "visible": true
-        },
-        {
-          "card": "Super Fast Fwd",
+          "card": "Fwd",
           "visible": true
         },
         {
@@ -157,7 +153,15 @@
           "visible": true
         },
         {
-          "card": "Turn Left",
+          "card": "Fast Fwd",
+          "visible": true
+        },
+        {
+          "card": "Fwd",
+          "visible": true
+        },
+        {
+          "card": "Left OR Right",
           "visible": true
         },
         {
@@ -166,10 +170,6 @@
         },
         {
           "card": "Turn Left",
-          "visible": true
-        },
-        {
-          "card": "Super Fast Fwd",
           "visible": true
         }
       ]
