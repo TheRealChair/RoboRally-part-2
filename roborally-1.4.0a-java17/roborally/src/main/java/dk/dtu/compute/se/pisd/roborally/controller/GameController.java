@@ -220,7 +220,6 @@ public class GameController {
     public void executePrograms() {
         board.setStepMode(false);
         continuePrograms();
-        checkLaserDamage();
     }
 
     public void executeStep() {
@@ -354,7 +353,7 @@ public class GameController {
             Player player = board.getPlayer(i);
             if (player != null && player.getSpace() != null && player.getSpace().hasLaser(player.getHeading())) {
                 System.out.println("Damage taken");
-                player.takeDamage(1); // Reduce player's health by 1 if they are on a space with a laser
+                player.takeDamage(1); 
             }
         }
     }
