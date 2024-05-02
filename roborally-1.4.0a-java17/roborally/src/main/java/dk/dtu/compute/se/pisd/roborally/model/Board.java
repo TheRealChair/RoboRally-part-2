@@ -75,7 +75,7 @@ public class Board extends Subject {
         }
         initializePrePitPos();
         this.stepMode = false;
-        setupWalls();
+        //setupWalls();
         setupCheckpoints();
     }
     /*
