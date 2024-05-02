@@ -8,7 +8,12 @@
         "EAST"
       ],
       "actions": [],
-      "checkpoints": [],
+      "checkpoints": [
+        {
+          "id": 1,
+          "observers": []
+        }
+      ],
       "x": 1,
       "y": 1
     },
@@ -18,7 +23,12 @@
         "WEST"
       ],
       "actions": [],
-      "checkpoints": [],
+      "checkpoints": [
+        {
+          "id": 2,
+          "observers": []
+        }
+      ],
       "x": 4,
       "y": 4
     }
@@ -32,11 +42,15 @@
       "heading": "EAST",
       "cards": [
         {
+          "card": "Turn Right",
+          "visible": true
+        },
+        {
           "card": "Super Fast Fwd",
           "visible": true
         },
         {
-          "card": "Back Up",
+          "card": "Turn Left",
           "visible": true
         },
         {
@@ -44,23 +58,19 @@
           "visible": true
         },
         {
+          "card": "Fast Fwd",
+          "visible": true
+        },
+        {
           "card": "Left OR Right",
           "visible": true
         },
         {
-          "card": "Fast Fwd",
+          "card": "Turn Right",
           "visible": true
         },
         {
-          "card": "Fast Fwd",
-          "visible": true
-        },
-        {
-          "card": "Super Fast Fwd",
-          "visible": true
-        },
-        {
-          "card": "Fast Fwd",
+          "card": "Turn Right",
           "visible": true
         }
       ]
@@ -73,15 +83,27 @@
       "heading": "EAST",
       "cards": [
         {
+          "card": "Fast Fwd",
+          "visible": true
+        },
+        {
+          "card": "Fast Fwd",
+          "visible": true
+        },
+        {
+          "card": "Fast Fwd",
+          "visible": true
+        },
+        {
+          "card": "Back Up",
+          "visible": true
+        },
+        {
           "card": "Turn Left",
           "visible": true
         },
         {
-          "card": "Turn Right",
-          "visible": true
-        },
-        {
-          "card": "Super Fast Fwd",
+          "card": "Fast Fwd",
           "visible": true
         },
         {
@@ -90,18 +112,6 @@
         },
         {
           "card": "U-Turn",
-          "visible": true
-        },
-        {
-          "card": "Back Up",
-          "visible": true
-        },
-        {
-          "card": "Fwd",
-          "visible": true
-        },
-        {
-          "card": "Turn Left",
           "visible": true
         }
       ]
