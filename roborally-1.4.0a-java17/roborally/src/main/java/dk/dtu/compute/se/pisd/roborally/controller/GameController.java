@@ -89,6 +89,10 @@ public class GameController {
                     }
                 }
             }
+            if(player.hasBeenInPit){
+                player.hasBeenInPit = false;
+                break;
+            }
         }
     }
     /**
@@ -112,6 +116,10 @@ public class GameController {
                         // (which would be very bad style).
                     }
                 }
+            }
+            if(player.hasBeenInPit){
+                player.hasBeenInPit = false;
+                break;
             }
         }
     }
@@ -334,6 +342,10 @@ public class GameController {
                     this.turnRight(player);
                     this.turnRight(player);
                     this.moveForward(player);
+                    if (player.hasBeenInPit) {
+                        player.hasBeenInPit = false;
+                        break;
+                    }
                     this.turnRight(player);
                     this.turnRight(player);
                     break;

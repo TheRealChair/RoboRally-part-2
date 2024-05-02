@@ -8,7 +8,7 @@ import java.util.List;
 public class LoadPlayers {
 
     public static void loadPlayer(Board result, PlayerTemplate playerTemplate) {
-        Player player = new Player(result, playerTemplate.color, playerTemplate.name);
+        Player player = new Player(result, playerTemplate.color, playerTemplate.name, false);
         int x = playerTemplate.x;
         int y = playerTemplate.y;
         if (x >= 0 && y >= 0 && x < result.width && y < result.height) {

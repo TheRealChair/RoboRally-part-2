@@ -26,6 +26,7 @@ import dk.dtu.compute.se.pisd.roborally.model.Checkpoint;
 import dk.dtu.compute.se.pisd.roborally.model.Heading;
 import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
+import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -33,6 +34,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeLineCap;
 import org.jetbrains.annotations.NotNull;
 
@@ -49,6 +51,10 @@ public class SpaceView extends StackPane implements ViewObserver {
 
     public final Space space;
 
+    private Group playerLayer;
+    private Group pitLayer;
+    private Group rebootLayer;
+
 
     public SpaceView(@NotNull Space space) {
         this.space = space;
@@ -61,6 +67,13 @@ public class SpaceView extends StackPane implements ViewObserver {
         this.setPrefHeight(SPACE_HEIGHT);
         this.setMinHeight(SPACE_HEIGHT);
         this.setMaxHeight(SPACE_HEIGHT);
+
+        playerLayer = new Group();
+        pitLayer = new Group();
+        rebootLayer = new Group();
+
+        // Add layers to the scene graph in the desired order
+        getChildren().addAll(pitLayer, rebootLayer, playerLayer);
 
         if ((space.x + space.y) % 2 == 0) {
             double imageWidth = 60.0; // adjust to desired width in pixels
@@ -186,8 +199,23 @@ public class SpaceView extends StackPane implements ViewObserver {
     @Override
     public void updateView(Subject subject) {
         if (subject == this.space) {
+            updatePit();
+            updateReboot();
             updatePlayer();
         }
     }
 
+    public void updatePit() {
+        if (space.isPit()) {
+            Rectangle pit = new Rectangle(SPACE_WIDTH, SPACE_HEIGHT, Color.BLACK);
+            pitLayer.getChildren().add(pit);
+        }
+    }
+
+    public void updateReboot() {
+        if (space.x == 7 && space.y == 0) {
+            Rectangle reboot = new Rectangle(SPACE_WIDTH, SPACE_HEIGHT, Color.LIGHTGREEN);
+            rebootLayer.getChildren().add(reboot);
+        }
+    }
 }

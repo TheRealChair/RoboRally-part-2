@@ -43,7 +43,7 @@ public class Board extends Subject {
 
     private Integer gameId;
 
-    private final Space[][] spaces;
+    public static Space[][] spaces;
 
     private final List<Player> players = new ArrayList<>();
 
@@ -56,25 +56,29 @@ public class Board extends Subject {
 
     private boolean stepMode;
 
+    public static boolean[][] pits;
+
+    public static final int[][] prePitPos = {
+            {2, 3}, {4, 6}, {6,1}
+    };
+
     public Board(int width, int height) {
         this.width = width;
         this.height = height;
         spaces = new Space[width][height];
+        pits = new boolean[width][height];
         for (int x = 0; x < width; x++) {
             for(int y = 0; y < height; y++) {
                 Space space = new Space(this, x, y);
                 spaces[x][y] = space;
             }
         }
+        initializePrePitPos();
         this.stepMode = false;
         setupWalls();
         setupCheckpoints();
     }
-
-    /**
-     * Sets up the walls on the board.
-     * @Author Kasparas
-     */
+    /*
     public void setupWalls() {
         getSpace(1, 1).addWall(Heading.NORTH);
         getSpace(1, 1).addWall(Heading.EAST);
@@ -82,6 +86,18 @@ public class Board extends Subject {
         getSpace(4, 4).addWall(Heading.WEST);
         // Ovenfor er væggene, og der kan tilføjes flere ved bare at indtaste koordinaterne
 
+    }
+    */
+    public void initializePrePitPos() {
+        for(int[] pitPos : prePitPos){
+            int x = pitPos[0];
+            int y = pitPos[1];
+            if (x >= 0 && x < width && y >= 0 && y < height) {
+                Pits.addPit(x, y);
+            } else {
+                System.out.println("Pit coordinates out of bounds: " + x + ", " + y);
+            }
+        }
     }
 
     /**
@@ -256,12 +272,32 @@ public class Board extends Subject {
                 x = (x + 1) % width;
                 break;
         }
-        Heading reverse = Heading.values()[(heading.ordinal() + 2)% Heading.values().length];
-        Space result = getSpace(x, y);
-        if (result != null) {
-            if (result.getWalls().contains(reverse)) {
-                return null;
+
+        // Check if the new position is within bounds
+        if (x < 0 || x >= width || y < 0 || y >= height) {
+            // Treat out-of-bounds movement as falling into a pit
+            Player player = space.getPlayer();
+            if (player != null) {
+                player.hasBeenInPit = true;
+                player.rebootPosition(); // Reset player position
             }
+            return null;
+        }
+
+        Heading reverse = Heading.values()[(heading.ordinal() + 2) % Heading.values().length];
+        Space result = getSpace(x, y);
+        if (result != null && result.getWalls().contains(reverse)) {
+            return null; // Hit a wall on the other side
+        }
+
+        // Check if the new position is a pit
+        if (result != null && result.isPit()) {
+            Player player = space.getPlayer();
+            if (player != null) {
+                player.hasBeenInPit = true;
+                player.rebootPosition(); // Reset player position
+            }
+            return null;
         }
         return result;
     }
