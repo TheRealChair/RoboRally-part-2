@@ -87,6 +87,7 @@ public class Board extends Subject {
         getSpace(1, 1).addWall(Heading.EAST);
         getSpace(4, 4).addWall(Heading.SOUTH);
         getSpace(4, 4).addWall(Heading.WEST);
+        getSpace(6, 3).addWall(Heading.WEST);
         // Ovenfor er væggene, og der kan tilføjes flere ved bare at indtaste koordinaterne
 
     }

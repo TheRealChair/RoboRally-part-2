@@ -62,9 +62,13 @@ public class Space extends Subject {
     }
 
     public void addWall(Heading heading) {
-        if (!walls.contains(heading)) {
-            walls.add(heading);
-            notifyChange();
+        if (x >= 0 && x < board.width && y >= 0 && y < board.height) {
+            if (!walls.contains(heading)) {
+                walls.add(heading);
+                notifyChange();
+            }
+        } else {
+            System.out.println("Wall coordinates out of bounds: " + x + ", " + y);
         }
     }
 

@@ -74,6 +74,16 @@
       "y": 1
     },
     {
+      "walls": [
+        "WEST"
+      ],
+      "actions": [],
+      "checkpoints": [],
+      "pits": [],
+      "x": 6,
+      "y": 3
+    },
+    {
       "walls": [],
       "actions": [],
       "checkpoints": [
@@ -139,35 +149,35 @@
       ],
       "commandCards": [
         {
-          "card": "Back Up",
+          "card": "Again",
           "visible": true
         },
         {
-          "card": "Super Fast Fwd",
+          "card": "Turn Left",
           "visible": true
         },
         {
-          "card": "Left OR Right",
+          "card": "Turn Right",
           "visible": true
         },
         {
-          "card": "Super Fast Fwd",
+          "card": "Move 3",
           "visible": true
         },
         {
-          "card": "Back Up",
+          "card": "Move 2",
           "visible": true
         },
         {
-          "card": "Super Fast Fwd",
+          "card": "Again",
           "visible": true
         },
         {
-          "card": "Back Up",
+          "card": "Move 3",
           "visible": true
         },
         {
-          "card": "Left OR Right",
+          "card": "Turn Right",
           "visible": true
         }
       ]
@@ -197,7 +207,11 @@
       ],
       "commandCards": [
         {
-          "card": "Left OR Right",
+          "card": "Move 3",
+          "visible": true
+        },
+        {
+          "card": "Back Up",
           "visible": true
         },
         {
@@ -205,11 +219,7 @@
           "visible": true
         },
         {
-          "card": "Turn Left",
-          "visible": true
-        },
-        {
-          "card": "Fwd",
+          "card": "Move 2",
           "visible": true
         },
         {
@@ -217,7 +227,7 @@
           "visible": true
         },
         {
-          "card": "Turn Left",
+          "card": "Move 3",
           "visible": true
         },
         {
@@ -225,7 +235,7 @@
           "visible": true
         },
         {
-          "card": "Fwd",
+          "card": "Turn Right",
           "visible": true
         }
       ]
