@@ -102,6 +102,7 @@ public class SpaceView extends StackPane implements ViewObserver {
         drawWalls();
         drawCheckpoints();
         drawPits();
+        drawReboots();
 
         Player player = space.getPlayer();
         if (player != null) {
@@ -198,7 +199,7 @@ public class SpaceView extends StackPane implements ViewObserver {
     public void updateView(Subject subject) {
         if (subject == this.space) {
             updatePit();
-            updateReboot();
+            //updateReboot();
             updatePlayer();
         }
     }
@@ -237,16 +238,27 @@ public class SpaceView extends StackPane implements ViewObserver {
         BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, backgroundSize);
         this.setBackground(new Background(backgroundImage));
     }
-
-    public void updateReboot() {
-        if (space.x == 7 && space.y == 0) {
-            double imageWidth = 60.0; // adjust to desired width in pixels
-            double imageHeight = 60.0;
-            BackgroundSize backgroundSize = new BackgroundSize(imageWidth, imageHeight, false, false, false, false);
-            String imagePath = "BoardPics/respawn.png";
-            Image image = new Image(imagePath);
-            BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, backgroundSize);
-            this.setBackground(new Background(backgroundImage));
+    public void drawReboots() {
+        for (Reboots reboot : space.getReboots()) {
+            drawReboot(reboot);
         }
+    }
+
+    public void drawReboot(Reboots reboots) {
+        double rebootSize = 10;
+        Polygon polygon = new Polygon();
+        polygon.getPoints().addAll(new Double[]{
+                0.0, 0.0,
+                rebootSize, 0.0,
+                rebootSize, rebootSize,
+                0.0, rebootSize
+        });
+        double imageWidth = 60.0; // adjust to desired width in pixels
+        double imageHeight = 60.0;
+        BackgroundSize backgroundSize = new BackgroundSize(imageWidth, imageHeight, false, false, false, false);
+        String imagePath = "BoardPics/respawn.png";
+        Image image = new Image(imagePath);
+        BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, backgroundSize);
+        this.setBackground(new Background(backgroundImage));
     }
 }

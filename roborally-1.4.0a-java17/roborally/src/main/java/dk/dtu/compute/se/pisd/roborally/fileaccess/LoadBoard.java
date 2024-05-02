@@ -84,6 +84,9 @@ public class LoadBoard {
                     for (Pits pit : spaceTemplate.pits){
                         space.getPits().add(pit);
                     }
+                    for (Reboots reboot : spaceTemplate.reboot){
+                        space.getReboots().add(reboot);
+                    }
                 }
             }
 
@@ -131,7 +134,10 @@ public class LoadBoard {
         for (int i=0; i<board.width; i++) {
             for (int j=0; j<board.height; j++) {
                 Space space = board.getSpace(i,j);
-                if (!space.getWalls().isEmpty() || !space.getActions().isEmpty() || !space.getCheckpoints().isEmpty() || !space.getPits().isEmpty()) {
+                if (!space.getWalls().isEmpty() || !space.getActions().isEmpty()
+                                                || !space.getCheckpoints().isEmpty()
+                                                || !space.getPits().isEmpty()
+                                                || !space.getReboots().isEmpty()) {
                     SpaceTemplate spaceTemplate = new SpaceTemplate();
                     spaceTemplate.x = space.x;
                     spaceTemplate.y = space.y;
@@ -139,10 +145,15 @@ public class LoadBoard {
                     spaceTemplate.walls.addAll(space.getWalls());
                     spaceTemplate.checkpoints.addAll(space.getCheckpoints());
                     spaceTemplate.pits.addAll(space.getPits());
+                    spaceTemplate.reboot.addAll(space.getReboots());
                     template.spaces.add(spaceTemplate);
+
                     }
+
                 }
+
             }
+
         for (Player player : board.getPlayers()) {
             template.players.add(new PlayerTemplate(player));
         }

@@ -44,7 +44,7 @@ public class Space extends Subject {
     private List<FieldAction> actions = new ArrayList<>();
     private List<Checkpoint> checkpoints = new ArrayList<>();
     private List<Pits> pits = new ArrayList<>();
-
+    private List<Reboots> reboots = new ArrayList<>();
 
     public final Board board;
 
@@ -80,6 +80,12 @@ public class Space extends Subject {
             notifyChange();
         }
     }
+    public void addReboot(Reboots reboot) {
+        if (!reboots.contains(reboot)) {
+            reboots.add(reboot);
+            notifyChange();
+        }
+    }
 
     public Player getPlayer() {
         return player;
@@ -109,6 +115,7 @@ public class Space extends Subject {
         return actions;
     }
 
+
     public List<Checkpoint> getCheckpoints() {
         return checkpoints;
     }
@@ -117,8 +124,10 @@ public class Space extends Subject {
         return pits;
     }
     public boolean isPit(){
-
         return !pits.isEmpty();
+    }
+    public List<Reboots> getReboots() {
+        return reboots;
     }
 
     /*
@@ -134,6 +143,8 @@ public class Space extends Subject {
         // notify the space of these changes by calling this method.
         notifyChange();
     }
+
+
     /*
     public boolean isPit(){
         return isPit;

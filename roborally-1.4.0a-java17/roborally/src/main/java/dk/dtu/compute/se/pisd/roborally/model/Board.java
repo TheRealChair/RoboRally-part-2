@@ -80,6 +80,7 @@ public class Board extends Subject {
         setupWalls();
         setupCheckpoints();
         setupPits();
+        setupReboot();
     }
 
     public void setupWalls() {
@@ -90,7 +91,6 @@ public class Board extends Subject {
         // Ovenfor er væggene, og der kan tilføjes flere ved bare at indtaste koordinaterne
 
     }
-
 
     /**
      * Sets up the checkpoints on the board.
@@ -132,6 +132,20 @@ public class Board extends Subject {
             }
         }
         // Ovenfor er pits, og der kan tilføjes flere ved bare at indtaste koordinaterne
+    }
+    public void setupReboot (){
+        int[][] rebootPosition = {
+                {7, 0}
+        };
+        for(int i = 0; i < rebootPosition.length; i++){
+            int x = rebootPosition[i][0];
+            int y = rebootPosition[i][1];
+            if (x >= 0 && x < width && y >= 0 && y < height) {
+                getSpace(x, y).addReboot(new Reboots());
+            } else {
+                System.out.println("Reboot coordinates out of bounds: " + x + ", " + y);
+            }
+        }
     }
 
 

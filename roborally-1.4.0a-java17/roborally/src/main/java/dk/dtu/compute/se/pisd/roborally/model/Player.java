@@ -134,8 +134,8 @@ public class Player extends Subject {
 
     public void rebootPosition() {
         Player playerAtReboot = null;
-        if (this.board.getSpace(Reboot.getX(), Reboot.getY()) != null) {
-            playerAtReboot = this.board.getSpace(Reboot.getX(), Reboot.getY()).getPlayer();
+        if (this.board.getSpace(Reboots.getX(), Reboots.getY()) != null) {
+            playerAtReboot = this.board.getSpace(Reboots.getX(), Reboots.getY()).getPlayer();
             if (playerAtReboot != null) {
                 GameController gameController = new GameController(board);
                 gameController.moveForward(playerAtReboot);
@@ -144,7 +144,7 @@ public class Player extends Subject {
         clearRegisters();
         this.space.setPlayer(null);
         this.setHeading(SOUTH);
-        this.space = this.board.getSpace(Reboot.getX(), Reboot.getY());
+        this.space = this.board.getSpace(Reboots.getX(), Reboots.getY());
         this.space.setPlayer(this);
     }
 

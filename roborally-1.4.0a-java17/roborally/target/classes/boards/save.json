@@ -1,6 +1,6 @@
 {
   "width": 12,
-  "height": 10,
+  "height": 5,
   "spaces": [
     {
       "walls": [
@@ -8,6 +8,7 @@
         "EAST"
       ],
       "actions": [],
+      "reboot": [],
       "checkpoints": [
         {
           "id": 1,
@@ -21,6 +22,7 @@
     {
       "walls": [],
       "actions": [],
+      "reboot": [],
       "checkpoints": [],
       "pits": [
         {
@@ -37,6 +39,7 @@
         "WEST"
       ],
       "actions": [],
+      "reboot": [],
       "checkpoints": [
         {
           "id": 2,
@@ -50,19 +53,7 @@
     {
       "walls": [],
       "actions": [],
-      "checkpoints": [],
-      "pits": [
-        {
-          "x": 0,
-          "y": 0
-        }
-      ],
-      "x": 4,
-      "y": 6
-    },
-    {
-      "walls": [],
-      "actions": [],
+      "reboot": [],
       "checkpoints": [],
       "pits": [
         {
@@ -76,50 +67,22 @@
     {
       "walls": [],
       "actions": [],
-      "checkpoints": [
-        {
-          "id": 4,
-          "observers": []
-        }
+      "reboot": [
+        {}
       ],
-      "pits": [],
-      "x": 6,
-      "y": 9
-    },
-    {
-      "walls": [],
-      "actions": [],
-      "checkpoints": [
-        {
-          "id": 3,
-          "observers": []
-        }
-      ],
+      "checkpoints": [],
       "pits": [],
       "x": 7,
-      "y": 8
-    },
-    {
-      "walls": [],
-      "actions": [],
-      "checkpoints": [],
-      "pits": [
-        {
-          "x": 0,
-          "y": 0
-        }
-      ],
-      "x": 8,
-      "y": 8
+      "y": 0
     }
   ],
   "players": [
     {
       "name": "Player 1",
       "color": "red",
-      "x": 0,
+      "x": 7,
       "y": 0,
-      "heading": "EAST",
+      "heading": "SOUTH",
       "programmingCards": [
         {
           "visible": true
@@ -139,35 +102,35 @@
       ],
       "commandCards": [
         {
-          "card": "Back Up",
+          "card": "Turn Right",
           "visible": true
         },
         {
-          "card": "Super Fast Fwd",
+          "card": "U-Turn",
           "visible": true
         },
         {
-          "card": "Left OR Right",
+          "card": "Move 2",
           "visible": true
         },
         {
-          "card": "Super Fast Fwd",
+          "card": "Move 3",
           "visible": true
         },
         {
-          "card": "Back Up",
+          "card": "Move 1",
           "visible": true
         },
         {
-          "card": "Super Fast Fwd",
+          "card": "Turn Right",
           "visible": true
         },
         {
-          "card": "Back Up",
+          "card": "Turn Left",
           "visible": true
         },
         {
-          "card": "Left OR Right",
+          "card": "Move 3",
           "visible": true
         }
       ]
@@ -201,15 +164,23 @@
           "visible": true
         },
         {
-          "card": "Turn Left",
+          "card": "Left OR Right",
           "visible": true
         },
         {
-          "card": "Turn Left",
+          "card": "Move 1",
           "visible": true
         },
         {
-          "card": "Fwd",
+          "card": "Turn Right",
+          "visible": true
+        },
+        {
+          "card": "Again",
+          "visible": true
+        },
+        {
+          "card": "Move 3",
           "visible": true
         },
         {
@@ -217,15 +188,7 @@
           "visible": true
         },
         {
-          "card": "Turn Left",
-          "visible": true
-        },
-        {
-          "card": "Left OR Right",
-          "visible": true
-        },
-        {
-          "card": "Fwd",
+          "card": "Move 1",
           "visible": true
         }
       ]
