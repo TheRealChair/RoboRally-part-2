@@ -220,6 +220,7 @@ public class GameController {
     public void executePrograms() {
         board.setStepMode(false);
         continuePrograms();
+        checkLaserDamage();
     }
 
     public void executeStep() {
@@ -256,6 +257,7 @@ public class GameController {
                         startProgrammingPhase();
                     }
                 }
+                checkLaserDamage();
             } else {
                 // this should not happen
                 assert false;
@@ -328,6 +330,7 @@ public class GameController {
         board.setPhase(Phase.PROGRAMMING);
         board.setCurrentPlayer(board.getPlayer(0));
         board.setStep(0);
+        
 
         for (int i = 0; i < board.getPlayersNumber(); i++) {
             Player player = board.getPlayer(i);
@@ -345,6 +348,18 @@ public class GameController {
             }
         }
     }
+
+    private void checkLaserDamage() {
+        for (int i = 0; i < board.getPlayersNumber(); i++) {
+            Player player = board.getPlayer(i);
+            if (player != null && player.getSpace() != null && player.getSpace().hasLaser(player.getHeading())) {
+                System.out.println("Damage taken");
+                player.takeDamage(1); // Reduce player's health by 1 if they are on a space with a laser
+            }
+        }
+    }
+
+    
 
     private CommandCard generateRandomCommandCard() {
         Command[] commands = Command.values();

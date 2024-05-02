@@ -42,6 +42,8 @@ public class Player extends Subject {
     private String name;
     private String color;
 
+    private int health = 3;
+
     private Space space;
     private Heading heading = SOUTH;
 
@@ -131,6 +133,18 @@ public class Player extends Subject {
 
     public CommandCardField getCardField(int i) {
         return cards[i];
+    }
+
+    public void takeDamage(int damage) {
+        health -= damage;
+        if (health < 0) {
+            health = 0;
+        }
+        notifyChange(); // Notify observers of the change in health
+    }
+
+    public int getHealth() {
+        return health;
     }
 
 }

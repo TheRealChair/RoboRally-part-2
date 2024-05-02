@@ -26,6 +26,7 @@ import dk.dtu.compute.se.pisd.roborally.controller.FieldAction;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * ...
@@ -39,6 +40,8 @@ public class Space extends Subject {
 
     private List<Heading> walls = new ArrayList<>();
     private List<FieldAction> actions = new ArrayList<>();
+    private Optional<Laser> laser = Optional.empty();
+    private List<Heading> lasers = new ArrayList<>();
 
     public final Board board;
 
@@ -92,6 +95,21 @@ public class Space extends Subject {
         // also need to update when some player attributes change, the player can
         // notify the space of these changes by calling this method.
         notifyChange();
+    }
+
+    public void addLaser(Heading heading) {
+        if (!lasers.contains(heading)) {
+            lasers.add(heading);
+            notifyChange();
+        }
+    }
+
+    public boolean hasLaser(Heading heading) {
+        return lasers.contains(heading);
+    }
+    
+    public List<Heading> getLasers() {
+        return lasers;
     }
 
 }

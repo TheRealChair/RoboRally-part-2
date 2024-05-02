@@ -68,8 +68,13 @@ public class Board extends Subject {
         }
         this.stepMode = false;
         setupWalls();
+        setupLasers();
     }
 
+
+    public void setupLasers(){
+        getSpace(4, 4).addLaser(Heading.EAST);
+    }
 
 
     public void setupWalls() {

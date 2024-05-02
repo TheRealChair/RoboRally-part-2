@@ -33,6 +33,8 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeLineCap;
 import org.jetbrains.annotations.NotNull;
+import javafx.scene.shape.Rectangle;
+
 
 /**
  * ...
@@ -76,6 +78,7 @@ public class SpaceView extends StackPane implements ViewObserver {
     private void updatePlayer() {
         this.getChildren().clear();
         drawWalls();
+        drawLasers();
 
         Player player = space.getPlayer();
         if (player != null) {
@@ -137,6 +140,51 @@ public class SpaceView extends StackPane implements ViewObserver {
                 break;
         }
         this.getChildren().add(line);
+    }
+
+    private void drawLasers() {
+        for (Heading heading : space.getLasers()) {
+            drawLaser(heading);
+        }
+    }
+
+    private void drawLaser(Heading heading) {
+        Line laserLine = new Line();
+        laserLine.setStroke(Color.RED);
+        laserLine.setStrokeWidth(3); // Laser line thickness
+    
+        // Assuming the middle of the space for start point
+        double midX = SPACE_WIDTH / 2;
+        double midY = SPACE_HEIGHT / 2;
+        double length = SPACE_WIDTH / 2; // or some other factor
+    
+        switch (heading) {
+            case NORTH:
+                laserLine.setStartX(midX);
+                laserLine.setEndX(midX);
+                laserLine.setStartY(midY);
+                laserLine.setEndY(midY - length);
+                break;
+            case EAST:
+                laserLine.setStartX(midX);
+                laserLine.setEndX(midX + length);
+                laserLine.setStartY(midY);
+                laserLine.setEndY(midY);
+                break;
+            case SOUTH:
+                laserLine.setStartX(midX);
+                laserLine.setEndX(midX);
+                laserLine.setStartY(midY);
+                laserLine.setEndY(midY + length);
+                break;
+            case WEST:
+                laserLine.setStartX(midX);
+                laserLine.setEndX(midX - length);
+                laserLine.setStartY(midY);
+                laserLine.setEndY(midY);
+                break;
+        }
+        this.getChildren().add(laserLine);
     }
     
     
