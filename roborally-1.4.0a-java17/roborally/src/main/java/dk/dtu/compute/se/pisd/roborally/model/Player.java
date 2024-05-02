@@ -125,6 +125,12 @@ public class Player extends Subject {
         }
     }
 
+    public void rebootPosition(){
+        this.space.setPlayer(null);
+        this.space = this.board.getSpace(7,0);
+        this.space.setPlayer(this);
+    }
+
     public CommandCardField getProgramField(int i) {
         return program[i];
     }
