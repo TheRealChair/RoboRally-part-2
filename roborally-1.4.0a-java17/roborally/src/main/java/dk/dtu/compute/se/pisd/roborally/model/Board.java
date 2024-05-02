@@ -83,9 +83,6 @@ public class Board extends Subject {
     */
     public void setupConveyor() {
         addConveyorBelt(2, 2, Heading.EAST);
-        addConveyorBelt(3,2, Heading.SOUTH);
-        addConveyorBelt(3,3,Heading.WEST);
-        addConveyorBelt(2,3,Heading.NORTH);
         // Ovenfor er conveyorbelts, og der kan tilføjes flere ved bare at indtaste koordinaterne
     }
 
