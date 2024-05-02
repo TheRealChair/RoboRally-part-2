@@ -43,7 +43,7 @@ public class Board extends Subject {
 
     private Integer gameId;
 
-    public static Space[][] spaces;
+    private static Space[][] spaces;
 
     private final List<Player> players = new ArrayList<>();
 
@@ -56,29 +56,32 @@ public class Board extends Subject {
 
     private boolean stepMode;
 
+    /*
     public static boolean[][] pits;
 
     public static final int[][] prePitPos = {
             {2, 3}, {4, 6}, {6,1}
     };
+    */
 
     public Board(int width, int height) {
         this.width = width;
         this.height = height;
         spaces = new Space[width][height];
-        pits = new boolean[width][height];
+        //pits = new boolean[width][height];
         for (int x = 0; x < width; x++) {
             for(int y = 0; y < height; y++) {
                 Space space = new Space(this, x, y);
                 spaces[x][y] = space;
             }
         }
-        initializePrePitPos();
+        //initializePrePitPos();
         this.stepMode = false;
-        //setupWalls();
+        setupWalls();
         setupCheckpoints();
+        setupPits();
     }
-    /*
+
     public void setupWalls() {
         getSpace(1, 1).addWall(Heading.NORTH);
         getSpace(1, 1).addWall(Heading.EAST);
@@ -87,24 +90,13 @@ public class Board extends Subject {
         // Ovenfor er væggene, og der kan tilføjes flere ved bare at indtaste koordinaterne
 
     }
-    */
-    public void initializePrePitPos() {
-        for(int[] pitPos : prePitPos){
-            int x = pitPos[0];
-            int y = pitPos[1];
-            if (x >= 0 && x < width && y >= 0 && y < height) {
-                Pits.addPit(x, y);
-            } else {
-                System.out.println("Pit coordinates out of bounds: " + x + ", " + y);
-            }
-        }
-    }
+
 
     /**
      * Sets up the checkpoints on the board.
      * @Param id the id of the checkpoint
      * @Author Balder Jacobsen
-     */
+*/
     public void setupCheckpoints() {
         getSpace(1, 1).addCheckpoint(new Checkpoint(1));
         getSpace(4, 4).addCheckpoint(new Checkpoint(2));
@@ -112,6 +104,15 @@ public class Board extends Subject {
         getSpace(6,9).addCheckpoint(new Checkpoint(4));
         // Ovenfor er checkpoints, og der kan tilføjes flere ved bare at indtaste koordinaterne
     }
+    public void setupPits() {
+        getSpace(2, 3).addPit(new Pits());
+        getSpace(4, 6).addPit(new Pits());
+        getSpace(6, 1).addPit(new Pits());
+        getSpace(8, 8).addPit(new Pits());
+        // Ovenfor er pits, og der kan tilføjes flere ved bare at indtaste koordinaterne
+    }
+
+
 
     /**
      * Checks if a wall is present in the given space in the given direction.
@@ -340,3 +341,16 @@ public class Board extends Subject {
         return players.toArray(new Player[0]);
     }
 }
+/*
+    public void initializePrePitPos() {
+        for(int[] pitPos : prePitPos){
+            int x = pitPos[0];
+            int y = pitPos[1];
+            if (x >= 0 && x < width && y >= 0 && y < height) {
+                Pits.addPit(x, y);
+            } else {
+                System.out.println("Pit coordinates out of bounds: " + x + ", " + y);
+            }
+        }
+    }
+*/

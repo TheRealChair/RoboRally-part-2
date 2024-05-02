@@ -27,6 +27,7 @@ import dk.dtu.compute.se.pisd.roborally.controller.FieldAction;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * ...
  *
@@ -41,8 +42,9 @@ public class Space extends Subject {
 
     private List<Heading> walls = new ArrayList<>();
     private List<FieldAction> actions = new ArrayList<>();
-
     private List<Checkpoint> checkpoints = new ArrayList<>();
+    private List<Pits> pits = new ArrayList<>();
+
 
     public final Board board;
 
@@ -69,6 +71,12 @@ public class Space extends Subject {
     public void addCheckpoint(Checkpoint checkpoint) {
         if (!checkpoints.contains(checkpoint)) {
             checkpoints.add(checkpoint);
+            notifyChange();
+        }
+    }
+    public void addPit(Pits pit){
+        if (!pits.contains(pit)){
+            pits.add(pit);
             notifyChange();
         }
     }
@@ -105,13 +113,28 @@ public class Space extends Subject {
         return checkpoints;
     }
 
+    public List<Pits> getPits(){
+        return pits;
+    }
+    public boolean isPit(){
+
+        return !pits.isEmpty();
+    }
+
+    /*
+    public List<Pits> getPits() {
+        isPit = pits[x][y];
+        return List.of();
+    }
+    */
+
     void playerChanged() {
         // This is a minor hack; since some views that are registered with the space
         // also need to update when some player attributes change, the player can
         // notify the space of these changes by calling this method.
         notifyChange();
     }
-
+    /*
     public boolean isPit(){
         return isPit;
     }
@@ -120,6 +143,8 @@ public class Space extends Subject {
         isPit = pit;
         notifyChange();
     }
+
+     */
 
 
 }

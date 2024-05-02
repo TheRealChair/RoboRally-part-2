@@ -81,6 +81,9 @@ public class LoadBoard {
                     for (Checkpoint checkpoint : spaceTemplate.checkpoints) {
                         space.getCheckpoints().add(checkpoint);
                     }
+                    for (Pits pit : spaceTemplate.pits){
+                        space.getPits().add(pit);
+                    }
                 }
             }
 
@@ -128,13 +131,14 @@ public class LoadBoard {
         for (int i=0; i<board.width; i++) {
             for (int j=0; j<board.height; j++) {
                 Space space = board.getSpace(i,j);
-                if (!space.getWalls().isEmpty() || !space.getActions().isEmpty() || !space.getCheckpoints().isEmpty()) {
+                if (!space.getWalls().isEmpty() || !space.getActions().isEmpty() || !space.getCheckpoints().isEmpty() || !space.getPits().isEmpty()) {
                     SpaceTemplate spaceTemplate = new SpaceTemplate();
                     spaceTemplate.x = space.x;
                     spaceTemplate.y = space.y;
                     spaceTemplate.actions.addAll(space.getActions());
                     spaceTemplate.walls.addAll(space.getWalls());
                     spaceTemplate.checkpoints.addAll(space.getCheckpoints());
+                    spaceTemplate.pits.addAll(space.getPits());
                     template.spaces.add(spaceTemplate);
                     }
                 }

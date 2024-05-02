@@ -22,10 +22,7 @@
 package dk.dtu.compute.se.pisd.roborally.view;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
-import dk.dtu.compute.se.pisd.roborally.model.Checkpoint;
-import dk.dtu.compute.se.pisd.roborally.model.Heading;
-import dk.dtu.compute.se.pisd.roborally.model.Player;
-import dk.dtu.compute.se.pisd.roborally.model.Space;
+import dk.dtu.compute.se.pisd.roborally.model.*;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -104,6 +101,7 @@ public class SpaceView extends StackPane implements ViewObserver {
         this.getChildren().clear();
         drawWalls();
         drawCheckpoints();
+        drawPits();
 
         Player player = space.getPlayer();
         if (player != null) {
@@ -207,15 +205,48 @@ public class SpaceView extends StackPane implements ViewObserver {
 
     public void updatePit() {
         if (space.isPit()) {
-            Rectangle pit = new Rectangle(SPACE_WIDTH, SPACE_HEIGHT, Color.BLACK);
-            pitLayer.getChildren().add(pit);
+            double imageWidth = 60.0; // adjust to desired width in pixels
+            double imageHeight = 60.0;
+            BackgroundSize backgroundSize = new BackgroundSize(imageWidth, imageHeight, false, false, false, false);
+            String imagePath = "BoardPics/hole.png";
+            Image image = new Image(imagePath);
+            BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, backgroundSize);
+            this.setBackground(new Background(backgroundImage));
         }
+    }
+
+    public void drawPits() {
+        for (Pits pit : space.getPits()) {
+            drawPit(pit);
+        }
+    }
+    public void drawPit(Pits pit) {
+        double pitSize = 10;
+        Polygon polygon = new Polygon();
+        polygon.getPoints().addAll(new Double[]{
+                0.0, 0.0,
+                pitSize, 0.0,
+                pitSize, pitSize,
+                0.0, pitSize
+        });
+        double imageWidth = 60.0; // adjust to desired width in pixels
+        double imageHeight = 60.0;
+        BackgroundSize backgroundSize = new BackgroundSize(imageWidth, imageHeight, false, false, false, false);
+        String imagePath = "BoardPics/hole.png";
+        Image image = new Image(imagePath);
+        BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, backgroundSize);
+        this.setBackground(new Background(backgroundImage));
     }
 
     public void updateReboot() {
         if (space.x == 7 && space.y == 0) {
-            Rectangle reboot = new Rectangle(SPACE_WIDTH, SPACE_HEIGHT, Color.LIGHTGREEN);
-            rebootLayer.getChildren().add(reboot);
+            double imageWidth = 60.0; // adjust to desired width in pixels
+            double imageHeight = 60.0;
+            BackgroundSize backgroundSize = new BackgroundSize(imageWidth, imageHeight, false, false, false, false);
+            String imagePath = "BoardPics/respawn.png";
+            Image image = new Image(imagePath);
+            BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, backgroundSize);
+            this.setBackground(new Background(backgroundImage));
         }
     }
 }

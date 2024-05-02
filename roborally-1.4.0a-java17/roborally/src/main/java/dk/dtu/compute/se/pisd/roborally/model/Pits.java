@@ -6,10 +6,4 @@ public class Pits {
     private int y;
 
 
-    public static void addPit(int x, int y){
-        Board.pits[x][y] = true;
-        Board.spaces[x][y].setPit(true);
-    }
-
-
 }
