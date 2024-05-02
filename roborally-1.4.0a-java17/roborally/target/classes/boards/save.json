@@ -6,12 +6,24 @@
     {
       "name": "Player 1",
       "color": "red",
-      "x": 4,
+      "x": 3,
       "y": 4,
       "heading": "EAST",
       "cards": [
         {
-          "card": "Fast Fwd",
+          "card": "Back Up",
+          "visible": true
+        },
+        {
+          "card": "Back Up",
+          "visible": true
+        },
+        {
+          "card": "Back Up",
+          "visible": true
+        },
+        {
+          "card": "Back Up",
           "visible": true
         },
         {
@@ -23,23 +35,11 @@
           "visible": true
         },
         {
+          "card": "Turn Left",
+          "visible": true
+        },
+        {
           "card": "Left OR Right",
-          "visible": true
-        },
-        {
-          "card": "Fwd",
-          "visible": true
-        },
-        {
-          "card": "U-Turn",
-          "visible": true
-        },
-        {
-          "card": "Fwd",
-          "visible": true
-        },
-        {
-          "card": "U-Turn",
           "visible": true
         }
       ]
@@ -47,16 +47,12 @@
     {
       "name": "Player 2",
       "color": "green",
-      "x": 3,
-      "y": 8,
-      "heading": "EAST",
+      "x": 4,
+      "y": 4,
+      "heading": "WEST",
       "cards": [
         {
-          "card": "Fast Fwd",
-          "visible": true
-        },
-        {
-          "card": "Fast Fwd",
+          "card": "Turn Right",
           "visible": true
         },
         {
@@ -72,15 +68,19 @@
           "visible": true
         },
         {
+          "card": "Turn Left",
+          "visible": true
+        },
+        {
+          "card": "Turn Left",
+          "visible": true
+        },
+        {
           "card": "Fwd",
           "visible": true
         },
         {
-          "card": "Turn Right",
-          "visible": true
-        },
-        {
-          "card": "Fast Fwd",
+          "card": "U-Turn",
           "visible": true
         }
       ]
