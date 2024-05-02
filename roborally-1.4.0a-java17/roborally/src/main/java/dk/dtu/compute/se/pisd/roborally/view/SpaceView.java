@@ -28,7 +28,8 @@ import dk.dtu.compute.se.pisd.roborally.model.Player;
 import dk.dtu.compute.se.pisd.roborally.model.Space;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.layout.StackPane;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Line;
@@ -62,9 +63,21 @@ public class SpaceView extends StackPane implements ViewObserver {
         this.setMaxHeight(SPACE_HEIGHT);
 
         if ((space.x + space.y) % 2 == 0) {
-            this.setStyle("-fx-background-color: white;");
+            double imageWidth = 60.0; // adjust to desired width in pixels
+            double imageHeight = 60.0; // adjust to desired height in pixels
+
+            BackgroundSize backgroundSize = new BackgroundSize(imageWidth, imageHeight, false, false, false, false);
+            Image image = new Image("BoardPics/empty.png");
+            BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, backgroundSize);
+            this.setBackground(new Background(backgroundImage));
         } else {
-            this.setStyle("-fx-background-color: black;");
+            Image image = new Image("BoardPics/empty.png");
+            double imageWidth = 60.0; // adjust to desired width in pixels
+            double imageHeight = 60.0; // adjust to desired height in pixels
+
+            BackgroundSize backgroundSize = new BackgroundSize(imageWidth, imageHeight, false, false, false, false);
+            BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, backgroundSize);
+            this.setBackground(new Background(backgroundImage));
         }
 
         // updatePlayer();
@@ -104,7 +117,7 @@ public class SpaceView extends StackPane implements ViewObserver {
     private void drawWall(Heading heading) {
         double wallThickness = 5;
         Line line = new Line();
-        line.setStroke(Color.YELLOW);
+        line.setStroke(Color.ORANGE);
         line.setStrokeWidth(wallThickness);
     
         double offset = wallThickness / 2;
@@ -150,17 +163,18 @@ public class SpaceView extends StackPane implements ViewObserver {
         double checkpointSize = 10;
         Polygon polygon = new Polygon();
         polygon.getPoints().addAll(new Double[]{
-            0.0, 0.0,
-            checkpointSize, 0.0,
-            checkpointSize, checkpointSize,
-            0.0, checkpointSize
+                0.0, 0.0,
+                checkpointSize, 0.0,
+                checkpointSize, checkpointSize,
+                0.0, checkpointSize
         });
-        polygon.setFill(Color.RED);
-        polygon.setStroke(Color.BLACK);
-        polygon.setStrokeWidth(1);
-        polygon.setTranslateX(SPACE_WIDTH / 2 - checkpointSize / 2);
-        polygon.setTranslateY(SPACE_HEIGHT / 2 - checkpointSize / 2);
-        this.getChildren().add(polygon);
+        double imageWidth = 60.0; // adjust to desired width in pixels
+        double imageHeight = 60.0;
+        BackgroundSize backgroundSize = new BackgroundSize(imageWidth, imageHeight, false, false, false, false);
+        String imagePath = "BoardPics/" + checkpoint.getId() + ".png";
+        Image image = new Image(imagePath);
+        BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, backgroundSize);
+        this.setBackground(new Background(backgroundImage));
     }
     
     
