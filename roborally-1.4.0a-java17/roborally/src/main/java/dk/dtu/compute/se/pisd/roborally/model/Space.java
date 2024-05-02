@@ -49,11 +49,14 @@ public class Space extends Subject {
     public final int x;
     public final int y;
 
+    private boolean isPit;
+
     public Space(Board board, int x, int y) {
         this.board = board;
         this.x = x;
         this.y = y;
         player = null;
+        this.isPit = false;
     }
 
     public void addWall(Heading heading) {
@@ -108,5 +111,15 @@ public class Space extends Subject {
         // notify the space of these changes by calling this method.
         notifyChange();
     }
+
+    public boolean isPit(){
+        return isPit;
+    }
+
+    public void setPit(boolean pit){
+        isPit = pit;
+        notifyChange();
+    }
+
 
 }
