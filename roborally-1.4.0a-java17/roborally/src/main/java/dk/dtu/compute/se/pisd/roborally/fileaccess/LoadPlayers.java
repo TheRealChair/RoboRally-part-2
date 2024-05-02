@@ -28,16 +28,15 @@ public class LoadPlayers {
         for (int i = 0; i < numFields; i++) {
             CommandCardFieldTemplate cardTemplate = commandCards.get(i);
             if (cardTemplate == null || cardTemplate.card == null) continue;
-            CommandCardField cardField = new CommandCardField(player);
+            CommandCardField cardField = player.getCardField(i); // Get the existing CommandCardField
             try {
                 Command command = Command.fromDisplayName(cardTemplate.card);
-                cardField.setCard(new CommandCard(command));
+                cardField.setCard(new CommandCard(command)); // Set the card to the existing CommandCardField
             } catch (IllegalArgumentException e) {
                 System.out.println("Invalid command card name: " + cardTemplate.card);
                 continue;
             }
-            cardField.setVisible(cardTemplate.visible);
-            player.getCardField(i).setCard(cardField.getCard());
+            cardField.setVisible(cardTemplate.visible); // Set the visibility to the existing CommandCardField
         }
     }
     private static void loadProgrammingCards(Player player, List<CommandCardFieldTemplate> programmingCards){
@@ -45,16 +44,15 @@ public class LoadPlayers {
         for (int i = 0; i < numFields; i++) {
             CommandCardFieldTemplate cardTemplate = programmingCards.get(i);
             if (cardTemplate == null || cardTemplate.card == null) continue;
-            CommandCardField cardField = new CommandCardField(player);
+            CommandCardField cardField = player.getProgramField(i); // Get the existing CommandCardField
             try {
                 Command command = Command.fromDisplayName(cardTemplate.card);
-                cardField.setCard(new CommandCard(command));
+                cardField.setCard(new CommandCard(command)); // Set the card to the existing CommandCardField
             } catch (IllegalArgumentException e) {
                 System.out.println("Invalid command card name: " + cardTemplate.card);
                 continue;
             }
-            cardField.setVisible(cardTemplate.visible);
-            player.getProgramField(i).setCard(cardField.getCard());
+            cardField.setVisible(cardTemplate.visible); // Set the visibility to the existing CommandCardField
         }
     }
 }

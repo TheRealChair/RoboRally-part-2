@@ -23,10 +23,7 @@ package dk.dtu.compute.se.pisd.roborally.view;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import dk.dtu.compute.se.pisd.roborally.controller.GameController;
-import dk.dtu.compute.se.pisd.roborally.model.CommandCard;
-import dk.dtu.compute.se.pisd.roborally.model.CommandCardField;
-import dk.dtu.compute.se.pisd.roborally.model.Phase;
-import dk.dtu.compute.se.pisd.roborally.model.Player;
+import dk.dtu.compute.se.pisd.roborally.model.*;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -269,23 +266,27 @@ public class CardFieldView extends GridPane implements ViewObserver {
                         Object object = db.getContent(ROBO_RALLY_CARD);
                         if (object instanceof String) {
                             CommandCardField source = cardFieldFromRepresentation((String) object);
-                            if (source != null && gameController.moveCards(source, cardField)) {
-                                // CommandCard card = source.getCard();
-                                // if (card != null) {
-                                // if (gameController.moveCards(source, cardField)) {
-                                    // cardField.setCard(card);
-                                    success = true;
-                                // }
+                            if (source != null) {
+                                if (source.getCard() != null &&
+                                    source.getCard().command == Command.AGAIN &&
+                                    cardField == cardField.player.getProgramField(0)) {
+                                    success = false;
+                                } else {
+                                    success = gameController.moveCards(source, cardField);
+                                }
                             }
                         }
                     }
                 }
+
+
                 event.setDropCompleted(success);
                 target.setBackground(BG_DEFAULT);
             }
+
+
             event.consume();
         }
-
     }
 
     private class OnDragDoneHandler implements EventHandler<DragEvent> {

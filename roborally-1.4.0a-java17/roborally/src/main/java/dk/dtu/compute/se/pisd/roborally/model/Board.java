@@ -98,11 +98,22 @@ public class Board extends Subject {
      * @Author Balder Jacobsen
 */
     public void setupCheckpoints() {
-        getSpace(1, 1).addCheckpoint(new Checkpoint(1));
-        getSpace(4, 4).addCheckpoint(new Checkpoint(2));
-        getSpace(7,8).addCheckpoint(new Checkpoint(3));
-        getSpace(6,9).addCheckpoint(new Checkpoint(4));
-        // Ovenfor er checkpoints, og der kan tilføjes flere ved bare at indtaste koordinaterne
+        int[][] checkpointPositions = {
+                {1, 1},
+                {4, 4},
+                {7, 8},
+                {6, 9}
+        };
+
+        for (int i = 0; i < checkpointPositions.length; i++) {
+            int x = checkpointPositions[i][0];
+            int y = checkpointPositions[i][1];
+            if (x >= 0 && x < width && y >= 0 && y < height) {
+                getSpace(x, y).addCheckpoint(new Checkpoint(i + 1));
+            } else {
+                System.out.println("Checkpoint coordinates out of bounds: " + x + ", " + y);
+            }
+        }
     }
     public void setupPits() {
         getSpace(2, 3).addPit(new Pits());

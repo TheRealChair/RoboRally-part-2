@@ -42,6 +42,7 @@ public class Player extends Subject {
     final public Board board;
     private String name;
     private String color;
+
     private Space space;
     private Heading heading = EAST;
 
@@ -52,6 +53,7 @@ public class Player extends Subject {
     private CommandCardField[] cards;
 
     public boolean hasBeenInPit = false;
+    private CommandCard lastExecutedCommand;
 
     public Player(@NotNull Board board, String color, @NotNull String name, boolean hasBeenInPit) {
         this.board = board;
@@ -152,6 +154,22 @@ public class Player extends Subject {
         for (CommandCardField commandCardField : program) {
             commandCardField.setCard(null);
         }
+    }
+
+    /**
+     @Author Viktor,
+     @return the last executed command
+     */
+    public CommandCard getLastExecutedCommand() {
+        return lastExecutedCommand;
+    }
+
+    /**
+     @Author Viktor,
+     @param lastExecutedCommand the last executed command
+     */
+    public void setLastExecutedCommand(CommandCard lastExecutedCommand) {
+        this.lastExecutedCommand = lastExecutedCommand;
     }
 
     public CommandCardField getProgramField(int i) {

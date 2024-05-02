@@ -214,7 +214,7 @@ public class PlayerView extends Tab implements ViewObserver {
 
                     if (player.board.getCurrentPlayer() == player) {
                         CommandCard card = player.getProgramField(player.board.getStep()).getCard();
-                        if (card != null && card.command == Command.OPTION_LEFT_RIGHT) {
+                        if (card != null && (card.command == Command.OPTION_LEFT_RIGHT || card.command == Command.AGAIN)) {
                             // Create "Turn Left" button
                             Button turnLeftButton = new Button("Turn Left");
                             turnLeftButton.setOnAction(e -> {

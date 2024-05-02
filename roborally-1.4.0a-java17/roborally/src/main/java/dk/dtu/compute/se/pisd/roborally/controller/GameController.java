@@ -182,6 +182,7 @@ public class GameController {
         player.setSpace(space);
     }
 
+
     /**
      * Moves the current player to the given space, if the space is free.
      * @param space, the space to move the player to
@@ -353,8 +354,21 @@ public class GameController {
                     board.setPhase(Phase.PLAYER_INTERACTION);
                     playerToInteract = player;
                     break;
-                default:
+                case AGAIN:
+                    if (player.getLastExecutedCommand() != null) {
+                        if (player.getLastExecutedCommand().command == Command.OPTION_LEFT_RIGHT){
+                            board.setPhase(Phase.PLAYER_INTERACTION);
+                            playerToInteract = player;
+                        } else {
+                            executeCommand(player, player.getLastExecutedCommand().command);
+                        }
+                    }
+                    break;
+                 default:
                     // DO NOTHING (for now)
+            }
+            if (command != Command.AGAIN) {
+                player.setLastExecutedCommand(new CommandCard(command));
             }
             Space space = player.getSpace();
             for (Checkpoint checkpoint : space.getCheckpoints()) {
@@ -366,7 +380,6 @@ public class GameController {
             }
             checkWinCondition(player);
         }
-
     }
 
     public Player getPlayerToInteract() {
@@ -384,6 +397,7 @@ public class GameController {
             return false;
         }
     }
+
 
     public void startProgrammingPhase() {
         board.setPhase(Phase.PROGRAMMING);
@@ -460,5 +474,4 @@ public class GameController {
             this.heading = heading;
         }
     }
-
 }
