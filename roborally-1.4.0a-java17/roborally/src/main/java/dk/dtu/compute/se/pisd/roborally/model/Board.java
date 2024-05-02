@@ -116,10 +116,21 @@ public class Board extends Subject {
         }
     }
     public void setupPits() {
-        getSpace(2, 3).addPit(new Pits());
-        getSpace(4, 6).addPit(new Pits());
-        getSpace(6, 1).addPit(new Pits());
-        getSpace(8, 8).addPit(new Pits());
+        int[][] pitPositions = {
+                {2, 3},
+                {4, 6},
+                {6, 1},
+                {8, 8}
+        };
+        for(int i = 0; i < pitPositions.length; i++){
+            int x = pitPositions[i][0];
+            int y = pitPositions[i][1];
+            if (x >= 0 && x < width && y >= 0 && y < height) {
+                getSpace(x, y).addPit(new Pits());
+            } else {
+                System.out.println("Pit coordinates out of bounds: " + x + ", " + y);
+            }
+        }
         // Ovenfor er pits, og der kan tilføjes flere ved bare at indtaste koordinaterne
     }
 
