@@ -6,73 +6,12 @@
     {
       "name": "Player 1",
       "color": "red",
-      "x": 3,
-      "y": 4,
+      "x": 0,
+      "y": 0,
       "heading": "EAST",
       "cards": [
         {
-          "card": "Back Up",
-          "visible": true
-        },
-        {
-          "card": "Back Up",
-          "visible": true
-        },
-        {
-          "card": "Back Up",
-          "visible": true
-        },
-        {
-          "card": "Back Up",
-          "visible": true
-        },
-        {
-          "card": "Back Up",
-          "visible": true
-        },
-        {
-          "card": "Left OR Right",
-          "visible": true
-        },
-        {
-          "card": "Turn Left",
-          "visible": true
-        },
-        {
-          "card": "Left OR Right",
-          "visible": true
-        }
-      ]
-    },
-    {
-      "name": "Player 2",
-      "color": "green",
-      "x": 4,
-      "y": 4,
-      "heading": "WEST",
-      "cards": [
-        {
-          "card": "Turn Right",
-          "visible": true
-        },
-        {
-          "card": "Left OR Right",
-          "visible": true
-        },
-        {
-          "card": "Turn Left",
-          "visible": true
-        },
-        {
-          "card": "Left OR Right",
-          "visible": true
-        },
-        {
-          "card": "Turn Left",
-          "visible": true
-        },
-        {
-          "card": "Turn Left",
+          "card": "Fwd",
           "visible": true
         },
         {
@@ -80,7 +19,68 @@
           "visible": true
         },
         {
+          "card": "Left OR Right",
+          "visible": true
+        },
+        {
+          "card": "Turn Right",
+          "visible": true
+        },
+        {
+          "card": "Turn Left",
+          "visible": true
+        },
+        {
+          "card": "Super Fast Fwd",
+          "visible": true
+        },
+        {
+          "card": "Fwd",
+          "visible": true
+        },
+        {
+          "card": "Turn Left",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "name": "Player 2",
+      "color": "green",
+      "x": 0,
+      "y": 2,
+      "heading": "EAST",
+      "cards": [
+        {
+          "card": "Super Fast Fwd",
+          "visible": true
+        },
+        {
+          "card": "Left OR Right",
+          "visible": true
+        },
+        {
+          "card": "Turn Left",
+          "visible": true
+        },
+        {
           "card": "U-Turn",
+          "visible": true
+        },
+        {
+          "card": "U-Turn",
+          "visible": true
+        },
+        {
+          "card": "Turn Left",
+          "visible": true
+        },
+        {
+          "card": "Fast Fwd",
+          "visible": true
+        },
+        {
+          "card": "Back Up",
           "visible": true
         }
       ]
