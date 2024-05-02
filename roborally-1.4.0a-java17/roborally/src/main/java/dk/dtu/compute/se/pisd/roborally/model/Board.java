@@ -67,10 +67,10 @@ public class Board extends Subject {
             }
         }
         this.stepMode = false;
-        //setupWalls();
-        //setupCheckpoints();
+        setupWalls();
+        setupCheckpoints();
     }
-/*
+
     public void setupWalls() {
         getSpace(1, 1).addWall(Heading.NORTH);
         getSpace(1, 1).addWall(Heading.EAST);
@@ -79,8 +79,8 @@ public class Board extends Subject {
         // Ovenfor er væggene, og der kan tilføjes flere ved bare at indtaste koordinaterne
 
     }
-    */
-/*
+
+
     public void setupCheckpoints() {
         getSpace(1, 1).addCheckpoint(new Checkpoint(1));
         getSpace(4, 4).addCheckpoint(new Checkpoint(2));
@@ -88,7 +88,7 @@ public class Board extends Subject {
         getSpace(6,9).addCheckpoint(new Checkpoint(4));
         // Ovenfor er checkpoints, og der kan tilføjes flere ved bare at indtaste koordinaterne
     }
-*/
+
     public boolean hasWall(Space space, Heading heading) {
         if (space.getWalls().contains(heading)) {
             return true;
