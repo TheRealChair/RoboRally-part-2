@@ -247,12 +247,32 @@ public class Board extends Subject {
                 x = (x + 1) % width;
                 break;
         }
-        Heading reverse = Heading.values()[(heading.ordinal() + 2)% Heading.values().length];
-        Space result = getSpace(x, y);
-        if (result != null) {
-            if (result.getWalls().contains(reverse)) {
-                return null;
+
+        // Check if the new position is within bounds
+        if (x < 0 || x >= width || y < 0 || y >= height) {
+            // Treat out-of-bounds movement as falling into a pit
+            Player player = space.getPlayer();
+            if (player != null) {
+                player.hasBeenInPit = true;
+                player.rebootPosition(); // Reset player position
             }
+            return null;
+        }
+
+        Heading reverse = Heading.values()[(heading.ordinal() + 2) % Heading.values().length];
+        Space result = getSpace(x, y);
+        if (result != null && result.getWalls().contains(reverse)) {
+            return null; // Hit a wall on the other side
+        }
+
+        // Check if the new position is a pit
+        if (result != null && result.isPit()) {
+            Player player = space.getPlayer();
+            if (player != null) {
+                player.hasBeenInPit = true;
+                player.rebootPosition(); // Reset player position
+            }
+            return null;
         }
         return result;
     }

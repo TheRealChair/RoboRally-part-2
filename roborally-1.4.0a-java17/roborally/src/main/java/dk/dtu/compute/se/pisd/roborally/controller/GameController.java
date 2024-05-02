@@ -342,6 +342,10 @@ public class GameController {
                     this.turnRight(player);
                     this.turnRight(player);
                     this.moveForward(player);
+                    if (player.hasBeenInPit) {
+                        player.hasBeenInPit = false;
+                        break;
+                    }
                     this.turnRight(player);
                     this.turnRight(player);
                     break;
