@@ -31,34 +31,54 @@
       ],
       "x": 4,
       "y": 4
+    },
+    {
+      "walls": [],
+      "actions": [],
+      "checkpoints": [
+        {
+          "id": 4,
+          "observers": []
+        }
+      ],
+      "x": 6,
+      "y": 9
+    },
+    {
+      "walls": [],
+      "actions": [],
+      "checkpoints": [
+        {
+          "id": 3,
+          "observers": []
+        }
+      ],
+      "x": 7,
+      "y": 8
     }
   ],
   "players": [
     {
       "name": "Player 1",
       "color": "red",
-      "x": 0,
-      "y": 0,
+      "x": 1,
+      "y": 1,
       "heading": "EAST",
       "cards": [
-        {
-          "card": "Turn Right",
-          "visible": true
-        },
-        {
-          "card": "Super Fast Fwd",
-          "visible": true
-        },
         {
           "card": "Turn Left",
           "visible": true
         },
         {
-          "card": "U-Turn",
+          "card": "Fwd",
           "visible": true
         },
         {
-          "card": "Fast Fwd",
+          "card": "Turn Right",
+          "visible": true
+        },
+        {
+          "card": "Back Up",
           "visible": true
         },
         {
@@ -70,7 +90,11 @@
           "visible": true
         },
         {
-          "card": "Turn Right",
+          "card": "Left OR Right",
+          "visible": true
+        },
+        {
+          "card": "Back Up",
           "visible": true
         }
       ]
@@ -83,7 +107,15 @@
       "heading": "EAST",
       "cards": [
         {
-          "card": "Fast Fwd",
+          "card": "U-Turn",
+          "visible": true
+        },
+        {
+          "card": "Fwd",
+          "visible": true
+        },
+        {
+          "card": "Fwd",
           "visible": true
         },
         {
@@ -103,15 +135,7 @@
           "visible": true
         },
         {
-          "card": "Fast Fwd",
-          "visible": true
-        },
-        {
-          "card": "Turn Right",
-          "visible": true
-        },
-        {
-          "card": "U-Turn",
+          "card": "Left OR Right",
           "visible": true
         }
       ]
