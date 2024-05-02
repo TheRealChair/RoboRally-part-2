@@ -88,6 +88,7 @@ public class Board extends Subject {
         getSpace(1, 1).addWall(Heading.EAST);
         getSpace(4, 4).addWall(Heading.SOUTH);
         getSpace(4, 4).addWall(Heading.WEST);
+        getSpace(6, 3).addWall(Heading.WEST);
         // Ovenfor er væggene, og der kan tilføjes flere ved bare at indtaste koordinaterne
 
     }
@@ -297,16 +298,16 @@ public class Board extends Subject {
         int y = space.y;
         switch (heading) {
             case SOUTH:
-                y = (y + 1) % height;
+                y++;
                 break;
             case WEST:
-                x = (x + width - 1) % width;
+                x--;
                 break;
             case NORTH:
-                y = (y + height - 1) % height;
+                y--;
                 break;
             case EAST:
-                x = (x + 1) % width;
+                x++;
                 break;
         }
 
@@ -316,6 +317,7 @@ public class Board extends Subject {
             Player player = space.getPlayer();
             if (player != null) {
                 player.hasBeenInPit = true;
+                System.out.println("player out of bounds");
                 player.rebootPosition(); // Reset player position
             }
             return null;
