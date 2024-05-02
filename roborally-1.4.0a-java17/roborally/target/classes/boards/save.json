@@ -61,8 +61,8 @@
     {
       "name": "Player 1",
       "color": "red",
-      "x": 0,
-      "y": 0,
+      "x": 4,
+      "y": 6,
       "heading": "EAST",
       "programmingCards": [
         {
@@ -83,11 +83,7 @@
       ],
       "commandCards": [
         {
-          "card": "Back Up",
-          "visible": true
-        },
-        {
-          "card": "Fast Fwd",
+          "card": "Super Fast Fwd",
           "visible": true
         },
         {
@@ -95,7 +91,7 @@
           "visible": true
         },
         {
-          "card": "Super Fast Fwd",
+          "card": "Back Up",
           "visible": true
         },
         {
@@ -103,15 +99,19 @@
           "visible": true
         },
         {
-          "card": "Super Fast Fwd",
+          "card": "Fwd",
           "visible": true
         },
         {
-          "card": "Super Fast Fwd",
+          "card": "Turn Right",
           "visible": true
         },
         {
-          "card": "Turn Left",
+          "card": "U-Turn",
+          "visible": true
+        },
+        {
+          "card": "Fast Fwd",
           "visible": true
         }
       ]
@@ -119,9 +119,9 @@
     {
       "name": "Player 2",
       "color": "green",
-      "x": 0,
-      "y": 2,
-      "heading": "EAST",
+      "x": 7,
+      "y": 6,
+      "heading": "NORTH",
       "programmingCards": [
         {
           "visible": true
@@ -141,23 +141,27 @@
       ],
       "commandCards": [
         {
+          "card": "Fwd",
+          "visible": true
+        },
+        {
+          "card": "Super Fast Fwd",
+          "visible": true
+        },
+        {
           "card": "U-Turn",
           "visible": true
         },
         {
-          "card": "Fwd",
+          "card": "Turn Right",
+          "visible": true
+        },
+        {
+          "card": "Super Fast Fwd",
           "visible": true
         },
         {
           "card": "Fast Fwd",
-          "visible": true
-        },
-        {
-          "card": "Fast Fwd",
-          "visible": true
-        },
-        {
-          "card": "Fwd",
           "visible": true
         },
         {
@@ -165,17 +169,13 @@
           "visible": true
         },
         {
-          "card": "Back Up",
-          "visible": true
-        },
-        {
-          "card": "Turn Left",
+          "card": "Fwd",
           "visible": true
         }
       ]
     }
   ],
   "currentPhase": "PROGRAMMING",
-  "currentStep": 0,
-  "currentPlayer": 0
+  "currentStep": 5,
+  "currentPlayer": 1
 }

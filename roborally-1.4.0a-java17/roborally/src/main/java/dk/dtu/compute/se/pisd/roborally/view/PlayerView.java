@@ -167,6 +167,9 @@ public class PlayerView extends Tab implements ViewObserver {
             if (player != null) {
                 pointLabel.setText("Points: " + player.getPoints());
             }
+            if (player != null) {
+                activeCheckPointLabel.setText("Active Checkpoint: " + player.getCurrentCheckpoint());
+            }
 
             if (player.board.getPhase() != Phase.PLAYER_INTERACTION) {
                 if (!programPane.getChildren().contains(buttonPanel)) {
