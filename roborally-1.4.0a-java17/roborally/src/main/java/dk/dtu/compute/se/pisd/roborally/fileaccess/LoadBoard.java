@@ -73,7 +73,11 @@ public class LoadBoard {
                 Space space = result.getSpace(spaceTemplate.x, spaceTemplate.y);
                 if (space != null) {
                     space.getActions().addAll(spaceTemplate.actions);
-                    space.getWalls().addAll(spaceTemplate.walls);
+
+                    // Add walls to the space
+                    for (Heading wall : spaceTemplate.walls) {
+                        space.getWalls().add(wall);
+                    }
                 }
             }
 
@@ -107,7 +111,6 @@ public class LoadBoard {
 
         return null;
     }
-
 
 
 
