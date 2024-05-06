@@ -102,6 +102,8 @@ public class SpaceView extends StackPane implements ViewObserver {
         }
     }
 
+     // @Author: Kasparas
+    // Draws walls
     private void drawWall(Heading heading) {
         double wallThickness = 5;
         Line line = new Line();
@@ -148,15 +150,16 @@ public class SpaceView extends StackPane implements ViewObserver {
         }
     }
 
+     // @Author: Kasparas
+    // Draws lasers... no functionality yet
     private void drawLaser(Heading heading) {
         Line laserLine = new Line();
         laserLine.setStroke(Color.RED);
-        laserLine.setStrokeWidth(3); // Laser line thickness
+        laserLine.setStrokeWidth(3);
     
-        // Assuming the middle of the space for start point
         double midX = SPACE_WIDTH / 2;
         double midY = SPACE_HEIGHT / 2;
-        double length = SPACE_WIDTH / 2; // or some other factor
+        double length = SPACE_WIDTH / 2;
     
         switch (heading) {
             case NORTH:

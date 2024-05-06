@@ -76,7 +76,6 @@ public class Board extends Subject {
         getSpace(4, 4).addLaser(Heading.EAST);
     }
 
-
     public void setupWalls() {
         getSpace(1, 1).addWall(Heading.NORTH);
         getSpace(1, 1).addWall(Heading.EAST);
@@ -85,6 +84,9 @@ public class Board extends Subject {
         // Ovenfor er væggene, og der kan tilføjes flere ved bare at indtaste koordinaterne
     }
 
+
+    // @Author: Kasparas
+    // Checks whether a wall is on the given tile
     public boolean hasWall(Space space, Heading heading) {
         if (space.getWalls().contains(heading)) {
             return true;

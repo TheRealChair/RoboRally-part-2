@@ -135,6 +135,8 @@ public class Player extends Subject {
         return cards[i];
     }
 
+
+    // Temporary method for lasers
     public void takeDamage(int damage) {
         health -= damage;
         if (health < 0) {

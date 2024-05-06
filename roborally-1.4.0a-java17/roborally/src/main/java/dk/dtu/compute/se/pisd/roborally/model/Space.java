@@ -97,6 +97,8 @@ public class Space extends Subject {
         notifyChange();
     }
 
+
+    
     public void addLaser(Heading heading) {
         if (!lasers.contains(heading)) {
             lasers.add(heading);
