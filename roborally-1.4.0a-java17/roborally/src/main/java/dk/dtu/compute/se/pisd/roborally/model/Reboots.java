@@ -1,5 +1,8 @@
 package dk.dtu.compute.se.pisd.roborally.model;
-
+/**
+ * reboot spot class.
+ * @author Victor Mazanti
+ */
 public class Reboots {
 
     private static int x = 7;

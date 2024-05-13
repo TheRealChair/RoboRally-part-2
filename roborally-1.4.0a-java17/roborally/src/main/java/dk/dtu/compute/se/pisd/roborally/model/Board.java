@@ -116,6 +116,10 @@ public class Board extends Subject {
             }
         }
     }
+    /**
+     * setup pits for json.
+     * @author Victor Mazanti, Balder Jacobsen.
+     */
     public void setupPits() {
         int[][] pitPositions = {
                 {2, 3},
@@ -134,6 +138,10 @@ public class Board extends Subject {
         }
         // Ovenfor er pits, og der kan tilføjes flere ved bare at indtaste koordinaterne
     }
+    /**
+     * setup reboot for json.
+     * @author Victor Mazanti, Balder Jacobsen.
+     */
     public void setupReboot (){
         int[][] rebootPosition = {
                 {7, 0}
@@ -155,7 +163,7 @@ public class Board extends Subject {
      * Checks if a wall is present in the given space in the given direction.
      * @param space
      * @param heading
-     * @Author Kasparas
+     * @author Kasparas
      * @return
      */
     public boolean hasWall(Space space, Heading heading) {

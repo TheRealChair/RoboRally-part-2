@@ -215,7 +215,10 @@ public class SpaceView extends StackPane implements ViewObserver {
             this.setBackground(new Background(backgroundImage));
         }
     }
-
+    /**
+     * Draw the pits on the board.
+     * @author Victor Mazanti, Balder Jacobsen
+     */
     public void drawPits() {
         for (Pits pit : space.getPits()) {
             drawPit(pit);

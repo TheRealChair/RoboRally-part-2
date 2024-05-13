@@ -78,12 +78,20 @@ public class Space extends Subject {
             notifyChange();
         }
     }
+    /**
+     * add pits on the board.
+     * @author Victor Mazanti
+     */
     public void addPit(Pits pit){
         if (!pits.contains(pit)){
             pits.add(pit);
             notifyChange();
         }
     }
+    /**
+     * add reboot spot on the board.
+     * @author Victor Mazanti
+     */
     public void addReboot(Reboots reboot) {
         if (!reboots.contains(reboot)) {
             reboots.add(reboot);

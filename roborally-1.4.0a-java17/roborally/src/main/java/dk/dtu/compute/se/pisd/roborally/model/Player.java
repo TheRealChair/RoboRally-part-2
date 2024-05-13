@@ -131,7 +131,10 @@ public class Player extends Subject {
             }
         }
     }
-
+    /**
+     * move the player to reboot position.
+     * @author Victor Mazanti
+     */
     public void rebootPosition() {
         Player playerAtReboot = null;
         if (this.board.getSpace(Reboots.getX(), Reboots.getY()) != null) {
@@ -149,7 +152,10 @@ public class Player extends Subject {
     }
 
 
-
+    /**
+     * clear player register.
+     * @author Victor Mazanti
+     */
     public void clearRegisters(){
         for (CommandCardField commandCardField : program) {
             commandCardField.setCard(null);
@@ -157,7 +163,7 @@ public class Player extends Subject {
     }
 
     /**
-     @Author Viktor,
+     @author Viktor,
      @return the last executed command
      */
     public CommandCard getLastExecutedCommand() {
@@ -165,7 +171,7 @@ public class Player extends Subject {
     }
 
     /**
-     @Author Viktor,
+     @author Viktor,
      @param lastExecutedCommand the last executed command
      */
     public void setLastExecutedCommand(CommandCard lastExecutedCommand) {
