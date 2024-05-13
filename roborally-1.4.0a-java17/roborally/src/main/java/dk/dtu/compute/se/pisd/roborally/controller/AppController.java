@@ -103,10 +103,19 @@ public class AppController implements Observer {
         }
     }
 
+    /**
+         * Loads a game from a file and updates the game state accordingly.
+         * @Author: Karl
+         */
     public void saveGame() {
         LoadBoard.saveBoard(gameController.board, "save");
     }
 
+
+    /**
+         * Loads a game from a file and updates the game state accordingly.
+         * @Author: Karl
+         */
     public void loadGame() {
         Board board = LoadBoard.loadBoard("save");
         gameController = new GameController(board);

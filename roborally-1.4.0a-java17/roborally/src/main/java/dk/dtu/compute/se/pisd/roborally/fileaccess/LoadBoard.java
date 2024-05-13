@@ -45,6 +45,14 @@ public class LoadBoard {
     private static final String DEFAULTBOARD = "defaultboard";
     private static final String JSON_EXT = "json";
 
+
+    /**
+         * Loads a game board from a JSON file specified by the board name.
+         * If the board cannot be loaded, it defaults to loading the default board.
+         * @param boardname the name of the board to load
+         * @return the loaded Board object, or null if the board cannot be loaded
+         * @Author: Karl
+         */
     public static Board loadBoard(String boardname) {
         if (boardname == null) {
             boardname = DEFAULTBOARD;
@@ -122,7 +130,13 @@ public class LoadBoard {
     }
 
 
-
+    /**
+         * Saves the current state of a board to a JSON file specified by the name.
+         * Utilizes Gson for serializing the board and its components to a pretty-printed JSON format.
+         * @param board the board to save
+         * @param name the filename for saving the board
+         * @Author: Karl
+         */
     public static void saveBoard(Board board, String name) {
         BoardTemplate template = new BoardTemplate();
         template.width = board.width;

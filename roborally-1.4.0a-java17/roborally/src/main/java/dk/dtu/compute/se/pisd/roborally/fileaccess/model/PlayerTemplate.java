@@ -6,6 +6,13 @@ import dk.dtu.compute.se.pisd.roborally.model.Player;
 import java.util.List;
 import java.util.ArrayList;
 
+/**
+ * Represents a template for serializing and deserializing player data.
+ * This class is used to facilitate the conversion of a Player object into a format
+ * that can be easily written to and read from a file, specifically for setting up
+ * game state or saving it.
+ */
+
 public class PlayerTemplate {
     public String name;
     public String color;
