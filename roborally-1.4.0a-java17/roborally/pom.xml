@@ -119,7 +119,7 @@
 						<manifest>
 							<addClasspath>true</addClasspath>
 							<classpathPrefix>libs/</classpathPrefix>
-							<mainClass>dk.dtu.compute.se.pisd.roborally.RoboRally</mainClass>
+							<mainClass>Gruppe3.roborally.RoboRally</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
@@ -149,7 +149,7 @@
 				<version>3.1.1</version>
 				<configuration>
 					<show>public</show>
-					<overview>src/main/java/dk/dtu/compute/se/pisd/overview.html</overview>
+					<overview>src/main/java/Gruppe3/overview.html</overview>
 				</configuration>
 			</plugin>
 			<plugin>
