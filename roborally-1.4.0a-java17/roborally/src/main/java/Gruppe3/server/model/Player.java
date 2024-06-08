@@ -6,24 +6,24 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
-import java.util.List;
-
 @Entity
-@Table(name = "games")
+@Table(name = "players")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Game {
+public class Player {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column (name = "game_id")
-    private Long gameId;
+    @Column(name = "player_id")
+    private Long playerId;
 
-    private int turn_id;
+    private String playerName;
 
-    @OneToMany(mappedBy = "game")
-    private List<Player> players;
+    private int score;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "game_id")
+    private Game game;
 }
