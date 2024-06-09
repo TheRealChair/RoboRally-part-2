@@ -6,6 +6,5 @@ INSERT INTO authors (name, birthday) VALUES
 -- Insert data into games table with unique game_id values
 INSERT INTO games (turn_id) VALUES
 (1),
-(2),
-(3);
-
+(1),
+(1);
