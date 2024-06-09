@@ -96,3 +96,4 @@ fabric.properties
 # Android studio 3.1+ serialized cache file
 .idea/caches/build_file_checksums.ser
 
+roborally-1.4.0a-java17/roborally/target/classes/boards/save.json
