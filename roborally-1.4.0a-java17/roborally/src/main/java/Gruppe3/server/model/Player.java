@@ -1,10 +1,13 @@
 package Gruppe3.server.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Entity
 @Table(name = "players")
@@ -25,5 +28,9 @@ public class Player {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "game_id")
+    @JsonBackReference
     private Game game;
+
+    @OneToMany(mappedBy = "player")
+    private List<Register> registers;
 }

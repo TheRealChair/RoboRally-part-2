@@ -1,5 +1,6 @@
 package Gruppe3.server.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,5 +26,6 @@ public class Game {
     private int turn_id;
 
     @OneToMany(mappedBy = "game")
+    @JsonManagedReference
     private List<Player> players;
 }

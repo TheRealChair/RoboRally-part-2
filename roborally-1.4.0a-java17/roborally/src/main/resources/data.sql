@@ -1,7 +1,3 @@
--- Insert data into authors table
-INSERT INTO authors (name, birthday) VALUES
-('Author1', '1990-01-01'),
-('Author2', '1980-01-01');
 
 -- Insert data into games table with unique game_id values
 INSERT INTO games (turn_id) VALUES
@@ -9,6 +5,7 @@ INSERT INTO games (turn_id) VALUES
 (1),
 (1);
 
-INSERT INTO registers (register_id, card_type) VALUES
-(1, 'FORWARD'),
-(2, 'FORWARD');
+INSERT INTO players (player_name, score, game_id) VALUES
+('Player1', 0, 1),
+('Player2', 0, 1),
+('Player3', 0, 1);
