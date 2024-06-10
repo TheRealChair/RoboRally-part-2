@@ -21,16 +21,20 @@
  */
 package Gruppe3.roborally.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+
 import Gruppe3.designpatterns.observer.Subject;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * ...
- *
- * @author Ekkart Kindler, ekki@dtu.dk
- *
- */
+@Entity
 public class CommandCard extends Subject {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     final public Command command;
 
@@ -41,6 +45,4 @@ public class CommandCard extends Subject {
     public String getName() {
         return command.displayName;
     }
-
-
 }

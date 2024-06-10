@@ -8,3 +8,7 @@ INSERT INTO games (turn_id) VALUES
 (1),
 (1),
 (1);
+
+INSERT INTO registers (register_id, card_type) VALUES
+(1, 'FORWARD'),
+(2, 'FORWARD');
