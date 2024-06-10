@@ -31,6 +31,7 @@ import Gruppe3.roborally.model.Board;
 import Gruppe3.roborally.model.Phase;
 import Gruppe3.roborally.model.Player;
 
+import Gruppe3.server.model.Game;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -41,6 +42,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 
 /**
  * ...
@@ -55,11 +64,15 @@ public class AppController implements Observer {
     final private int BOARD_WIDTH = 12;
     final private int BOARD_HEIGHT = 5;
     final private RoboRally roboRally;
+    private static final String BASE_URL = "http://localhost:8080/games";
+    private RestTemplate restTemplate;
 
     private GameController gameController;
 
-    public AppController(@NotNull RoboRally roboRally) {
+    public AppController(@NotNull RoboRally roboRally, RestTemplate restTemplate) {
+
         this.roboRally = roboRally;
+        this.restTemplate = restTemplate;
     }
 
     public void newGame() {
@@ -70,16 +83,12 @@ public class AppController implements Observer {
 
         if (result.isPresent()) {
             if (gameController != null) {
-                // The UI should not allow this, but in case this happens anyway.
-                // give the user the option to save the game or abort this operation!
                 if (!stopGame()) {
                     return;
                 }
             }
 
-            // XXX the board should eventually be created programmatically or loaded from a file
-            //     here we just create an empty board with the required number of players.
-            Board board = new Board(BOARD_WIDTH ,BOARD_HEIGHT);
+            Board board = new Board(BOARD_WIDTH, BOARD_HEIGHT);
             gameController = new GameController(board);
             int no = result.get();
             int[] startPoints = new int[]{0, 2, 3, 6, 7, 9};
@@ -89,13 +98,40 @@ public class AppController implements Observer {
                 player.setSpace(board.getSpace(0, startPoints[i]));
             }
 
-            // XXX: V2
-            // board.setCurrentPlayer(board.getPlayer(0));
-            gameController.startProgrammingPhase();
+            Game game = new Game();
+            game.setTurn_id(0);
 
+            // Send the new game to the server
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Content-Type", "application/json");
+            HttpEntity<Game> request = new HttpEntity<>(game, headers);
+            ResponseEntity<Game> response = restTemplate.exchange(BASE_URL, HttpMethod.POST, request, Game.class);
+
+            if (response.getStatusCode().is2xxSuccessful()) {
+                System.out.println("Game created successfully: " + response.getBody());
+            } else {
+                throw new RuntimeException("Failed to create game: " + response.getStatusCode());
+            }
+
+            gameController.startProgrammingPhase();
             roboRally.createBoardView(gameController);
         }
     }
+
+    private void sendNewGameToServer(Game game) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type", "application/json");
+        HttpEntity<Game> request = new HttpEntity<>(game, headers);
+        ResponseEntity<Game> response = restTemplate.exchange(BASE_URL + "/new", HttpMethod.POST, request, Game.class);
+
+        if (response.getStatusCode().is2xxSuccessful()) {
+            System.out.println("Game created successfully: " + response.getBody());
+        } else {
+            throw new RuntimeException("Failed to create game: " + response.getStatusCode());
+        }
+    }
+
+
 
     /**
          * Loads a game from a file and updates the game state accordingly.

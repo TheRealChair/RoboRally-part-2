@@ -30,6 +30,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * ...
@@ -53,7 +54,8 @@ public class RoboRally extends Application {
     public void start(Stage primaryStage) {
         stage = primaryStage;
 
-        AppController appController = new AppController(this);
+        RestTemplate restTemplate = new RestTemplate();
+        AppController appController = new AppController(this, restTemplate);
 
         // create the primary scene with the a menu bar and a pane for
         // the board view (which initially is empty); it will be filled
