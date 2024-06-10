@@ -1,6 +1,6 @@
 package Gruppe3.server.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,6 +16,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Game {
 
     @Id
@@ -25,7 +26,4 @@ public class Game {
 
     private int turn_id;
 
-    @OneToMany(mappedBy = "game")
-    @JsonManagedReference
-    private List<Player> players;
 }

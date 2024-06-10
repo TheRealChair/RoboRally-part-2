@@ -28,7 +28,6 @@ public class Player {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "game_id")
-    @JsonBackReference
     private Game game;
 
     @OneToMany(mappedBy = "player")
