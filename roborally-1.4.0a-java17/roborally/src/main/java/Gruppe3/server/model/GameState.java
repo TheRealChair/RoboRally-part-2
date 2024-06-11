@@ -1,4 +1,5 @@
 package Gruppe3.server.model;
+import Gruppe3.server.model.CompositeKeys.GameId_GamePlayerId;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,17 +12,19 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@IdClass(GameId_GamePlayerId.class) // Specify the composite key class
 public class GameState {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "game_stateId")
-    private Long gameStateId;
+    @ManyToOne
+    @JoinColumn(name = "game_id")
+    private Game game;
+
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "player_id")
+    private Player player;
 
     private int register;
     private String card;
-    private Long gamePlayerId;
-    private Long gameId;
-
-
 }

@@ -1,49 +1,31 @@
 package Gruppe3.server.model.CompositeKeys;
 
+import Gruppe3.server.model.Game;
+import Gruppe3.server.model.Player;
+
 import java.io.Serializable;
 import java.util.Objects;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.Column;
+import jakarta.persistence.ManyToOne;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Embeddable
 public class GameId_GamePlayerId implements Serializable {
 
-    @Column(name = "game_id")
-    private Long gameId;
+    @ManyToOne
+    private Game game;
 
-    @Column(name = "game_player_id")
-    private Long gamePlayerId;
+    @ManyToOne
+    private Player player;
 
-    // Default constructor
     public GameId_GamePlayerId() {}
 
-    // Parameterized constructor
-    public GameId_GamePlayerId(Long gameId, Long gamePlayerId) {
-        this.gameId = gameId;
-        this.gamePlayerId = gamePlayerId;
-    }
-
-    // Getters and setters
-    public Long getGameId() {
-        return gameId;
-    }
-
-    public void setGameId(Long gameId) {
-        this.gameId = gameId;
-    }
-
-    public Long getGamePlayerId() {
-        return gamePlayerId;
-    }
-
-    public void setGamePlayerId(Long gamePlayerId) {
-        this.gamePlayerId = gamePlayerId;
-    }
-
-    // hashCode and equals methods
-    @Override
-    public int hashCode() {
-        return Objects.hash(gameId, gamePlayerId);
+    public GameId_GamePlayerId(Game game, Player player) {
+        this.game = game;
+        this.player = player;
     }
 
     @Override
@@ -51,7 +33,12 @@ public class GameId_GamePlayerId implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GameId_GamePlayerId that = (GameId_GamePlayerId) o;
-        return Objects.equals(gameId, that.gameId) &&
-                Objects.equals(gamePlayerId, that.gamePlayerId);
+        return Objects.equals(game, that.game) &&
+                Objects.equals(player, that.player);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(game, player);
     }
 }
