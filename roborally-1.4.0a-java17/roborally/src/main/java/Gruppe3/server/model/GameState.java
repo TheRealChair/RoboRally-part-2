@@ -15,8 +15,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class GameState {
 
-    @EmbeddedId
-    private GameId_GamePlayerId id;
+//    @EmbeddedId
+//    private GameId_GamePlayerId id;
 
     @Column(name = "register_id")
     private int registerId;
@@ -24,13 +24,11 @@ public class GameState {
     @Column(name = "card")
     private Long card;
 
-    @MapsId("gamePlayerId")
-    @ManyToOne
-    @JoinColumn(name = "game_player_id")
-    private Player player;
+    @Column(name = "player")
+    private Long player;
 
-    @MapsId("gameId")
     @ManyToOne
+    @MapsId("gameId")
     @JoinColumn(name = "game_id")
     private Game game;
 }

@@ -3,10 +3,15 @@ package Gruppe3.server.model.CompositeKeys;
 import java.io.Serializable;
 import java.util.Objects;
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.Column;
 
 @Embeddable
 public class GameId_GamePlayerId implements Serializable {
+
+    @Column(name = "game_id")
     private Long gameId;
+
+    @Column(name = "game_player_id")
     private Long gamePlayerId;
 
     // Default constructor

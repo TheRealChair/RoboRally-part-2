@@ -42,7 +42,7 @@ public class GameStateController {
 
         if (optionalRegister.isPresent() && optionalPlayer.isPresent()) {
             GameState gameState = optionalRegister.get();
-            gameState.setPlayer(optionalPlayer.get());
+            //gameState.setPlayer(optionalPlayer.get());
             GameState savedGameState = gameStateRepository.save(gameState);
             return ResponseEntity.ok(savedGameState);
         } else {
