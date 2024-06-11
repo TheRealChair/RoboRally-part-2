@@ -1,6 +1,5 @@
 package Gruppe3.server.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,5 +30,5 @@ public class Player {
     private Game game;
 
     @OneToMany(mappedBy = "player")
-    private List<Register> registers;
+    private List<GameState> gameStates;
 }
