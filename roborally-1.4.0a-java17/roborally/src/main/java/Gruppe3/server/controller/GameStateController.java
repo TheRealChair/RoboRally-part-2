@@ -1,50 +1,73 @@
 package Gruppe3.server.controller;
 
 import Gruppe3.server.model.GameState;
-import Gruppe3.server.model.CompositeKeys.GameId_GamePlayerId;
 import Gruppe3.server.repository.GameStateRepo;
-import Gruppe3.server.model.Player;
-import Gruppe3.server.repository.PlayerRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/registers")
+@RequestMapping("/gameStates")
 public class GameStateController {
 
     private final GameStateRepo gameStateRepository;
-    private final PlayerRepo playerRepository;
 
     @Autowired
-    public GameStateController(GameStateRepo gameStateRepository, PlayerRepo playerRepository) {
+    public GameStateController(GameStateRepo gameStateRepository) {
         this.gameStateRepository = gameStateRepository;
-        this.playerRepository = playerRepository;
     }
 
-    // Get a single register by ID
-    @GetMapping("/{gameId}/{gamePlayerId}")
-    public ResponseEntity<GameState> getRegisterById(@PathVariable Long gameId, @PathVariable Long gamePlayerId) {
-        GameId_GamePlayerId id = new GameId_GamePlayerId(gameId, gamePlayerId);
-        Optional<GameState> register = gameStateRepository.findById(id);
-        return register.map(ResponseEntity::ok)
+    // Get all game states
+    @GetMapping
+    public ResponseEntity<List<GameState>> getGameStates() {
+        List<GameState> gameStateList = gameStateRepository.findAll();
+        return ResponseEntity.ok(gameStateList);
+    }
+
+    // Create a new game state
+    @PostMapping
+    public ResponseEntity<GameState> createGameState(@RequestBody GameState gameState) {
+        GameState savedGameState = gameStateRepository.save(gameState);
+        return ResponseEntity.ok(savedGameState);
+    }
+
+    // Get a single game state by ID
+    @GetMapping("/{id}")
+    public ResponseEntity<GameState> getGameStateById(@PathVariable Long id) {
+        Optional<GameState> gameState = gameStateRepository.findById(id);
+        return gameState.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // Assign a player to a register
-    @PostMapping("/{gameId}/{gamePlayerId}/player/{playerId}")
-    public ResponseEntity<GameState> assignPlayerToRegister(@PathVariable Long gameId, @PathVariable Long gamePlayerId, @PathVariable Long playerId) {
-        GameId_GamePlayerId id = new GameId_GamePlayerId(gameId, gamePlayerId);
-        Optional<GameState> optionalRegister = gameStateRepository.findById(id);
-        Optional<Player> optionalPlayer = playerRepository.findById(playerId);
+    // Update an existing game state
+    @PutMapping("/{id}")
+    public ResponseEntity<GameState> updateGameState(@PathVariable Long id, @RequestBody GameState gameStateDetails) {
+        Optional<GameState> optionalGameState = gameStateRepository.findById(id);
+        if (optionalGameState.isPresent()) {
+            GameState existingGameState = optionalGameState.get();
+            // Update fields accordingly
+            existingGameState.setRegisterId(gameStateDetails.getRegisterId());
+            existingGameState.setCard(gameStateDetails.getCard());
+            existingGameState.setPlayer(gameStateDetails.getPlayer());
+            // Ensure to set the game if necessary
+            // existingGameState.setGame(gameStateDetails.getGame());
+            GameState updatedGameState = gameStateRepository.save(existingGameState);
+            return ResponseEntity.ok(updatedGameState);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
-        if (optionalRegister.isPresent() && optionalPlayer.isPresent()) {
-            GameState gameState = optionalRegister.get();
-            //gameState.setPlayer(optionalPlayer.get());
-            GameState savedGameState = gameStateRepository.save(gameState);
-            return ResponseEntity.ok(savedGameState);
+    // Delete a game state
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteGameState(@PathVariable Long id) {
+        Optional<GameState> gameState = gameStateRepository.findById(id);
+        if (gameState.isPresent()) {
+            gameStateRepository.delete(gameState.get());
+            return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();
         }

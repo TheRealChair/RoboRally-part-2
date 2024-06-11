@@ -4,6 +4,6 @@ import Gruppe3.server.model.GameState;
 import Gruppe3.server.model.CompositeKeys.GameId_GamePlayerId;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface GameStateRepo extends JpaRepository<GameState, GameId_GamePlayerId> {
-    GameState findByGameId_GamePlayerId(GameId_GamePlayerId id);
+public interface GameStateRepo extends JpaRepository<GameState, Long> {
+    GameState findByGameStateId(Long id);
 }
