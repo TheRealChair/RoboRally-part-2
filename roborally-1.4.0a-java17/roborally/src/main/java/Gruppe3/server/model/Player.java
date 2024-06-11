@@ -29,6 +29,6 @@ public class Player {
     @JoinColumn(name = "game_id")
     private Game game;
 
-    @OneToMany(mappedBy = "player")
-    private List<GameState> gameStates;
+
+
 }

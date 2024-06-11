@@ -1,11 +1,12 @@
 package Gruppe3.server.model;
-
 import jakarta.persistence.*;
-
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Table(name = "gameState")
+@Table(name = "game-states")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,17 +18,10 @@ public class GameState {
     @Column(name = "game_stateId")
     private Long gameStateId;
 
-    @Column(name = "register_id")
-    private int registerId;
-
-    @Column(name = "card")
+    private int register;
     private String card;
+    private Long gamePlayerId;
+    private Long gameId;
 
-    @Column(name = "player")
-    private Long player;
-
-    @ManyToOne
-    @JoinColumn(name = "game_id")
-    private Game game;
 
 }

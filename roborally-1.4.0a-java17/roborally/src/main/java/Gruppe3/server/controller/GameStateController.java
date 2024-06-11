@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/gameStates")
+@RequestMapping("/game-states")
 public class GameStateController {
 
     private final GameStateRepo gameStateRepository;
@@ -48,12 +48,11 @@ public class GameStateController {
         Optional<GameState> optionalGameState = gameStateRepository.findById(id);
         if (optionalGameState.isPresent()) {
             GameState existingGameState = optionalGameState.get();
-            // Update fields accordingly
-            existingGameState.setRegisterId(gameStateDetails.getRegisterId());
+            existingGameState.setRegister(gameStateDetails.getRegister());
             existingGameState.setCard(gameStateDetails.getCard());
-            existingGameState.setPlayer(gameStateDetails.getPlayer());
-            // Ensure to set the game if necessary
-            // existingGameState.setGame(gameStateDetails.getGame());
+            existingGameState.setGamePlayerId(gameStateDetails.getGamePlayerId());
+            existingGameState.setGameId(gameStateDetails.getGameId());
+
             GameState updatedGameState = gameStateRepository.save(existingGameState);
             return ResponseEntity.ok(updatedGameState);
         } else {
