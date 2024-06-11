@@ -1,4 +1,4 @@
-package Gruppe3.server.model;
+package Gruppe3.server.model.CompositeKeys;
 
 import java.io.Serializable;
 import java.util.Objects;

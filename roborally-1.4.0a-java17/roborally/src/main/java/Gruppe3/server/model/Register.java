@@ -1,5 +1,6 @@
 package Gruppe3.server.model;
 
+import Gruppe3.server.model.CompositeKeys.RegisterPlayerId;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
