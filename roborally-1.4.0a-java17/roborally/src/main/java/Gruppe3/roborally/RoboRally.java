@@ -26,8 +26,12 @@ import Gruppe3.roborally.controller.GameController;
 import Gruppe3.roborally.view.BoardView;
 import Gruppe3.roborally.view.RoboRallyMenuBar;
 import javafx.application.Application;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.springframework.web.client.RestTemplate;
@@ -41,6 +45,7 @@ import org.springframework.web.client.RestTemplate;
 public class RoboRally extends Application {
 
     private static final int MIN_APP_WIDTH = 600;
+    private static final int MIN_APP_HEIGHT = 200;
 
     private Stage stage;
     private BorderPane boardRoot;
@@ -64,7 +69,31 @@ public class RoboRally extends Application {
         boardRoot = new BorderPane();
         VBox vbox = new VBox(menuBar, boardRoot);
         vbox.setMinWidth(MIN_APP_WIDTH);
+        vbox.setMinHeight(MIN_APP_HEIGHT);
         Scene primaryScene = new Scene(vbox);
+
+        // Create two buttons
+        Button button1 = new Button("New Game");
+        Button button2 = new Button("Join Game");
+
+        button1.setOnAction(e -> appController.newGame());
+        //button2.setOnAction(e -> appController.joinGame());
+
+        VBox vbox1 = new VBox();
+
+        // Create a region to act as a spacer
+        Region spacer = new Region();
+        spacer.setPrefHeight(45);
+
+        // Create a HBox to hold the buttons
+        vbox1.getChildren().addAll(spacer, button1, button2);
+
+        vbox1.setAlignment(Pos.CENTER);
+        vbox1.setSpacing(10);
+
+        // Set the HBox to the center of the BorderPane
+        boardRoot.setCenter(vbox1);
+
 
         stage.setScene(primaryScene);
         stage.setTitle("RoboRally");

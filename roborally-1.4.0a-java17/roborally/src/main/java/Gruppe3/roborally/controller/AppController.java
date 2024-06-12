@@ -81,6 +81,7 @@ public class AppController implements Observer {
         dialog.setHeaderText("Select number of players");
         Optional<Integer> result = dialog.showAndWait();
 
+
         if (result.isPresent()) {
             if (gameController != null) {
                 if (!stopGame()) {
