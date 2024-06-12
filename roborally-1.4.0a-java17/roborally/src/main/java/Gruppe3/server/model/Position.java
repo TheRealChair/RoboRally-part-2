@@ -1,5 +1,6 @@
 package Gruppe3.server.model;
 
+import Gruppe3.server.model.CompositeKeys.GameId_GamePlayerId;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -13,15 +14,18 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@IdClass(GameId_GamePlayerId.class)
 public class Position {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "game_id")
-    private Long gameId;
 
-    @Column(name = "player_id")
-    private Long playerId;
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "game_id")
+    private Game game;
+
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "player_id")
+    private Player player;
 
     @Column(name = "position_x")
     private int positionX;

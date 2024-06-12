@@ -1,5 +1,8 @@
 package Gruppe3.server.controller;
 
+import Gruppe3.server.model.Game;
+import Gruppe3.server.model.GameState;
+import Gruppe3.server.model.Player;
 import Gruppe3.server.model.Position;
 import Gruppe3.server.repository.PositionRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,25 +36,38 @@ public class PositionController {
         return ResponseEntity.ok(savedPosition);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Position> getPositionById(@PathVariable Long id){
-        Optional<Position> position = positionRepository.findById(id);
+    @GetMapping("/{game_id}/{player_id}")
+    public ResponseEntity<Position> getPositionById(@PathVariable("gameId") Long gameId, @PathVariable("playerId") Long playerId){
+        Game game = new Game();
+        game.setGameId(gameId);
+
+        Player player = new Player();
+        player.setPlayerId(playerId);
+
+        Optional<Position> position = positionRepository.findByGameIdAndPlayerId(game, player);
         return position.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Position> updatePosition(@PathVariable Long id, @RequestBody Position positionDetails){
-        Optional<Position> optionalPosition = positionRepository.findById(id);
+    @PutMapping("/{game_id}/{player_id}")
+    public ResponseEntity<Position> updatePosition(@PathVariable("gameId") Long gameId,
+                                                     @PathVariable("playerId") Long playerId,
+                                                     @RequestBody Position positionDetails) {
+        Game game = new Game();
+        game.setGameId(gameId);
+
+        Player player = new Player();
+        player.setPlayerId(playerId);
+
+        Optional<Position> optionalPosition = positionRepository.findByGameIdAndPlayerId(game, player);
         if (optionalPosition.isPresent()) {
             Position existingPosition = optionalPosition.get();
-            existingPosition.setGameId(positionDetails.getGameId());
-            existingPosition.setPlayerId(positionDetails.getPlayerId());
             existingPosition.setPositionX(positionDetails.getPositionX());
             existingPosition.setPositionY(positionDetails.getPositionY());
             existingPosition.setHeading(positionDetails.getHeading());
+
             Position updatedPosition = positionRepository.save(existingPosition);
             return ResponseEntity.ok(updatedPosition);
-        } else{
+        } else {
             return ResponseEntity.notFound().build();
         }
     }
