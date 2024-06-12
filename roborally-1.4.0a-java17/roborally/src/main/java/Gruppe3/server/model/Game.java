@@ -24,6 +24,10 @@ public class Game {
     @Column (name = "game_id")
     private Long gameId;
 
-    private int turn_id;
+    @Column (name = "no_of_players")
+    private int NoOfPlayers;
+
+    @Column (name = "board_id")
+    private int BoardID = 1;
 
 }

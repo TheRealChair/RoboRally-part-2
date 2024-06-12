@@ -99,7 +99,6 @@ public class AppController implements Observer {
             }
 
             Game game = new Game();
-            game.setTurn_id(0);
 
             // Send the new game to the server
             HttpHeaders headers = new HttpHeaders();
