@@ -99,6 +99,7 @@ public class AppController implements Observer {
             }
 
             Game game = new Game();
+            game.setNoOfPlayers(board.getPlayers().length);
 
             // Send the new game to the server
             HttpHeaders headers = new HttpHeaders();
