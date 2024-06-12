@@ -91,8 +91,66 @@
     {
       "name": "Player 1",
       "color": "red",
-      "x": 2,
-      "y": 0,
+      "x": 4,
+      "y": 4,
+      "heading": "SOUTH",
+      "programmingCards": [
+        {
+          "visible": true
+        },
+        {
+          "visible": true
+        },
+        {
+          "visible": true
+        },
+        {
+          "visible": true
+        },
+        {
+          "visible": true
+        }
+      ],
+      "commandCards": [
+        {
+          "card": "Move 3",
+          "visible": true
+        },
+        {
+          "card": "Turn Left",
+          "visible": true
+        },
+        {
+          "card": "Turn Right",
+          "visible": true
+        },
+        {
+          "card": "Move 3",
+          "visible": true
+        },
+        {
+          "card": "Left OR Right",
+          "visible": true
+        },
+        {
+          "card": "Move 2",
+          "visible": true
+        },
+        {
+          "card": "Left OR Right",
+          "visible": true
+        },
+        {
+          "card": "Turn Right",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "name": "Player 2",
+      "color": "green",
+      "x": 3,
+      "y": 2,
       "heading": "WEST",
       "programmingCards": [
         {
@@ -113,89 +171,31 @@
       ],
       "commandCards": [
         {
-          "card": "Move 2",
+          "card": "Move 3",
+          "visible": true
+        },
+        {
+          "card": "Move 3",
+          "visible": true
+        },
+        {
+          "card": "Move 1",
+          "visible": true
+        },
+        {
+          "card": "Turn Left",
+          "visible": true
+        },
+        {
+          "card": "Turn Left",
+          "visible": true
+        },
+        {
+          "card": "Move 3",
           "visible": true
         },
         {
           "card": "Turn Right",
-          "visible": true
-        },
-        {
-          "card": "Turn Right",
-          "visible": true
-        },
-        {
-          "card": "Turn Right",
-          "visible": true
-        },
-        {
-          "card": "U-Turn",
-          "visible": true
-        },
-        {
-          "card": "Move 2",
-          "visible": true
-        },
-        {
-          "card": "Back Up",
-          "visible": true
-        },
-        {
-          "card": "Again",
-          "visible": true
-        }
-      ]
-    },
-    {
-      "name": "Player 2",
-      "color": "green",
-      "x": 0,
-      "y": 2,
-      "heading": "EAST",
-      "programmingCards": [
-        {
-          "visible": true
-        },
-        {
-          "visible": true
-        },
-        {
-          "visible": true
-        },
-        {
-          "visible": true
-        },
-        {
-          "visible": true
-        }
-      ],
-      "commandCards": [
-        {
-          "card": "Back Up",
-          "visible": true
-        },
-        {
-          "card": "Back Up",
-          "visible": true
-        },
-        {
-          "card": "Back Up",
-          "visible": true
-        },
-        {
-          "card": "Again",
-          "visible": true
-        },
-        {
-          "card": "Turn Right",
-          "visible": true
-        },
-        {
-          "card": "Turn Right",
-          "visible": true
-        },
-        {
-          "card": "Left OR Right",
           "visible": true
         },
         {
