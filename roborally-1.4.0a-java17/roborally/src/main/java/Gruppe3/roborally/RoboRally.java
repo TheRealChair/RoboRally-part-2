@@ -59,6 +59,7 @@ public class RoboRally extends Application {
     public void start(Stage primaryStage) {
         stage = primaryStage;
 
+
         RestTemplate restTemplate = new RestTemplate();
         AppController appController = new AppController(this, restTemplate);
 
