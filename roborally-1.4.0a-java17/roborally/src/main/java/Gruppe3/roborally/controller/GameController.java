@@ -460,6 +460,10 @@ public class GameController {
         assert false;
     }
 
+    public Board getBoard() {
+        return board;
+    }
+
 
     class ImpossibleMoveException extends Exception {
 

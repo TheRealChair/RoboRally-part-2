@@ -8,6 +8,8 @@ public class GameResponse {
 
     @JsonProperty("noOfPlayers")
     private int noOfPlayers; // Assuming noOfPlayers is an integer
+    @JsonProperty("boardID")
+    private int boardID; // Assuming boardID is an integer
 
     // Getters and setters
     public String getGameId() {
@@ -24,5 +26,9 @@ public class GameResponse {
 
     public void setNoOfPlayers(int noOfPlayers) {
         this.noOfPlayers = noOfPlayers;
+    }
+
+    public int getBoardID() {
+        return boardID;
     }
 }

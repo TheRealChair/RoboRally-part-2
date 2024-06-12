@@ -88,7 +88,15 @@ public class RoboRally extends Application {
                 throw new RuntimeException(ex);
             }
         });
-        //button2.setOnAction(e -> appController.joinGame());
+        button2.setOnAction(e -> {
+            try {
+                appController.joinGame();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
 
         VBox vbox1 = new VBox();
 
