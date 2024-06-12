@@ -5,7 +5,7 @@ INSERT INTO games (no_of_players, board_id) VALUES
 (3, 1),
 (4, 1);
 
-INSERT INTO players (player_name, score, game_id) VALUES
-('Player1', 0, 1),
-('Player2', 0, 1),
-('Player3', 0, 1);
+INSERT INTO players (score, game_id, game_player_id) VALUES
+(0, 1, 1),
+(0, 1, 2),
+(0, 1, 3);

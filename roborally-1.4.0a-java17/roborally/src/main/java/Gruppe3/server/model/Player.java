@@ -22,13 +22,12 @@ public class Player {
     @Column(name = "player_id")
     private Long playerId;
 
-    private String playerName;
-
-    private int score;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "game_id")
     private Game game;
+
+    @Column(name = "game_player_id")
+    private int GamePlayerID;
 
     @OneToMany(mappedBy = "player")
     private List<Register> registers;
