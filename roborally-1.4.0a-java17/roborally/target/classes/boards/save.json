@@ -65,6 +65,17 @@
       "y": 1
     },
     {
+      "walls": [
+        "WEST"
+      ],
+      "actions": [],
+      "reboot": [],
+      "checkpoints": [],
+      "pits": [],
+      "x": 6,
+      "y": 3
+    },
+    {
       "walls": [],
       "actions": [],
       "reboot": [
@@ -80,9 +91,9 @@
     {
       "name": "Player 1",
       "color": "red",
-      "x": 7,
+      "x": 2,
       "y": 0,
-      "heading": "SOUTH",
+      "heading": "WEST",
       "programmingCards": [
         {
           "visible": true
@@ -102,6 +113,18 @@
       ],
       "commandCards": [
         {
+          "card": "Move 2",
+          "visible": true
+        },
+        {
+          "card": "Turn Right",
+          "visible": true
+        },
+        {
+          "card": "Turn Right",
+          "visible": true
+        },
+        {
           "card": "Turn Right",
           "visible": true
         },
@@ -114,23 +137,11 @@
           "visible": true
         },
         {
-          "card": "Move 3",
+          "card": "Back Up",
           "visible": true
         },
         {
-          "card": "Move 1",
-          "visible": true
-        },
-        {
-          "card": "Turn Right",
-          "visible": true
-        },
-        {
-          "card": "Turn Left",
-          "visible": true
-        },
-        {
-          "card": "Move 3",
+          "card": "Again",
           "visible": true
         }
       ]
@@ -160,19 +171,15 @@
       ],
       "commandCards": [
         {
-          "card": "Left OR Right",
+          "card": "Back Up",
           "visible": true
         },
         {
-          "card": "Left OR Right",
+          "card": "Back Up",
           "visible": true
         },
         {
-          "card": "Move 1",
-          "visible": true
-        },
-        {
-          "card": "Turn Right",
+          "card": "Back Up",
           "visible": true
         },
         {
@@ -180,15 +187,19 @@
           "visible": true
         },
         {
-          "card": "Move 3",
+          "card": "Turn Right",
           "visible": true
         },
         {
-          "card": "U-Turn",
+          "card": "Turn Right",
           "visible": true
         },
         {
-          "card": "Move 1",
+          "card": "Left OR Right",
+          "visible": true
+        },
+        {
+          "card": "Again",
           "visible": true
         }
       ]

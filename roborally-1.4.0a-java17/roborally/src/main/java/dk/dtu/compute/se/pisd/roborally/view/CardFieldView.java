@@ -29,6 +29,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -140,9 +141,35 @@ public class CardFieldView extends GridPane implements ViewObserver {
     @Override
     public void updateView(Subject subject) {
         if (subject == field && subject != null) {
+            this.getChildren().clear();
+
             CommandCard card = field.getCard();
             if (card != null && field.isVisible()) {
-                label.setText(card.getName());
+                String imagePath = switch (card.command) {
+                    case FORWARD -> "CardPics/Move1.png";
+                    case RIGHT -> "CardPics/TurnRight.png";
+                    case LEFT -> "CardPics/TurnLeft.png";
+                    case FAST_FORWARD -> "CardPics/Move2.png";
+                    case SUPER_FAST_FORWARD -> "CardPics/Move3.png";
+                    case U_TURN -> "CardPics/UTurn.png";
+                    case BACK_UP -> "CardPics/BackUp.png";
+                    case OPTION_LEFT_RIGHT -> "CardPics/LeftOrRight.png";
+                    case AGAIN -> "CardPics/Again.png";
+                };
+                if (imagePath != null) {
+                    Image image = new Image(imagePath);
+                    ImageView imageView = new ImageView(image);
+                    imageView.setFitWidth(CARDFIELD_WIDTH);
+                    imageView.setFitHeight(CARDFIELD_HEIGHT);
+
+                    imageView.setMouseTransparent(true);
+
+                    // ADD the imageview to scene
+                    this.getChildren().add(imageView);
+
+                } else {
+                    label.setText(card.getName());
+                }
             } else {
                 label.setText("");
             }
