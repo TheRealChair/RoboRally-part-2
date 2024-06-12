@@ -38,13 +38,9 @@ public class PositionController {
 
     @GetMapping("/{game_id}/{player_id}")
     public ResponseEntity<Position> getPositionById(@PathVariable("gameId") Long gameId, @PathVariable("playerId") Long playerId){
-        Game game = new Game();
-        game.setGameId(gameId);
 
-        Player player = new Player();
-        player.setPlayerId(playerId);
 
-        Optional<Position> position = positionRepository.findByGameIdAndPlayerId(game, player);
+        Optional<Position> position = positionRepository.findByGameIdAndPlayerId(gameId, playerId);
         return position.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
@@ -52,13 +48,8 @@ public class PositionController {
     public ResponseEntity<Position> updatePosition(@PathVariable("gameId") Long gameId,
                                                      @PathVariable("playerId") Long playerId,
                                                      @RequestBody Position positionDetails) {
-        Game game = new Game();
-        game.setGameId(gameId);
 
-        Player player = new Player();
-        player.setPlayerId(playerId);
-
-        Optional<Position> optionalPosition = positionRepository.findByGameIdAndPlayerId(game, player);
+        Optional<Position> optionalPosition = positionRepository.findByGameIdAndPlayerId(gameId, playerId);
         if (optionalPosition.isPresent()) {
             Position existingPosition = optionalPosition.get();
             existingPosition.setPositionX(positionDetails.getPositionX());
@@ -74,13 +65,8 @@ public class PositionController {
     @DeleteMapping("/{game_id}/{player_id}")
     public ResponseEntity<Void> deletePosition(@PathVariable("gameId") Long gameId, @PathVariable("playerId") Long playerId) {
 
-        Game game = new Game();
-        game.setGameId(gameId);
 
-        Player player = new Player();
-        player.setPlayerId(playerId);
-
-        Optional<Position> position = positionRepository.findByGameIdAndPlayerId(game, player);
+        Optional<Position> position = positionRepository.findByGameIdAndPlayerId(gameId, playerId);
         if (position.isPresent()) {
             positionRepository.delete(position.get());
             return ResponseEntity.noContent().build();
