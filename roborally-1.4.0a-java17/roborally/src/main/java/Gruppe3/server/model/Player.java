@@ -29,6 +29,4 @@ public class Player {
     @Column(name = "game_player_id")
     private int GamePlayerID;
 
-    @OneToMany(mappedBy = "player")
-    private List<Register> registers;
 }

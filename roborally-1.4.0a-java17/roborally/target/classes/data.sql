@@ -1,11 +1,6 @@
+-- Insert data into games table with a unique game_id value
+INSERT INTO games (turn_id) VALUES (1);
 
--- Insert data into games table with unique game_id values
-INSERT INTO games (no_of_players, board_id) VALUES
-(2, 1),
-(3, 1),
-(4, 1);
-
-INSERT INTO players (score, game_id, game_player_id) VALUES
-(0, 1, 1),
-(0, 1, 2),
-(0, 1, 3);
+-- Insert data into players table with references to the game_id from games table
+INSERT INTO players (player_name, score, game_id) VALUES
+('Player1', 0, 1);
