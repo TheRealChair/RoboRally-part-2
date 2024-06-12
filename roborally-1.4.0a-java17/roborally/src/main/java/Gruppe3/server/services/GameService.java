@@ -40,7 +40,7 @@ public class GameService {
         }
         Position position = optionalPositions.get();
         logger.info("Player {} is at position ({}, {}) heading {}",
-                player.getPlayerName(), position.getPositionX(), position.getPositionY(), position.getHeading());
+                player.getPlayerId(), position.getPositionX(), position.getPositionY(), position.getHeading());
 
     }
 

@@ -110,16 +110,20 @@ public class AppController implements Observer {
             GameRequest gameRequest = new GameRequest();
             gameRequest.setNoOfPlayers(board.getPlayers().length);
 
-            PlayerRequest playerRequest = new PlayerRequest();
-            playerRequest.setPlayerId(1L);
-
 
             try {
                 // Send the request to the server
                 String endpointUrl = "games";
-                ClientController.sendRequestToServer(endpointUrl, gameRequest, GameResponse.class);
-                endpointUrl = "players";
+                GameResponse gameResponse = ClientController.sendRequestToServer(endpointUrl, gameRequest, GameResponse.class);
+                Long gameId = Long.parseLong(gameResponse.getGameId());
+
+                PlayerRequest playerRequest = new PlayerRequest();
+                playerRequest.setGamePlayerID(1);
+                playerRequest.setGameId(gameId);
+
+                endpointUrl = "players/games/" + gameId;
                 ClientController.sendRequestToServer(endpointUrl, playerRequest, PlayerResponse.class);
+
                 // Proceed with game initialization
                 gameController.startProgrammingPhase();
                 roboRally.createBoardView(gameController);
