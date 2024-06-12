@@ -45,18 +45,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.client.RestTemplate;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.URI;
-import java.net.http.HttpHeaders;
-import java.time.Duration;
 import Gruppe3.roborally.model.httpModels.GameRequest;
 import Gruppe3.roborally.model.httpModels.GameResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * ...
@@ -71,9 +67,9 @@ public class AppController implements Observer {
     final private int BOARD_WIDTH = 12;
     final private int BOARD_HEIGHT = 5;
     final private RoboRally roboRally;
-    private static final String BASE_URL = "http://localhost:8080/games";
     private HttpClient httpClient;
     private ObjectMapper objectMapper;
+    private static final String BASE_URL = "http://localhost:8080/";
 
     private GameController gameController;
 
@@ -107,15 +103,28 @@ public class AppController implements Observer {
                 player.setSpace(board.getSpace(0, startPoints[i]));
             }
 
+            // Prepare the game request
             GameRequest gameRequest = new GameRequest();
             gameRequest.setNoOfPlayers(board.getPlayers().length);
 
-            sendNewGameToServer(gameRequest);
+            // Determine the endpoint URL dynamically based on game type (games/players)
+            String endpointUrl = "games"; // Example: BASE_URL + "/players" for players endpoint
 
-            gameController.startProgrammingPhase();
-            roboRally.createBoardView(gameController);
+            try {
+                // Send the request to the server
+                ClientController.sendRequestToServer(endpointUrl, gameRequest, GameResponse.class);
+
+                // Proceed with game initialization
+                gameController.startProgrammingPhase();
+                roboRally.createBoardView(gameController);
+            } catch (IOException | InterruptedException e) {
+                System.out.println("Failed to create game: " + e.getMessage());
+                e.printStackTrace();
+                // Handle the exception as needed
+            }
         }
     }
+
 
     private void sendNewGameToServer(GameRequest gameRequest) throws IOException, InterruptedException {
         String gameRequestJson = objectMapper.writeValueAsString(gameRequest);
