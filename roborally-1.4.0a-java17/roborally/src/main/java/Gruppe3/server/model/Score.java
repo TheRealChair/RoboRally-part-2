@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class score {
+public class Score {
 
     @Id
     @ManyToOne
@@ -25,6 +25,6 @@ public class score {
     @JoinColumn(name = "player_id")
     private Player player;
 
-    @Column (name = "no_of_players")
-    private int NoOfPlayers;
+    @Column (name = "score")
+    private int score;
 }
