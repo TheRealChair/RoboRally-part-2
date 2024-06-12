@@ -33,7 +33,6 @@ import Gruppe3.roborally.model.Player;
 
 import Gruppe3.roborally.model.httpModels.PlayerRequest;
 import Gruppe3.roborally.model.httpModels.PlayerResponse;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
@@ -106,7 +105,7 @@ public class AppController implements Observer {
 
             // Prepare the game request
             GameRequest gameRequest = new GameRequest();
-            gameRequest.setNoOfPlayers(board.getPlayers().length);
+            gameRequest.setNoOfPlayers(result.get());
 
 
             try {
@@ -173,9 +172,16 @@ public class AppController implements Observer {
         }
     }
 
-    public void joinGame() throws IOException, InterruptedException {
+    public void joinGame(Long gameId) throws IOException, InterruptedException {
+        PlayerRequest playerRequest = new PlayerRequest();
+        playerRequest.setGameId(gameId);
+
+        String urlToGame = "players/games/" + gameId;
+        ClientController.sendRequestToServer(urlToGame, playerRequest, PlayerResponse.class);
+
+
         // Get the game from the server
-        GameResponse gameResponse = getGameFromServer(4); // 4 is the game ID
+        GameResponse gameResponse = getGameFromServer(1); // 4 is the game ID
 
         if (gameResponse != null) {
             // Check if there is space for a new player
