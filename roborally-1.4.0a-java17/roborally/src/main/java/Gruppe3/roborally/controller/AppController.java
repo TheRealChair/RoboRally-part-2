@@ -99,12 +99,10 @@ public class AppController implements Observer {
             Board board = new Board(BOARD_WIDTH, BOARD_HEIGHT);
             gameController = new GameController(board);
             int no = result.get();
-            int[] startPoints = new int[]{0, 2, 3, 6, 7, 9};
-            for (int i = 0; i < no; i++) {
-                Player player = new Player(board, PLAYER_COLORS.get(i), "Player " + (i + 1), false);
-                board.addPlayer(player);
-                player.setSpace(board.getSpace(0, startPoints[i]));
-            }
+
+            Player player = new Player(board, PLAYER_COLORS.get(0), "Player 1", false);
+            board.addPlayer(player);
+            player.setSpace(board.getSpace(0, 0));
 
             // Prepare the game request
             GameRequest gameRequest = new GameRequest();
@@ -135,7 +133,6 @@ public class AppController implements Observer {
         }
     }
 
-
     private void sendNewGameToServer(GameRequest gameRequest) throws IOException, InterruptedException {
         String gameRequestJson = objectMapper.writeValueAsString(gameRequest);
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -157,8 +154,63 @@ public class AppController implements Observer {
         }
     }
 
-    public void joinGame() {
-        // XXX implement this method
+    private GameResponse getGameFromServer(int gameId) throws IOException, InterruptedException {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + "games/" + gameId)) // games is the endpoint to get a game by its ID
+                .GET() // set HTTP method to GET
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() >= 200 && response.statusCode() < 300) {
+            // Parse the response body to GameResponse
+            GameResponse gameResponse = objectMapper.readValue(response.body(), GameResponse.class);
+            System.out.println("Game retrieved successfully: " + gameResponse);
+            return gameResponse;
+        } else {
+            System.out.println("Failed to retrieve game: " + response.body());
+            return null;
+        }
+    }
+
+    public void joinGame() throws IOException, InterruptedException {
+        // Get the game from the server
+        GameResponse gameResponse = getGameFromServer(4); // 4 is the game ID
+
+        if (gameResponse != null) {
+            // Check if there is space for a new player
+            if (gameResponse.getNoOfPlayers() < 6 && gameResponse.getBoardID() ==1) {
+                // Increase the noOfPlayers in the GameResponse object
+                gameResponse.setNoOfPlayers(gameResponse.getNoOfPlayers() + 1);
+
+                // Update the game on the server
+                updateGameOnServer(gameResponse);
+
+                System.out.println("Joined the game successfully.");
+            } else {
+                System.out.println("The game is already full. No more players can join.");
+            }
+        } else {
+            System.out.println("No game with the provided ID is currently running. Please start a new game first.");
+        }
+    }
+
+    private void updateGameOnServer(GameResponse gameResponse) throws IOException, InterruptedException {
+        String gameResponseJson = objectMapper.writeValueAsString(gameResponse);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + "games/" + gameResponse.getGameId())) // games is the endpoint to update a game by its ID
+                .header("Content-Type", "application/json")
+                .PUT(HttpRequest.BodyPublishers.ofString(gameResponseJson)) // set HTTP method to PUT and provide request body
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() >= 200 && response.statusCode() < 300) {
+            System.out.println("Game updated successfully: " + gameResponse);
+        } else {
+            System.out.println("Failed to update game: " + response.body());
+        }
     }
 
 

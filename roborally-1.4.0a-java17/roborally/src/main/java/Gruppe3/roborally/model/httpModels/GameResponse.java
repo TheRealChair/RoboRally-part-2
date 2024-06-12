@@ -16,4 +16,7 @@ public class GameResponse {
 
     @JsonProperty("noOfPlayers")
     private int noOfPlayers; // Assuming noOfPlayers is an integer
+
+    @JsonProperty("boardID")
+    private int boardID;
 }
