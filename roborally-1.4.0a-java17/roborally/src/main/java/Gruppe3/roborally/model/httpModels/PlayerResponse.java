@@ -11,6 +11,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PlayerResponse {
     private Long playerId;
-    private Long gameId;
+    private GameResponse game;
     private int gamePlayerID;
 }

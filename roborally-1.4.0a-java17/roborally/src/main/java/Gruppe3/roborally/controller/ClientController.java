@@ -1,5 +1,6 @@
 package Gruppe3.roborally.controller;
 
+import Gruppe3.roborally.model.httpModels.PlayerResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -58,6 +59,28 @@ public class ClientController {
             System.out.println("Response body: " + response.body());
             // Handle error or return null based on your application's logic
             throw new RuntimeException("Request failed with status code: " + response.statusCode());
+        }
+    }
+
+
+    // for notifying host about players joining the game
+    public static void notifyHost(PlayerResponse playerResponse) throws IOException, InterruptedException, JsonProcessingException {
+        String endpointPath = "players/notifyHost";
+        String requestJson = objectMapper.writeValueAsString(playerResponse);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + endpointPath))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(requestJson))
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() >= 200 && response.statusCode() < 300) {
+            System.out.println("Notification sent successfully.");
+        } else {
+            System.out.println("Failed to send notification: " + response.body());
         }
     }
 }
