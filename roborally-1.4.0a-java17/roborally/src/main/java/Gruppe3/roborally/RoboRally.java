@@ -36,6 +36,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.IOException;
+
 /**
  * ...
  *
@@ -77,7 +79,15 @@ public class RoboRally extends Application {
         Button button1 = new Button("New Game");
         Button button2 = new Button("Join Game");
 
-        button1.setOnAction(e -> appController.newGame());
+        button1.setOnAction(e -> {
+            try {
+                appController.newGame();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
         //button2.setOnAction(e -> appController.joinGame());
 
         VBox vbox1 = new VBox();
