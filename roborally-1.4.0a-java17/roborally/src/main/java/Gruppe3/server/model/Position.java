@@ -33,6 +33,7 @@ public class Position {
     private int positionY;
 
 
+    @Column (name = "heading")
     private String heading;
 
 }
