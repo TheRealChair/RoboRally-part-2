@@ -37,9 +37,12 @@ public class PlayerController {
         Optional<Game> gameOptional = gameRepository.findById(gameId);
         if (gameOptional.isPresent()) {
             Game game = gameOptional.get();
-            int numberOfPlayers = game.getNoOfPlayers();
-            player.setGamePlayerID(numberOfPlayers + 1);
+
+            // Get the current number of players in the game
+            int numberOfPlayers = playerRepository.countByGame_GameId(gameId);
+            player.setGamePlayerID(numberOfPlayers + 1); // Assign the next available gamePlayerId
             player.setGame(game);
+
             Player savedPlayer = playerRepository.save(player);
             return ResponseEntity.ok(savedPlayer);
         } else {

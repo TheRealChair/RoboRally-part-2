@@ -115,7 +115,6 @@ public class AppController implements Observer {
                 Long gameId = Long.parseLong(gameResponse.getGameId());
 
                 PlayerRequest playerRequest = new PlayerRequest();
-                playerRequest.setGamePlayerID(1);
                 playerRequest.setGameId(gameId);
 
                 endpointUrl = "players/games/" + gameId;
