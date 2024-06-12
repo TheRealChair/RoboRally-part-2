@@ -31,7 +31,8 @@ import Gruppe3.roborally.model.Board;
 import Gruppe3.roborally.model.Phase;
 import Gruppe3.roborally.model.Player;
 
-import Gruppe3.server.model.Game;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -39,17 +40,19 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.net.URI;
+import Gruppe3.roborally.model.httpModels.GameRequest;
+import Gruppe3.roborally.model.httpModels.GameResponse;
 
 /**
  * ...
@@ -64,18 +67,20 @@ public class AppController implements Observer {
     final private int BOARD_WIDTH = 12;
     final private int BOARD_HEIGHT = 5;
     final private RoboRally roboRally;
-    private static final String BASE_URL = "http://localhost:8080/games";
-    private RestTemplate restTemplate;
+    private HttpClient httpClient;
+    private ObjectMapper objectMapper;
+    private static final String BASE_URL = "http://localhost:8080/";
 
     private GameController gameController;
 
     public AppController(@NotNull RoboRally roboRally, RestTemplate restTemplate) {
 
         this.roboRally = roboRally;
-        this.restTemplate = restTemplate;
+        this.httpClient = HttpClient.newHttpClient();
+        this.objectMapper = new ObjectMapper();
     }
 
-    public void newGame() {
+    public void newGame() throws IOException, InterruptedException {
         ChoiceDialog<Integer> dialog = new ChoiceDialog<>(PLAYER_NUMBER_OPTIONS.get(0), PLAYER_NUMBER_OPTIONS);
         dialog.setTitle("Player number");
         dialog.setHeaderText("Select number of players");
@@ -99,35 +104,47 @@ public class AppController implements Observer {
                 player.setSpace(board.getSpace(0, startPoints[i]));
             }
 
-            Game game = new Game();
+            // Prepare the game request
+            GameRequest gameRequest = new GameRequest();
+            gameRequest.setNoOfPlayers(board.getPlayers().length);
 
-            // Send the new game to the server
-            HttpHeaders headers = new HttpHeaders();
-            headers.set("Content-Type", "application/json");
-            HttpEntity<Game> request = new HttpEntity<>(game, headers);
-            ResponseEntity<Game> response = restTemplate.exchange(BASE_URL, HttpMethod.POST, request, Game.class);
+            // Determine the endpoint URL dynamically based on game type (games/players)
+            String endpointUrl = "games"; // Example: BASE_URL + "/players" for players endpoint
 
-            if (response.getStatusCode().is2xxSuccessful()) {
-                System.out.println("Game created successfully: " + response.getBody());
-            } else {
-                throw new RuntimeException("Failed to create game: " + response.getStatusCode());
+            try {
+                // Send the request to the server
+                ClientController.sendRequestToServer(endpointUrl, gameRequest, GameResponse.class);
+
+                // Proceed with game initialization
+                gameController.startProgrammingPhase();
+                roboRally.createBoardView(gameController);
+            } catch (IOException | InterruptedException e) {
+                System.out.println("Failed to create game: " + e.getMessage());
+                e.printStackTrace();
+                // Handle the exception as needed
             }
-
-            gameController.startProgrammingPhase();
-            roboRally.createBoardView(gameController);
         }
     }
 
-    private void sendNewGameToServer(Game game) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Content-Type", "application/json");
-        HttpEntity<Game> request = new HttpEntity<>(game, headers);
-        ResponseEntity<Game> response = restTemplate.exchange(BASE_URL + "/new", HttpMethod.POST, request, Game.class);
 
-        if (response.getStatusCode().is2xxSuccessful()) {
-            System.out.println("Game created successfully: " + response.getBody());
+    private void sendNewGameToServer(GameRequest gameRequest) throws IOException, InterruptedException {
+        String gameRequestJson = objectMapper.writeValueAsString(gameRequest);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL))
+                .header("Content-Type", "application/json")
+                .POST(HttpRequest.BodyPublishers.ofString(gameRequestJson)) // set HTTP method to POST and provide request body
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() >= 200 && response.statusCode() < 300) {
+            // Parse the response body to GameResponse
+            GameResponse gameResponse = objectMapper.readValue(response.body(), GameResponse.class);
+            System.out.println("Game created successfully: " + gameResponse);
         } else {
-            throw new RuntimeException("Failed to create game: " + response.getStatusCode());
+            System.out.println("Failed to create game: " + response.body());
         }
     }
 
