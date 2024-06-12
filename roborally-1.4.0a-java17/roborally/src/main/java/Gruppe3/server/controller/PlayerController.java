@@ -37,6 +37,8 @@ public class PlayerController {
         Optional<Game> gameOptional = gameRepository.findById(gameId);
         if (gameOptional.isPresent()) {
             Game game = gameOptional.get();
+            int numberOfPlayers = game.getNoOfPlayers();
+            player.setGamePlayerID(numberOfPlayers + 1);
             player.setGame(game);
             Player savedPlayer = playerRepository.save(player);
             return ResponseEntity.ok(savedPlayer);
@@ -59,8 +61,6 @@ public class PlayerController {
         Optional<Player> optionalPlayer = playerRepository.findById(id);
         if (optionalPlayer.isPresent()) {
             Player existingPlayer = optionalPlayer.get();
-            existingPlayer.setPlayerName(playerDetails.getPlayerName());
-            existingPlayer.setScore(playerDetails.getScore());
             Player updatedPlayer = playerRepository.save(existingPlayer);
             return ResponseEntity.ok(updatedPlayer);
         } else {
