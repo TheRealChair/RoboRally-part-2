@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/score")
+@RequestMapping("/scores")
 public class ScoreController {
 
     private final ScoreRepo scoreRepository;
@@ -59,7 +59,7 @@ public class ScoreController {
         Optional<Score> optionalScore = scoreRepository.findByGameAndPlayer(game, player);
         if (optionalScore.isPresent()) {
             Score existingScore = optionalScore.get();
-            existingScore.setScore(scoreDetails.getScore());
+            existingScore.setCheckpoints(scoreDetails.getCheckpoints());
 
             Score updatedScore = scoreRepository.save(existingScore);
             return ResponseEntity.ok(updatedScore);

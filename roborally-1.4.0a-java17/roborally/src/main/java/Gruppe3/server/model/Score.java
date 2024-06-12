@@ -1,6 +1,7 @@
 package Gruppe3.server.model;
 
 
+import Gruppe3.server.model.CompositeKeys.GameId_GamePlayerId;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,11 +9,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "score")
+@Table(name = "scores")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@IdClass(GameId_GamePlayerId.class)
 public class Score {
 
     @Id
@@ -25,6 +27,6 @@ public class Score {
     @JoinColumn(name = "player_id")
     private Player player;
 
-    @Column (name = "score")
-    private int score;
+    @Column (name = "checkpoints")
+    private int checkpoints;
 }
