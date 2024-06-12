@@ -5,5 +5,5 @@ INSERT INTO games (turn_id) VALUES (1);
 INSERT INTO players (player_name, score, game_id) VALUES
 ('Player1', 0, 1);
 
-INSERT INTO positions values
-(1, 2, 4, 5, "SOUTH");
+INSERT INTO positions (game_game_id, player_player_id, position_x, position_y, heading)
+VALUES (1, 1, 1, 1, 'south');

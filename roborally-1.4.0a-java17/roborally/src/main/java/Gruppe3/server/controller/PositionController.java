@@ -5,6 +5,7 @@ import Gruppe3.server.model.GameState;
 import Gruppe3.server.model.Player;
 import Gruppe3.server.model.Position;
 import Gruppe3.server.repository.PositionRepo;
+import Gruppe3.server.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -73,5 +74,11 @@ public class PositionController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/log/{game_id}/{player_id}")
+    public ResponseEntity<Void> logPlayerPosition(@PathVariable Long gameId, @PathVariable Long playerId){
+        GameService.logPlayerPosition(gameId, playerId);
+        return ResponseEntity.ok().build();
     }
 }
