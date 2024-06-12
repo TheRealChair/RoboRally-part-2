@@ -16,7 +16,14 @@ import lombok.Setter;
 public class score {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "player_id")
-    private Long playerId;
+    @ManyToOne
+    @JoinColumn(name = "game_id")
+    private Game game;
+
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "player_id")
+    private Player player;
+
+
 }
