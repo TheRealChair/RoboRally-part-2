@@ -1,11 +1,16 @@
 package Gruppe3.roborally.model.httpModels;
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class PlayerResponse {
     private Long playerId;
-    private String playerName;
-    private int score;
     private Long gameId;
+    private int gamePlayerID;
 }

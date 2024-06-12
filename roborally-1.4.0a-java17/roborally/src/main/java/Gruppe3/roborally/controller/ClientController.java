@@ -37,4 +37,25 @@ public class ClientController {
             System.out.println("Request failed: " + response.body());
         }
     }
+
+
+    public static Object getRequestFromServer(String endpointPath, Class<?> responseObjectClass)
+            throws IOException, InterruptedException, JsonProcessingException {
+        String requestUrl = BASE_URL + endpointPath;
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(requestUrl))
+                .header("Content-Type", "application/json")
+                .GET()
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() >= 200 && response.statusCode() < 300) {
+            return objectMapper.readValue(response.body(), responseObjectClass);
+        } else {
+            System.out.println("Request failed: " + response.body());
+            return null; // or throw an exception based on your error handling strategy
+        }
+    }
 }

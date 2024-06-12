@@ -1,10 +1,14 @@
 package Gruppe3.roborally.model.httpModels;
 
-import lombok.Data;
 
-@Data
+import lombok.*;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class PlayerRequest {
-    private String playerName;
-    private int score;
+    private Long playerId;
     private Long gameId;
+    private int gamePlayerID;
 }

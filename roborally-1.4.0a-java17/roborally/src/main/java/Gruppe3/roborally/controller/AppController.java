@@ -31,6 +31,8 @@ import Gruppe3.roborally.model.Board;
 import Gruppe3.roborally.model.Phase;
 import Gruppe3.roborally.model.Player;
 
+import Gruppe3.roborally.model.httpModels.PlayerRequest;
+import Gruppe3.roborally.model.httpModels.PlayerResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import javafx.application.Platform;
@@ -108,13 +110,16 @@ public class AppController implements Observer {
             GameRequest gameRequest = new GameRequest();
             gameRequest.setNoOfPlayers(board.getPlayers().length);
 
-            // Determine the endpoint URL dynamically based on game type (games/players)
-            String endpointUrl = "games"; // Example: BASE_URL + "/players" for players endpoint
+            PlayerRequest playerRequest = new PlayerRequest();
+            playerRequest.setPlayerId(1L);
+
 
             try {
                 // Send the request to the server
+                String endpointUrl = "games";
                 ClientController.sendRequestToServer(endpointUrl, gameRequest, GameResponse.class);
-
+                endpointUrl = "players";
+                ClientController.sendRequestToServer(endpointUrl, playerRequest, PlayerResponse.class);
                 // Proceed with game initialization
                 gameController.startProgrammingPhase();
                 roboRally.createBoardView(gameController);
@@ -146,6 +151,10 @@ public class AppController implements Observer {
         } else {
             System.out.println("Failed to create game: " + response.body());
         }
+    }
+
+    public void joinGame() {
+        // XXX implement this method
     }
 
 
