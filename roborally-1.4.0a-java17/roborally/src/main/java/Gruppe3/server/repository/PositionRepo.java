@@ -7,6 +7,6 @@ import Gruppe3.server.model.CompositeKeys.GameId_GamePlayerId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
-public interface PositionRepo extends JpaRepository<Position, Long> {
+public interface PositionRepo extends JpaRepository<Position, GameId_GamePlayerId> {
     Optional<Position> findByGameIdAndPlayerId(Game game, Player player);
 }

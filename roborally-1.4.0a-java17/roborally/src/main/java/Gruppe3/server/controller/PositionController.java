@@ -71,9 +71,16 @@ public class PositionController {
             return ResponseEntity.notFound().build();
         }
     }
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePosition(@PathVariable Long id) {
-        Optional<Position> position = positionRepository.findById(id);
+    @DeleteMapping("/{game_id}/{player_id}")
+    public ResponseEntity<Void> deletePosition(@PathVariable("gameId") Long gameId, @PathVariable("playerId") Long playerId) {
+
+        Game game = new Game();
+        game.setGameId(gameId);
+
+        Player player = new Player();
+        player.setPlayerId(playerId);
+
+        Optional<Position> position = positionRepository.findByGameIdAndPlayerId(game, player);
         if (position.isPresent()) {
             positionRepository.delete(position.get());
             return ResponseEntity.noContent().build();

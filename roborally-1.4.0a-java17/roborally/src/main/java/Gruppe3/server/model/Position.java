@@ -1,7 +1,6 @@
 package Gruppe3.server.model;
 
 import Gruppe3.server.model.CompositeKeys.GameId_GamePlayerId;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
