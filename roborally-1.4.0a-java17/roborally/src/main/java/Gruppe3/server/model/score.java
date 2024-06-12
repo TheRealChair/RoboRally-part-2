@@ -25,5 +25,6 @@ public class score {
     @JoinColumn(name = "player_id")
     private Player player;
 
-
+    @Column (name = "no_of_players")
+    private int NoOfPlayers;
 }
