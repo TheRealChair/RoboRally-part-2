@@ -29,7 +29,6 @@ import Gruppe3.roborally.RoboRally;
 
 import Gruppe3.roborally.model.Board;
 import Gruppe3.roborally.model.Phase;
-import Gruppe3.roborally.model.Player;
 
 import Gruppe3.roborally.model.httpModels.PlayerRequest;
 import Gruppe3.roborally.model.httpModels.PlayerResponse;
@@ -39,6 +38,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.TextInputDialog;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -54,6 +54,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.URI;
 import Gruppe3.roborally.model.httpModels.GameRequest;
 import Gruppe3.roborally.model.httpModels.GameResponse;
+
+import javax.swing.*;
 
 /**
  * ...
@@ -99,10 +101,6 @@ public class AppController implements Observer {
             gameController = new GameController(board);
             int no = result.get();
 
-            Player player = new Player(board, PLAYER_COLORS.get(0), "Player 1", false);
-            board.addPlayer(player);
-            player.setSpace(board.getSpace(0, 0));
-
             // Prepare the game request
             GameRequest gameRequest = new GameRequest();
             gameRequest.setNoOfPlayers(result.get());
@@ -135,7 +133,7 @@ public class AppController implements Observer {
         }
     }
 
-    private GameResponse getGameFromServer(int gameId) throws IOException, InterruptedException {
+    private GameResponse getGameFromServer(long gameId) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL + "games/" + gameId)) // games is the endpoint to get a game by its ID
                 .GET() // set HTTP method to GET
@@ -155,40 +153,54 @@ public class AppController implements Observer {
     }
 
     public void joinGame(Long gameId) throws IOException, InterruptedException {
-        PlayerRequest playerRequest = new PlayerRequest();
-        playerRequest.setGameId(gameId);
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Join Game");
+        dialog.setHeaderText("Enter Game ID");
+        Optional<String> result = dialog.showAndWait();
 
-        String urlToGame = "players/games/" + gameId;
-        PlayerResponse playerResponse = ClientController.sendRequestToServer(urlToGame, playerRequest, PlayerResponse.class);
-        System.out.println("Player joined game: " + playerResponse.getGame().getGameId() + " as player " + playerResponse.getGamePlayerID());
+        if (result.isPresent()) {
+            try {
+                gameId = Long.parseLong(result.get().trim());
+
+                PlayerRequest playerRequest = new PlayerRequest();
+                playerRequest.setGameId(gameId);
+
+                String urlToGame = "players/games/" + gameId;
+                PlayerResponse playerResponse = ClientController.sendRequestToServer(urlToGame, playerRequest, PlayerResponse.class);
+                System.out.println("Player joined game: " + playerResponse.getGame().getGameId() + " as player " + playerResponse.getGamePlayerID());
         ClientController.playerId = playerResponse.getPlayerId();
 
-        ClientController.notifyHost(playerResponse);
+                ClientController.notifyHost(playerResponse);
 
-        Board board = LoadBoard.loadBoard("save");
-        gameController = new GameController(board);
-        roboRally.createBoardView(gameController);
-        displayPlayerJoinedNotification(playerResponse);
+                Board board = LoadBoard.loadBoard("save");
+                gameController = new GameController(board);
+                roboRally.createBoardView(gameController);
+                displayPlayerJoinedNotification(playerResponse);
 
+                // Get the game from the server
+                GameResponse gameResponse = getGameFromServer(gameId);
 
-        // Get the game from the server
-        GameResponse gameResponse = getGameFromServer(4); // 4 is the game ID
+                if (gameResponse != null) {
+                    // Check if there is space for a new player
+                    if (gameResponse.getNoOfPlayers() < 6 && gameResponse.getBoardID() == 1) {
+                        // Increase the noOfPlayers in the GameResponse object
+                        gameResponse.setNoOfPlayers(gameResponse.getNoOfPlayers() + 1);
 
-        if (gameResponse != null) {
-            // Check if there is space for a new player
-            if (gameResponse.getNoOfPlayers() < 6 && gameResponse.getBoardID() ==1) {
-                // Increase the noOfPlayers in the GameResponse object
-                gameResponse.setNoOfPlayers(gameResponse.getNoOfPlayers() + 1);
+                        // Update the game on the server
+                        updateGameOnServer(gameResponse);
 
-                // Update the game on the server
-                updateGameOnServer(gameResponse);
-
-                System.out.println("Joined the game successfully.");
-            } else {
-                System.out.println("The game is already full. No more players can join.");
+                        System.out.println("Joined the game successfully.");
+                    } else {
+                        System.out.println("The game is already full. No more players can join.");
+                    }
+                } else {
+                    System.out.println("No game with the provided ID is currently running. Please start a new game first.");
+                }
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Invalid Game ID. Please enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } else {
-            System.out.println("No game with the provided ID is currently running. Please start a new game first.");
+            JOptionPane.showMessageDialog(null, "Game ID cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
