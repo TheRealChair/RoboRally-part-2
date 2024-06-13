@@ -71,7 +71,6 @@ public class AppController implements Observer {
     private HttpClient httpClient;
     private ObjectMapper objectMapper;
     private static final String BASE_URL = "http://localhost:8080/";
-    private ClientPolling clientPolling;
 
     private GameController gameController;
 
@@ -80,7 +79,6 @@ public class AppController implements Observer {
         this.roboRally = roboRally;
         this.httpClient = HttpClient.newHttpClient();
         this.objectMapper = new ObjectMapper();
-        this.clientPolling = new ClientPolling();
     }
 
     public void newGame() throws IOException, InterruptedException {
@@ -124,7 +122,7 @@ public class AppController implements Observer {
                 ClientController.playerId = hostPlayerResponse.getPlayerId(); // gives the client a local playerId
                 System.out.println("Player ID set to: " + ClientController.playerId);
 
-                clientPolling.run();
+                ClientController.startPolling();
 
                 // Proceed with game initialization
                 gameController.startProgrammingPhase();

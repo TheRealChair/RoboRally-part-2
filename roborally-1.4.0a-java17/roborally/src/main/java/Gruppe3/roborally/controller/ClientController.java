@@ -17,6 +17,8 @@ public class ClientController {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final String BASE_URL = "http://localhost:8080/";
     public static Long playerId = null;
+    private static Thread pollingThread;
+    private static ClientPolling pollingTask;
 
 
     // Send a request to server with a endPath ("player"), requestobject (PlayerRequest)
@@ -92,6 +94,26 @@ public class ClientController {
             System.out.println("Response body: " + response.body());
             // Handle error or return null based on your application's logic
             throw new RuntimeException("Request failed with status code: " + response.statusCode());
+        }
+    }
+
+    public static void startPolling() {
+        if (pollingThread == null || !pollingThread.isAlive()) {
+            pollingTask = new ClientPolling();
+            pollingThread = new Thread(pollingTask);
+            pollingThread.start();
+        }
+    }
+
+    public static void stopPolling() {
+        if (pollingTask != null) {
+            pollingTask.stop();
+            try {
+                pollingThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                Thread.currentThread().interrupt();
+            }
         }
     }
 }
