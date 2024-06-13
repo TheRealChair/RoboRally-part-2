@@ -48,7 +48,6 @@ public class GameController {
         Optional<Game> optionalGame = gameRepository.findById(id);
         if (optionalGame.isPresent()) {
             Game existingGame = optionalGame.get();
-            existingGame.setTurn_id(gameDetails.getTurn_id());
             Game updatedGame = gameRepository.save(existingGame);
             return ResponseEntity.ok(updatedGame);
         } else {

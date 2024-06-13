@@ -37,13 +37,21 @@ public class PlayerController {
         Optional<Game> gameOptional = gameRepository.findById(gameId);
         if (gameOptional.isPresent()) {
             Game game = gameOptional.get();
-            player.setGame(game);
+
+            // Get the current number of players in the game
+            int numberOfPlayers = playerRepository.countByGame_GameId(gameId);
+            player.setGamePlayerID(numberOfPlayers + 1); // Assign the next available gamePlayerId
+            player.setGame(game); // Set the game association
+
             Player savedPlayer = playerRepository.save(player);
+            notifyHost(savedPlayer);
+
             return ResponseEntity.ok(savedPlayer);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
+
 
     // Get a single player by ID
     @GetMapping("/{id}")
@@ -59,8 +67,6 @@ public class PlayerController {
         Optional<Player> optionalPlayer = playerRepository.findById(id);
         if (optionalPlayer.isPresent()) {
             Player existingPlayer = optionalPlayer.get();
-            existingPlayer.setPlayerName(playerDetails.getPlayerName());
-            existingPlayer.setScore(playerDetails.getScore());
             Player updatedPlayer = playerRepository.save(existingPlayer);
             return ResponseEntity.ok(updatedPlayer);
         } else {
@@ -79,4 +85,18 @@ public class PlayerController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    // Notify the host that a new player has joined
+    @PostMapping("/notifyHost")
+    public ResponseEntity<Void> notifyHost(@RequestBody Player player) {
+        if (player.getGame() != null) {
+            System.out.println("New player joined: " + player.getPlayerId() + " in game " + player.getGame().getGameId());
+        } else {
+            System.out.println("Player's game is null.");
+            // Handle the error or exception as needed
+            return ResponseEntity.badRequest().build(); // Or any other appropriate response
+        }
+        return ResponseEntity.ok().build();
+    }
+
 }
