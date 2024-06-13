@@ -25,6 +25,11 @@ import Gruppe3.roborally.model.*;
 import javafx.scene.control.Alert;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 /**
  * ...
  *
@@ -35,6 +40,7 @@ public class GameController {
 
     final public Board board;
     private Player playerToInteract;
+
 
     public GameController(Board board) {
         this.board = board;

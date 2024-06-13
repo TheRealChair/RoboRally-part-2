@@ -19,7 +19,7 @@ public class GameService {
 
     public static final Logger logger = LoggerFactory.getLogger(GameService.class);
 
-    private static PlayerRepo playerRepository = null;
+    private static PlayerRepo playerRepository;
     private static PositionRepo positionRepository;
     public GameService(PlayerRepo playerRepository, PositionRepo positionRepository){
         this.playerRepository = playerRepository;
@@ -40,7 +40,7 @@ public class GameService {
         }
         Position position = optionalPositions.get();
         logger.info("Player {} is at position ({}, {}) heading {}",
-                player.getPlayerName(), position.getPositionX(), position.getPositionY(), position.getHeading());
+                player.getPlayerId(), position.getPositionX(), position.getPositionY(), position.getHeading());
 
     }
 

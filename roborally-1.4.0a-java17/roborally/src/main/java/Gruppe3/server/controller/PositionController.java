@@ -38,7 +38,7 @@ public class PositionController {
     }
 
     @GetMapping("/{game_id}/{player_id}")
-    public ResponseEntity<Position> getPositionById(@PathVariable("gameId") Long gameId, @PathVariable("playerId") Long playerId){
+    public ResponseEntity<Position> getPositionById(@PathVariable("game_id") Long gameId, @PathVariable("player_id") Long playerId){
 
 
         Optional<Position> position = positionRepository.findByGameIdAndPlayerId(gameId, playerId);
@@ -46,8 +46,8 @@ public class PositionController {
     }
 
     @PutMapping("/{game_id}/{player_id}")
-    public ResponseEntity<Position> updatePosition(@PathVariable("gameId") Long gameId,
-                                                     @PathVariable("playerId") Long playerId,
+    public ResponseEntity<Position> updatePosition(@PathVariable("game_id") Long gameId,
+                                                     @PathVariable("player_id") Long playerId,
                                                      @RequestBody Position positionDetails) {
 
         Optional<Position> optionalPosition = positionRepository.findByGameIdAndPlayerId(gameId, playerId);
@@ -64,7 +64,7 @@ public class PositionController {
         }
     }
     @DeleteMapping("/{game_id}/{player_id}")
-    public ResponseEntity<Void> deletePosition(@PathVariable("gameId") Long gameId, @PathVariable("playerId") Long playerId) {
+    public ResponseEntity<Void> deletePosition(@PathVariable("game_id") Long gameId, @PathVariable("player_id") Long playerId) {
 
 
         Optional<Position> position = positionRepository.findByGameIdAndPlayerId(gameId, playerId);
@@ -77,7 +77,7 @@ public class PositionController {
     }
 
     @GetMapping("/log/{game_id}/{player_id}")
-    public ResponseEntity<Void> logPlayerPosition(@PathVariable Long gameId, @PathVariable Long playerId){
+    public ResponseEntity<Void> logPlayerPosition(@PathVariable("game_id") Long gameId, @PathVariable("player_id") Long playerId){
         GameService.logPlayerPosition(gameId, playerId);
         return ResponseEntity.ok().build();
     }
