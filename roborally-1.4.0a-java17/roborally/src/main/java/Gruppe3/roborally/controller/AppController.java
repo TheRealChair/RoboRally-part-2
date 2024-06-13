@@ -181,9 +181,12 @@ public class AppController implements Observer {
 
         ClientController.notifyHost(playerResponse);
 
+        Board board = LoadBoard.loadBoard("save");
+        gameController = new GameController(board);
+
 
         // Get the game from the server
-        GameResponse gameResponse = getGameFromServer(1); // 4 is the game ID
+        GameResponse gameResponse = getGameFromServer(4); // 4 is the game ID
 
         if (gameResponse != null) {
             // Check if there is space for a new player
@@ -202,6 +205,8 @@ public class AppController implements Observer {
             System.out.println("No game with the provided ID is currently running. Please start a new game first.");
         }
     }
+
+    
 
     private void updateGameOnServer(GameResponse gameResponse) throws IOException, InterruptedException {
         String gameResponseJson = objectMapper.writeValueAsString(gameResponse);
