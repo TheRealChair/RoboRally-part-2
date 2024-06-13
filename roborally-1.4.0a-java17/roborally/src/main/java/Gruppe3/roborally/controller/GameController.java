@@ -54,50 +54,42 @@ public class GameController {
     }
 
     /**
-     * Moves the given player one step forward in the direction it is facing.
+     * Moves the given player one step forward in the given direction.
      * @param player the player to move
-     * @Author: Balder, Elias, Karl and Viktor
+     * @param heading the direction in which to move
      */
-    public void moveForward(@NotNull Player player) {
+    public void moveForward(@NotNull Player player, @NotNull Heading heading) {
         if (player.board == board) {
             Space space = player.getSpace();
-            Heading heading = player.getHeading();
 
             if (!board.hasWall(space, heading)) {
-            Space target = board.getNeighbour(space, heading);
-            if (target != null) {
-                try {
-                    moveToSpace(player, target, heading);
-                } catch (ImpossibleMoveException e) {
-                    // we don't do anything here  for now; we just catch the
-                    // exception so that we do no pass it on to the caller
-                    // (which would be very bad style).
+                Space target = board.getNeighbour(space, heading);
+                if (target != null) {
+                    try {
+                        moveToSpace(player, target, heading);
+                    } catch (ImpossibleMoveException e) {
+                        // Handle exception appropriately
+                    }
                 }
             }
         }
     }
-    }
 
     /**
-     * Moves the given player two steps forward in the direction it is facing.
+     * Moves the given player two steps forward in the given direction.
      * @param player the player to move
-     * @Author: Balder, Elias, Karl and Viktor
      */
-    // TODO Assignment A3
-    public void fastForward(@NotNull Player player) {
+    public void fastForward(@NotNull Player player, @NotNull Heading heading) {
         for(int i = 0 ; i < 2 ; i++) {
             if (player.board == board) {
                 Space space = player.getSpace();
-                Heading heading = player.getHeading();
 
                 Space target1 = board.getNeighbour(space, heading);
                 if (target1 != null) {
                     try {
                         moveToSpace(player, target1, heading);
                     } catch (ImpossibleMoveException e) {
-                        // we don't do anything here  for now; we just catch the
-                        // exception so that we do no pass it on to the caller
-                        // (which would be very bad style).
+                        // Handle exception appropriately
                     }
                 }
             }
@@ -107,25 +99,22 @@ public class GameController {
             }
         }
     }
+
     /**
-     * Moves the given player three steps forward in the direction it is facing.
+     * Moves the given player three steps forward in the given direction.
      * @param player the player to move
-     * @Author: Balder, Elias and Viktor
      */
-    public void superFastForward(@NotNull Player player) {
+    public void superFastForward(@NotNull Player player, @NotNull Heading heading) {
         for(int i = 0 ; i < 3 ; i++) {
             if (player.board == board) {
                 Space space = player.getSpace();
-                Heading heading = player.getHeading();
 
                 Space target1 = board.getNeighbour(space, heading);
                 if (target1 != null) {
                     try {
                         moveToSpace(player, target1, heading);
                     } catch (ImpossibleMoveException e) {
-                        // we don't do anything here  for now; we just catch the
-                        // exception so that we do no pass it on to the caller
-                        // (which would be very bad style).
+                        // Handle exception appropriately
                     }
                 }
             }
@@ -139,9 +128,7 @@ public class GameController {
     /**
      * Turns the given player to the right.
      * @param player the player to turn
-     * @Author: Balder, Elias, Karl and Viktor
      */
-    // TODO Assignment A3
     public void turnRight(@NotNull Player player) {
         Heading heading = player.getHeading();
         Heading newHeading = heading.next();
@@ -151,17 +138,10 @@ public class GameController {
     /**
      * Turns the given player to the left.
      * @param player the player to turn
-     * @Author: Balder, Elias, Karl and Viktor
      */
-    // TODO Assignment A3
     public void turnLeft(@NotNull Player player) {
         Heading heading = player.getHeading();
         Heading newHeading = heading.prev();
-        player.setHeading(newHeading);
-    }
-    public void leftOrRight(@NotNull Player player) {
-        Heading heading = player.getHeading();
-        Heading newHeading = heading.next();
         player.setHeading(newHeading);
     }
 
@@ -194,11 +174,9 @@ public class GameController {
         player.setSpace(space);
     }
 
-
     /**
      * Moves the current player to the given space, if the space is free.
-     * @param space, the space to move the player to
-     * @Author: Balder, Elias, Karl and Viktor
+     * @param space the space to move the player to
      */
     public void moveCurrentPlayerToSpace(Space space) {
         Player currentPlayer = board.getCurrentPlayer();
@@ -215,6 +193,8 @@ public class GameController {
             board.incrementCounter();
         }
     }
+
+    // Other methods omitted for brevity...
 
     private void makeProgramFieldsVisible(int register) {
         if (register >= 0 && register < Player.NO_REGISTERS) {
@@ -265,7 +245,7 @@ public class GameController {
 
     public void startExecuteStep() {
         board.setStepMode(true);
-        }
+    }
 
     private void executeNextStep() {
         Player currentPlayer = board.getCurrentPlayer();
@@ -299,6 +279,7 @@ public class GameController {
         } else {
             // this should not happen
             assert false;
+
         }
     }
 
@@ -336,7 +317,7 @@ public class GameController {
 
             switch (command) {
                 case FORWARD:
-                    this.moveForward(player);
+                    this.moveForward(player, player.getHeading());
                     break;
                 case RIGHT:
                     this.turnRight(player);
@@ -345,10 +326,10 @@ public class GameController {
                     this.turnLeft(player);
                     break;
                 case FAST_FORWARD:
-                    this.fastForward(player);
+                    this.fastForward(player, player.getHeading());
                     break;
                 case SUPER_FAST_FORWARD:
-                    this.superFastForward(player);
+                    this.superFastForward(player, player.getHeading());
                     break;
                 case U_TURN:
                     this.turnRight(player);
@@ -357,7 +338,7 @@ public class GameController {
                 case BACK_UP:
                     this.turnRight(player);
                     this.turnRight(player);
-                    this.moveForward(player);
+                    this.moveForward(player, player.getHeading());
                     if (player.hasBeenInPit) {
                         player.hasBeenInPit = false;
                         break;

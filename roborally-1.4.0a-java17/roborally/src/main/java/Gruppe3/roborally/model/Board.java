@@ -101,6 +101,8 @@ public class Board extends Subject {
         // Example setup
         getSpace(2, 2).addAction(new ConveyorBelt(Heading.EAST, 1));
         getSpace(3, 2).addAction(new ConveyorBelt(Heading.NORTH, 1));
+        getSpace(3, 1).addAction(new ConveyorBelt(Heading.EAST, 2));
+
         // Add more conveyor belts as needed
     }
 

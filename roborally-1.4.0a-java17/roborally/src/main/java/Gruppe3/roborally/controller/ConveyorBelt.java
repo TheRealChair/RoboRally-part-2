@@ -56,16 +56,16 @@ public class ConveyorBelt extends FieldAction {
     public boolean doAction(GameController gameController, Space space) {
         Player player = gameController.getPlayerOnSpace(space);
         if (player != null) {
-            for (int i = 0; i < speed; i++) {
-                Space nextSpace = gameController.getBoard().getNeighbour(space, direction);
-                if (nextSpace != null) {
-                    player.setSpace(nextSpace);
-                    space = nextSpace;  // Update the space for the next iteration
-                } else {
-                    // Handle the case where the player would move out of bounds or into a pit
-                    player.rebootPosition();
-                    return false;
-                }
+            switch (speed) {
+                case (1):
+                    gameController.moveForward(player, direction);
+                    break;
+                case (2):
+                    gameController.fastForward(player, direction);
+                    break;
+                case (3):
+                    gameController.superFastForward(player, direction);
+                    break;
             }
             return true;
         }
