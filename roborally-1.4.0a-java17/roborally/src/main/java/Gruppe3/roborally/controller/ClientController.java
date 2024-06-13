@@ -16,6 +16,7 @@ public class ClientController {
     private static final HttpClient httpClient = HttpClient.newHttpClient();
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final String BASE_URL = "http://localhost:8080/";
+    public static Long playerId = 0L;
 
 
     // Send a request to server with a endPath ("player"), requestobject (PlayerRequest)
@@ -53,6 +54,34 @@ public class ClientController {
         return handleResponse(response, responseObjectClass);
     }
 
+    // Simplified method to send an update request to the server
+    public static void sendUpdateToServer(String endpointPath, Object requestObject)
+            throws IOException, InterruptedException, JsonProcessingException {
+        String baseUrl = BASE_URL + endpointPath;
+
+        // Convert the request object to JSON string
+        String requestBody = objectMapper.writeValueAsString(requestObject);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        // Build the HTTP PUT request
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(baseUrl))
+                .header("Content-Type", "application/json")
+                .PUT(HttpRequest.BodyPublishers.ofString(requestBody))
+                .build();
+
+        // Send the request and handle the response
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() >= 200 && response.statusCode() < 300) {
+            System.out.println("Update successful.");
+            System.out.println("Response body for update: " + response.body());
+        } else {
+            System.out.println("Update failed with status code: " + response.statusCode());
+            System.out.println("Response body: " + response.body());
+        }
+    }
+
     private static <T> T handleResponse(HttpResponse<String> response, Class<T> responseObjectClass)
             throws JsonProcessingException {
         if (response.statusCode() >= 200 && response.statusCode() < 300) {
@@ -65,6 +94,7 @@ public class ClientController {
             throw new RuntimeException("Request failed with status code: " + response.statusCode());
         }
     }
+
 
 
     // for notifying host about players joining the game
