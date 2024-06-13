@@ -22,6 +22,7 @@
 package Gruppe3.roborally.controller;
 
 import Gruppe3.roborally.model.*;
+import Gruppe3.roborally.model.httpModels.*;
 import javafx.scene.control.Alert;
 import org.jetbrains.annotations.NotNull;
 
@@ -46,6 +47,30 @@ public class GameController {
         this.board = board;
     }
 
+    public void sendPlayerPositionUpdate(Player player) {
+        try {
+            PlayerResponse playerResponse = ClientController.getRequestFromServer("/players"+player.getName(), PlayerResponse.class);
+
+
+        PositionRequest positionRequest = new PositionRequest();
+        positionRequest.setPositionX(player.getSpace().x);
+        positionRequest.setPositionY(player.getSpace().y);
+        positionRequest.setHeading(player.getHeading().toString());
+
+        ClientController.sendRequestToServer("positions", positionRequest, PositionResponse.class);
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void movePlayerAndUpdatePosition(Player player, Space target, Heading heading){
+        try{
+            moveToSpace(player, target, heading);
+            sendPlayerPositionUpdate(player);
+        } catch (ImpossibleMoveException e) {
+
+        }
+    }
 
     /**
      * Moves the given player one step forward in the direction it is facing.
@@ -58,11 +83,11 @@ public class GameController {
             Heading heading = player.getHeading();
 
             if (!board.hasWall(space, heading)) {
-            Space target = board.getNeighbour(space, heading);
+                Space target = board.getNeighbour(space, heading);
             if (target != null) {
-                try {
-                    moveToSpace(player, target, heading);
-                } catch (ImpossibleMoveException e) {
+
+                movePlayerAndUpdatePosition(player, target, heading);
+
                     // we don't do anything here  for now; we just catch the
                     // exception so that we do no pass it on to the caller
                     // (which would be very bad style).
@@ -70,7 +95,7 @@ public class GameController {
             }
         }
     }
-    }
+    
 
     /**
      * Moves the given player two steps forward in the direction it is facing.
