@@ -31,6 +31,24 @@ public class PlayerController {
         return ResponseEntity.ok(playerList);
     }
 
+    // Get players by gameId
+    @GetMapping("/games/{gameId}")
+    public ResponseEntity<List<Player>> getPlayersByGameId(@PathVariable Long gameId) {
+        List<Player> players = playerRepository.findByGame_GameId(gameId);
+        return ResponseEntity.ok(players);
+    }
+
+    //Get gameId from player
+    @GetMapping("/game/{playerId}")
+    public ResponseEntity<Game> getGameByPlayerId(@PathVariable Long playerId) {
+        Optional<Player> player = playerRepository.findById(playerId);
+        if (player.isPresent()) {
+            return ResponseEntity.ok(player.get().getGame());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     // Create a new player associated with a game
     @PostMapping("/games/{gameId}")
     public ResponseEntity<Player> createPlayer(@PathVariable Long gameId, @RequestBody Player player) {
