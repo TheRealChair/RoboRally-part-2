@@ -17,21 +17,25 @@ public class ClientController {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final String BASE_URL = "http://localhost:8080/";
 
+
+    // Send a request to server with a endPath ("player"), requestobject (PlayerRequest)
+    // And get back (PlayerResponse), which is the object of type RespondObjectClass
+    // object returned is a generic type (can be any type)
     public static <T> T sendRequestToServer(String endpointPath, Object requestObject, Class<T> responseObjectClass)
             throws IOException, InterruptedException, JsonProcessingException {
         String baseUrl = BASE_URL + endpointPath;
-        String requestJson = objectMapper.writeValueAsString(requestObject);
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        String requestJson = objectMapper.writeValueAsString(requestObject);  // Converts object to jason string
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);   // Makes it ignore unknown properties
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(baseUrl))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(requestJson))
-                .build();
+                .uri(URI.create(baseUrl))                                   // Begins building the request
+                .header("Content-Type", "application/json")     // Sets the url and content type
+                .POST(HttpRequest.BodyPublishers.ofString(requestJson))     // Sets the method to POST and adds the JSON String
+                .build();                                                   // Builds the object
 
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString()); // Sends the request and gets the response
 
-        return handleResponse(response, responseObjectClass);
+        return handleResponse(response, responseObjectClass);   // Handles the response, return a object dezerialized from the response
     }
 
     public static <T> T getRequestFromServer(String endpointPath, Class<T> responseObjectClass)
