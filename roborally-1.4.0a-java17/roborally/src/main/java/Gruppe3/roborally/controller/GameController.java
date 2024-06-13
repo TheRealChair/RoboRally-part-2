@@ -47,9 +47,10 @@ public class GameController {
         this.board = board;
     }
 
-    public void sendPlayerPositionUpdate(Player player) {
+    public void sendPlayerPositionUpdate() {
         try {
-            PlayerResponse playerResponse = ClientController.getRequestFromServer("/players"+player.getName(), PlayerResponse.class);
+            Long myId = ClientController.playerId;
+            PlayerResponse playerResponse = ClientController.getRequestFromServer("/players"+myId, PlayerResponse.class);
 
 
         PositionRequest positionRequest = new PositionRequest();
@@ -477,7 +478,7 @@ public class GameController {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Game Over");
             alert.setHeaderText(null);
-            alert.setContentText(player.getName() + " has won the game!");
+            alert.setContentText(player.getGamePlayerID() + " has won the game!");
 
             alert.showAndWait();
         }

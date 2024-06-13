@@ -24,7 +24,7 @@ public class LoadPlayers {
          * @Author: Karl
          */
     public static void loadPlayer(Board result, PlayerTemplate playerTemplate) {
-        Player player = new Player(result, playerTemplate.color, playerTemplate.name, false);
+        Player player = new Player(result, playerTemplate.color, playerTemplate.gamePlayerID, false);
         int x = playerTemplate.x;
         int y = playerTemplate.y;
         if (x >= 0 && y >= 0 && x < result.width && y < result.height) {

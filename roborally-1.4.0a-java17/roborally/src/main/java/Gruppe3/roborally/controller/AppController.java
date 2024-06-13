@@ -24,6 +24,7 @@ package Gruppe3.roborally.controller;
 import Gruppe3.roborally.fileaccess.LoadBoard;
 import Gruppe3.designpatterns.observer.Observer;
 import Gruppe3.designpatterns.observer.Subject;
+import Gruppe3.roborally.model.Player;
 
 import Gruppe3.roborally.RoboRally;
 
@@ -99,7 +100,7 @@ public class AppController implements Observer {
             gameController = new GameController(board);
             int no = result.get();
 
-            Player player = new Player(board, PLAYER_COLORS.get(0), "Player 1", false);
+            Player player = new Player(board, PLAYER_COLORS.get(0), 1 , false);
             board.addPlayer(player);
             player.setSpace(board.getSpace(0, 0));
 

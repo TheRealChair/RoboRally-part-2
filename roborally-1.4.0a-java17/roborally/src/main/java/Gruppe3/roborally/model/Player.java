@@ -40,7 +40,7 @@ public class Player extends Subject {
     final public static int NO_CARDS = 8;
 
     final public Board board;
-    private String name;
+    private int gamePlayerID;
     private String color;
 
     private Space space;
@@ -55,9 +55,9 @@ public class Player extends Subject {
     public boolean hasBeenInPit = false;
     private CommandCard lastExecutedCommand;
 
-    public Player(@NotNull Board board, String color, @NotNull String name, boolean hasBeenInPit) {
+    public Player(@NotNull Board board, String color, @NotNull int gamePlayerID, boolean hasBeenInPit) {
         this.board = board;
-        this.name = name;
+        this.gamePlayerID = gamePlayerID;
         this.color = color;
         this.hasBeenInPit = false;
         this.space = null;
@@ -73,13 +73,13 @@ public class Player extends Subject {
         }
     }
 
-    public String getName() {
-        return name;
+    public int getGamePlayerID() {
+        return gamePlayerID;
     }
 
-    public void setName(String name) {
-        if (name != null && !name.equals(this.name)) {
-            this.name = name;
+    public void setGamePlayerID(int gamePlayerID) {
+        if (gamePlayerID != 0 && gamePlayerID != this.gamePlayerID) {
+            this.gamePlayerID = gamePlayerID;
             notifyChange();
             if (space != null) {
                 space.playerChanged();
