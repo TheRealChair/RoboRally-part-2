@@ -118,7 +118,10 @@ public class AppController implements Observer {
                 playerRequest.setGameId(gameId);
 
                 endpointUrl = "players/games/" + gameId;
-                ClientController.sendRequestToServer(endpointUrl, playerRequest, PlayerResponse.class);
+                PlayerResponse hostPlayerResponse = ClientController.sendRequestToServer(endpointUrl, playerRequest, PlayerResponse.class);
+                ClientController.playerId = hostPlayerResponse.getPlayerId(); // gives the client a local playerId
+                System.out.println("Player ID set to: " + ClientController.playerId);
+
 
                 // Proceed with game initialization
                 gameController.startProgrammingPhase();
@@ -157,6 +160,7 @@ public class AppController implements Observer {
         String urlToGame = "players/games/" + gameId;
         PlayerResponse playerResponse = ClientController.sendRequestToServer(urlToGame, playerRequest, PlayerResponse.class);
         System.out.println("Player joined game: " + playerResponse.getGame().getGameId() + " as player " + playerResponse.getGamePlayerID());
+        ClientController.playerId = playerResponse.getPlayerId();
 
         ClientController.notifyHost(playerResponse);
 

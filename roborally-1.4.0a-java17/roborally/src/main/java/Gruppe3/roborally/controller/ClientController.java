@@ -16,6 +16,7 @@ public class ClientController {
     private static final HttpClient httpClient = HttpClient.newHttpClient();
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final String BASE_URL = "http://localhost:8080/";
+    public static Long playerId = null;
 
 
     // Send a request to server with a endPath ("player"), requestobject (PlayerRequest)
