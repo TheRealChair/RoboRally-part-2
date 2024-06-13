@@ -21,8 +21,12 @@
  */
 package Gruppe3.roborally.controller;
 
-import Gruppe3.roborally.model.Heading;
 import Gruppe3.roborally.model.Space;
+import Gruppe3.roborally.model.Player;
+import Gruppe3.roborally.model.Heading;
+import Gruppe3.roborally.model.Board;
+import Gruppe3.roborally.model.Reboots;
+import Gruppe3.roborally.model.Command;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -32,34 +36,40 @@ import org.jetbrains.annotations.NotNull;
  *
  */
 public class ConveyorBelt extends FieldAction {
+    private final Heading direction;
+    private final int speed;
 
-    private Heading heading;
-
-    public Heading getHeading() {
-        return heading;
+    public ConveyorBelt(Heading direction, int speed) {
+        this.direction = direction;
+        this.speed = speed;
     }
 
-    public void setHeading(Heading heading) {
-        this.heading = heading;
+    public Heading getDirection() {
+        return direction;
+    }
+
+    public int getSpeed() {
+        return speed;
     }
 
     @Override
-    public boolean doAction(@NotNull GameController gameController, @NotNull Space space) {
-        // TODO needs to be implemented
-        Player player = space.getPlayer();
+    public boolean doAction(GameController gameController, Space space) {
+        Player player = gameController.getPlayerOnSpace(space);
         if (player != null) {
-            Heading conveyorBeltHeading = getHeading();
-            Space nextSpace = space.board.getNeighbour(space, conveyorBeltHeading);
-
-            if (nextSpace != null && nextSpace.getPlayer() == null) {
-                space.setPlayer(null); // Remove player from current space
-                nextSpace.setPlayer(player); // Place player on next space
-                gameController.moveForward(player); // Update player to interact
-                return true; // Action successfully performed
+            for (int i = 0; i < speed; i++) {
+                Space nextSpace = gameController.getBoard().getNeighbour(space, direction);
+                if (nextSpace != null) {
+                    player.setSpace(nextSpace);
+                    space = nextSpace;  // Update the space for the next iteration
+                } else {
+                    // Handle the case where the player would move out of bounds or into a pit
+                    player.rebootPosition();
+                    return false;
+                }
             }
+            return true;
         }
-
-        return false; // No player on this space or unable to move player
+        return false;
     }
 
 }

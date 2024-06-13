@@ -40,6 +40,18 @@ public class GameController {
         this.board = board;
     }
 
+    public Board getBoard() {
+        return board;
+    }
+
+    public Player getPlayerOnSpace(Space space) {
+        for (Player player : board.getPlayers()) {
+            if (player.getSpace().equals(space)) {
+                return player;
+            }
+        }
+        return null;
+    }
 
     /**
      * Moves the given player one step forward in the direction it is facing.
@@ -243,6 +255,9 @@ public class GameController {
     }
 
     private void continuePrograms() {
+        if (board.getPhase() == Phase.ACTIVATION) {
+            board.triggerConveyorBelts(this);
+        }
         do {
             executeNextStep();
         } while (board.getPhase() == Phase.ACTIVATION && !board.isStepMode());
