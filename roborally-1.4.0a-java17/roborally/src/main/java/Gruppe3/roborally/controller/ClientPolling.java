@@ -9,18 +9,20 @@ import java.util.List;
 
 public class ClientPolling implements Runnable {
     private volatile boolean running = true;
-    private Long myId = null; // gets updated. id own player id
+    private Long myId = null; // gets updated. own player id
+    private PollingTask currentTask; // Current task to execute during polling
 
     public ClientPolling() {
         this.myId = ClientController.playerId;
+        this.currentTask = this::startGame; // Initialize with startGame as default task
     }
 
     @Override
     public void run() {
         while (running) {
-            System.out.println("Polling server for player updates...");
+            System.out.println("Polling server for updates...");
             try {
-                startGame();
+                currentTask.execute(); // Execute the current task
                 Thread.sleep(2000); // Sleep for 2 seconds before the next poll
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -33,8 +35,16 @@ public class ClientPolling implements Runnable {
         running = false;
     }
 
+    public void setStartGameTask() {
+        currentTask = this::startGame;
+    }
 
-    public void startGame() {
+    public void setStartProgrammingTask() {
+        currentTask = this::startProgramming;
+    }
+
+    // Logic for polling when to start the game
+    private void startGame() {
         try {
             // Fetch the game information for the current player
             GameResponse game = ClientController.getRequestFromServer("players/game/" + myId, GameResponse.class);
@@ -56,4 +66,10 @@ public class ClientPolling implements Runnable {
         }
     }
 
+    // Logic for polling when everybody has pressed "programming"
+    private void startProgramming() {
+        // Implement your logic for starting programming phase
+        System.out.println("Starting programming phase...");
+    }
 }
+
