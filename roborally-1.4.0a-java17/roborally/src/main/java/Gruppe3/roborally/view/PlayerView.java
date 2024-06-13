@@ -59,6 +59,7 @@ public class PlayerView extends Tab implements ViewObserver {
     private Button stepButton;
     private Label pointLabel;
     private Label activeCheckPointLabel;
+    private Label activePlayerLabel;
 
     private VBox playerInteractionPanel;
 
@@ -112,6 +113,7 @@ public class PlayerView extends Tab implements ViewObserver {
 
         pointLabel = new Label("Points: " + player.getPoints());
         activeCheckPointLabel = new Label("Active Checkpoint: " + player.getCurrentCheckpoint());
+
 
         cardsLabel = new Label("Command Cards");
         cardsPane = new GridPane();

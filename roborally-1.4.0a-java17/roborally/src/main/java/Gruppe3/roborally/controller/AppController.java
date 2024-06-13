@@ -123,32 +123,12 @@ public class AppController implements Observer {
                 // Proceed with game initialization
                 gameController.startProgrammingPhase();
                 roboRally.createBoardView(gameController);
+                System.out.println("Game created successfully.");
             } catch (IOException | InterruptedException e) {
                 System.out.println("Failed to create game: " + e.getMessage());
                 e.printStackTrace();
                 // Handle the exception as needed
             }
-        }
-    }
-
-    private void sendNewGameToServer(GameRequest gameRequest) throws IOException, InterruptedException {
-        String gameRequestJson = objectMapper.writeValueAsString(gameRequest);
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE_URL))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(gameRequestJson)) // set HTTP method to POST and provide request body
-                .build();
-
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
-        if (response.statusCode() >= 200 && response.statusCode() < 300) {
-            // Parse the response body to GameResponse
-            GameResponse gameResponse = objectMapper.readValue(response.body(), GameResponse.class);
-            System.out.println("Game created successfully: " + gameResponse);
-        } else {
-            System.out.println("Failed to create game: " + response.body());
         }
     }
 
@@ -183,6 +163,7 @@ public class AppController implements Observer {
 
         Board board = LoadBoard.loadBoard("save");
         gameController = new GameController(board);
+        displayPlayerJoinedNotification(playerResponse);
 
 
         // Get the game from the server
@@ -206,7 +187,16 @@ public class AppController implements Observer {
         }
     }
 
-    
+    private void displayPlayerJoinedNotification(PlayerResponse playerResponse) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Player Joined");
+            alert.setHeaderText(null);
+            alert.setContentText("Player " + playerResponse.getGamePlayerID() + " has joined the game!");
+            alert.showAndWait();
+        });
+    }
+
 
     private void updateGameOnServer(GameResponse gameResponse) throws IOException, InterruptedException {
         String gameResponseJson = objectMapper.writeValueAsString(gameResponse);
