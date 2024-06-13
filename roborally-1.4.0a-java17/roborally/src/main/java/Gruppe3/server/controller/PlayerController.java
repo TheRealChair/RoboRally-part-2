@@ -67,12 +67,21 @@ public class PlayerController {
         Optional<Player> optionalPlayer = playerRepository.findById(id);
         if (optionalPlayer.isPresent()) {
             Player existingPlayer = optionalPlayer.get();
+
+            // Update fields from playerDetails
+            if (playerDetails.getGamePlayerID() != 0) {
+                existingPlayer.setGamePlayerID(playerDetails.getGamePlayerID());
+            }
+
+            // Save the updated player
             Player updatedPlayer = playerRepository.save(existingPlayer);
+
             return ResponseEntity.ok(updatedPlayer);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
+
 
     // Delete a player
     @DeleteMapping("/{id}")
