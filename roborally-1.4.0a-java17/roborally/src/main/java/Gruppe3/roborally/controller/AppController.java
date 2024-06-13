@@ -127,6 +127,7 @@ public class AppController implements Observer {
                 // Proceed with game initialization
                 gameController.startProgrammingPhase();
                 roboRally.createBoardView(gameController);
+                System.out.println("Game created successfully.");
             } catch (IOException | InterruptedException e) {
                 System.out.println("Failed to create game: " + e.getMessage());
                 e.printStackTrace();
@@ -167,6 +168,8 @@ public class AppController implements Observer {
 
         Board board = LoadBoard.loadBoard("save");
         gameController = new GameController(board);
+        roboRally.createBoardView(gameController);
+        displayPlayerJoinedNotification(playerResponse);
 
 
         // Get the game from the server
@@ -190,7 +193,16 @@ public class AppController implements Observer {
         }
     }
 
-    
+    private void displayPlayerJoinedNotification(PlayerResponse playerResponse) {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Player Joined");
+            alert.setHeaderText(null);
+            alert.setContentText("Player " + playerResponse.getGamePlayerID() + " has joined the game!");
+            alert.showAndWait();
+        });
+    }
+
 
     private void updateGameOnServer(GameResponse gameResponse) throws IOException, InterruptedException {
         String gameResponseJson = objectMapper.writeValueAsString(gameResponse);
