@@ -160,6 +160,7 @@ public class AppController implements Observer {
         String urlToGame = "players/games/" + gameId;
         PlayerResponse playerResponse = ClientController.sendRequestToServer(urlToGame, playerRequest, PlayerResponse.class);
         System.out.println("Player joined game: " + playerResponse.getGame().getGameId() + " as player " + playerResponse.getGamePlayerID());
+        ClientController.playerId = playerResponse.getPlayerId();
 
         ClientController.notifyHost(playerResponse);
 
