@@ -33,19 +33,27 @@ public class ClientPolling implements Runnable {
         running = false;
     }
 
+
     public void startGame() {
         try {
+            // Fetch the game information for the current player
             GameResponse game = ClientController.getRequestFromServer("players/game/" + myId, GameResponse.class);
             long myGameId = Long.parseLong(game.getGameId());
 
             TypeReference<List<PlayerResponse>> typeReference = new TypeReference<>() {};
             List<PlayerResponse> playerResponses = ClientController.getRequestFromServer("players/games/" + myGameId, typeReference);
-            for (PlayerResponse player : playerResponses) {
-                System.out.println("Player: " + player);
-                // Add logic to initialize or update the game state with the player information
+
+            int gameSize = game.getNoOfPlayers();
+
+            // Check if the number of players in the response meets or exceeds the game size
+            if (playerResponses.size() >= gameSize) {
+                System.out.println("Game is ready to start!");
+            } else {
+                System.out.println("Waiting for more players to join...");
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
+
 }
