@@ -283,6 +283,7 @@ public class GameController {
                         }
                     }
                 }
+
             } else {
                 // this should not happen
                 assert false;
