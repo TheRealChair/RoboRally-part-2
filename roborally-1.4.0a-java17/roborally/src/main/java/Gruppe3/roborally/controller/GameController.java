@@ -47,7 +47,7 @@ public class GameController {
         this.board = board;
     }
 
-    public void sendPlayerPositionUpdate() {
+    public void sendPlayerPositionUpdate(Player player) {
         try {
             Long myId = ClientController.playerId;
             PlayerResponse playerResponse = ClientController.getRequestFromServer("/players"+myId, PlayerResponse.class);

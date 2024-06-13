@@ -100,9 +100,6 @@ public class AppController implements Observer {
             gameController = new GameController(board);
             int no = result.get();
 
-            Player player = new Player(board, PLAYER_COLORS.get(0), 1 , false);
-            board.addPlayer(player);
-            player.setSpace(board.getSpace(0, 0));
 
             // Prepare the game request
             GameRequest gameRequest = new GameRequest();
@@ -123,6 +120,9 @@ public class AppController implements Observer {
                 ClientController.playerId = hostPlayerResponse.getPlayerId(); // gives the client a local playerId
                 System.out.println("Player ID set to: " + ClientController.playerId);
 
+                Player player = new Player(board, PLAYER_COLORS.get(0), hostPlayerResponse.getGamePlayerID(), false);
+                board.addPlayer(player);
+                player.setSpace(board.getSpace(0, 0));
 
                 // Proceed with game initialization
                 gameController.startProgrammingPhase();
