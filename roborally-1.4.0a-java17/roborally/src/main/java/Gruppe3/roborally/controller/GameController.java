@@ -112,13 +112,8 @@ public class GameController {
 
                 Space target1 = board.getNeighbour(space, heading);
                 if (target1 != null) {
-                    try {
-                        moveToSpace(player, target1, heading);
-                    } catch (ImpossibleMoveException e) {
-                        // we don't do anything here  for now; we just catch the
-                        // exception so that we do no pass it on to the caller
-                        // (which would be very bad style).
-                    }
+                    movePlayerAndUpdatePosition(player, target1, heading);
+
                 }
             }
             if(player.hasBeenInPit){
@@ -140,13 +135,9 @@ public class GameController {
 
                 Space target1 = board.getNeighbour(space, heading);
                 if (target1 != null) {
-                    try {
-                        moveToSpace(player, target1, heading);
-                    } catch (ImpossibleMoveException e) {
-                        // we don't do anything here  for now; we just catch the
-                        // exception so that we do no pass it on to the caller
-                        // (which would be very bad style).
-                    }
+
+                    movePlayerAndUpdatePosition(player, target1, heading);
+
                 }
             }
             if(player.hasBeenInPit){
@@ -166,6 +157,7 @@ public class GameController {
         Heading heading = player.getHeading();
         Heading newHeading = heading.next();
         player.setHeading(newHeading);
+        sendPlayerPositionUpdate(player);
     }
 
     /**
@@ -178,11 +170,13 @@ public class GameController {
         Heading heading = player.getHeading();
         Heading newHeading = heading.prev();
         player.setHeading(newHeading);
+        sendPlayerPositionUpdate(player);
     }
     public void leftOrRight(@NotNull Player player) {
         Heading heading = player.getHeading();
         Heading newHeading = heading.next();
         player.setHeading(newHeading);
+        sendPlayerPositionUpdate(player);
     }
 
     /**
