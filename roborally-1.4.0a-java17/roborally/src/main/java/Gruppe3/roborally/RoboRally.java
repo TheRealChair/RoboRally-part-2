@@ -90,7 +90,7 @@ public class RoboRally extends Application {
         });
         button2.setOnAction(e -> {
             try {
-                Long gameId = 1L; //TEMP GAME ID
+                Long gameId = 4L; //TEMP GAME ID
                 appController.joinGame(gameId);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
