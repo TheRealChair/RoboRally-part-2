@@ -35,11 +35,8 @@ import Gruppe3.roborally.model.httpModels.PlayerRequest;
 import Gruppe3.roborally.model.httpModels.PlayerResponse;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import javafx.application.Platform;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.TextInputDialog;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -91,6 +88,7 @@ public class AppController implements Observer {
         Optional<Integer> result = dialog.showAndWait();
 
 
+
         if (result.isPresent()) {
             if (gameController != null) {
                 if (!stopGame()) {
@@ -113,7 +111,6 @@ public class AppController implements Observer {
             GameRequest gameRequest = new GameRequest();
             gameRequest.setNoOfPlayers(result.get());
 
-
             try {
                 // Send the request to the server
                 String endpointUrl = "games";
@@ -130,9 +127,6 @@ public class AppController implements Observer {
 
                 ClientController.startPolling(this); ; //start pooling for updates to startgame
 
-                // Proceed with game initialization
-                gameController.startProgrammingPhase();
-                roboRally.createBoardView(gameController);
                 System.out.println("Game created successfully.");
             } catch (IOException | InterruptedException e) {
                 System.out.println("Failed to create game: " + e.getMessage());
@@ -200,7 +194,6 @@ public class AppController implements Observer {
                             board.addPlayer(player);
                             player.setSpace(board.getSpace(0, startPoints[i]));
                         }
-                        roboRally.createBoardView(gameController);
                         displayPlayerJoinedNotification(playerResponse);
                         ClientController.postGameState(ClientController.playerId, gameId, 0, null);
                     } else {
