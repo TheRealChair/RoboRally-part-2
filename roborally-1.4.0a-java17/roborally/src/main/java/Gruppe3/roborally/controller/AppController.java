@@ -102,7 +102,7 @@ public class AppController implements Observer {
             gameController = new GameController(board);
             int no = result.get();
 
-            Player player = new Player(board, PLAYER_COLORS.get(0), "Player 1", false);
+            Player player = new Player(board, PLAYER_COLORS.get(0), 1, false);
             board.addPlayer(player);
             player.setSpace(board.getSpace(0, 0));
 
@@ -125,6 +125,7 @@ public class AppController implements Observer {
                 ClientController.playerId = hostPlayerResponse.getPlayerId(); // gives the client a local playerId
                 System.out.println("Player ID set to: " + ClientController.playerId);
 
+                ClientController.startPolling();    //start pooling for updates to startgame
 
                 // Proceed with game initialization
                 gameController.startProgrammingPhase();
@@ -170,19 +171,20 @@ public class AppController implements Observer {
                 PlayerRequest playerRequest = new PlayerRequest();
                 playerRequest.setGameId(gameId);
 
-                String urlToGame = "players/games/" + gameId;
-                PlayerResponse playerResponse = ClientController.sendRequestToServer(urlToGame, playerRequest, PlayerResponse.class);
-                System.out.println("Player joined game: " + playerResponse.getGame().getGameId() + " as player " + playerResponse.getGamePlayerID());
+        String urlToGame = "players/games/" + gameId;
+        PlayerResponse playerResponse = ClientController.sendRequestToServer(urlToGame, playerRequest, PlayerResponse.class);
+        System.out.println("Player joined game: " + playerResponse.getGame().getGameId() + " as player " + playerResponse.getGamePlayerID());
+        ClientController.playerId = playerResponse.getPlayerId();
 
-                ClientController.notifyHost(playerResponse);
 
                 Board board = LoadBoard.loadBoard("save1");
                 gameController = new GameController(board);
                 roboRally.createBoardView(gameController);
                 displayPlayerJoinedNotification(playerResponse);
 
-                // Get the game from the server
-                GameResponse gameResponse = getGameFromServer(gameId);
+
+        // Get the game from the server
+        GameResponse gameResponse = getGameFromServer(4); // 4 is the game ID
 
                 if (gameResponse != null) {
                     // Check if there is space for a new player
@@ -193,7 +195,7 @@ public class AppController implements Observer {
                         // Update the game on the server
                         updateGameOnServer(gameResponse);
 
-                        System.out.println("Joined the game successfully.");
+                        ClientController.startPolling(); //start pooling for updates to startgameSystem.out.println("Joined the game successfully.");
                     } else {
                         System.out.println("The game is already full. No more players can join.");
                     }

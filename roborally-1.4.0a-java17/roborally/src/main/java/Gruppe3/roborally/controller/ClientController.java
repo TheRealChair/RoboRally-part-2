@@ -2,6 +2,7 @@ package Gruppe3.roborally.controller;
 
 import Gruppe3.roborally.model.httpModels.PlayerResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -17,30 +18,31 @@ public class ClientController {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final String BASE_URL = "http://localhost:8080/";
     public static Long playerId = null;
+    private static Thread pollingThread;
+    private static ClientPolling pollingTask;
 
-
-    // Send a request to server with a endPath ("player"), requestobject (PlayerRequest)
+    // Send a request to server with an endpointPath ("player"), requestObject (PlayerRequest)
     // And get back (PlayerResponse), which is the object of type RespondObjectClass
     // object returned is a generic type (can be any type)
     public static <T> T sendRequestToServer(String endpointPath, Object requestObject, Class<T> responseObjectClass)
-            throws IOException, InterruptedException, JsonProcessingException {
+            throws IOException, InterruptedException {
         String baseUrl = BASE_URL + endpointPath;
-        String requestJson = objectMapper.writeValueAsString(requestObject);  // Converts object to jason string
+        String requestJson = objectMapper.writeValueAsString(requestObject);  // Converts object to JSON string
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);   // Makes it ignore unknown properties
 
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(baseUrl))                                   // Begins building the request
-                .header("Content-Type", "application/json")     // Sets the url and content type
+                .header("Content-Type", "application/json")     // Sets the URL and content type
                 .POST(HttpRequest.BodyPublishers.ofString(requestJson))     // Sets the method to POST and adds the JSON String
                 .build();                                                   // Builds the object
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString()); // Sends the request and gets the response
 
-        return handleResponse(response, responseObjectClass);   // Handles the response, return a object dezerialized from the response
+        return handleResponse(response, responseObjectClass);   // Handles the response, returns an object deserialized from the response
     }
 
     public static <T> T getRequestFromServer(String endpointPath, Class<T> responseObjectClass)
-            throws IOException, InterruptedException, JsonProcessingException {
+            throws IOException, InterruptedException {
         String requestUrl = BASE_URL + endpointPath;
 
         HttpRequest request = HttpRequest.newBuilder()
@@ -54,9 +56,24 @@ public class ClientController {
         return handleResponse(response, responseObjectClass);
     }
 
+    public static <T> T getRequestFromServer(String endpointPath, TypeReference<T> typeReference)
+            throws IOException, InterruptedException {
+        String requestUrl = BASE_URL + endpointPath;
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(requestUrl))
+                .header("Content-Type", "application/json")
+                .GET()
+                .build();
+
+        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+        return handleResponse(response, typeReference);
+    }
+
     // Simplified method to send an update request to the server
     public static void sendUpdateToServer(String endpointPath, Object requestObject)
-            throws IOException, InterruptedException, JsonProcessingException {
+            throws IOException, InterruptedException {
         String baseUrl = BASE_URL + endpointPath;
 
         // Convert the request object to JSON string
@@ -95,27 +112,36 @@ public class ClientController {
         }
     }
 
-
-
-    // for notifying host about players joining the game
-    public static void notifyHost(PlayerResponse playerResponse) throws IOException, InterruptedException, JsonProcessingException {
-        String endpointPath = "players/notifyHost";
-        String requestJson = objectMapper.writeValueAsString(playerResponse);
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(BASE_URL + endpointPath))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(requestJson))
-                .build();
-
-        HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-
+    private static <T> T handleResponse(HttpResponse<String> response, TypeReference<T> typeReference)
+            throws JsonProcessingException {
         if (response.statusCode() >= 200 && response.statusCode() < 300) {
-            System.out.println("Notification sent successfully.");
+            System.out.println("Response body: " + response.body());
+            return objectMapper.readValue(response.body(), typeReference);
         } else {
-            System.out.println("Failed to send notification: " + response.body());
+            System.out.println("Request failed with status code: " + response.statusCode());
+            System.out.println("Response body: " + response.body());
+            // Handle error or return null based on your application's logic
+            throw new RuntimeException("Request failed with status code: " + response.statusCode());
+        }
+    }
+
+    public static void startPolling() {
+        if (pollingThread == null || !pollingThread.isAlive()) {
+            pollingTask = new ClientPolling();
+            pollingThread = new Thread(pollingTask);
+            pollingThread.start();
+        }
+    }
+
+    public static void stopPolling() {
+        if (pollingTask != null) {
+            pollingTask.stop();
+            try {
+                pollingThread.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                Thread.currentThread().interrupt();
+            }
         }
     }
 }
-

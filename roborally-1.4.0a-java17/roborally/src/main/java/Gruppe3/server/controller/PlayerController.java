@@ -31,6 +31,24 @@ public class PlayerController {
         return ResponseEntity.ok(playerList);
     }
 
+    // Get players by gameId
+    @GetMapping("/games/{gameId}")
+    public ResponseEntity<List<Player>> getPlayersByGameId(@PathVariable Long gameId) {
+        List<Player> players = playerRepository.findByGame_GameId(gameId);
+        return ResponseEntity.ok(players);
+    }
+
+    //Get gameId from player
+    @GetMapping("/game/{playerId}")
+    public ResponseEntity<Game> getGameByPlayerId(@PathVariable Long playerId) {
+        Optional<Player> player = playerRepository.findById(playerId);
+        if (player.isPresent()) {
+            return ResponseEntity.ok(player.get().getGame());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     // Create a new player associated with a game
     @PostMapping("/games/{gameId}")
     public ResponseEntity<Player> createPlayer(@PathVariable Long gameId, @RequestBody Player player) {
@@ -44,7 +62,6 @@ public class PlayerController {
             player.setGame(game); // Set the game association
 
             Player savedPlayer = playerRepository.save(player);
-            notifyHost(savedPlayer);
 
             return ResponseEntity.ok(savedPlayer);
         } else {
@@ -94,18 +111,4 @@ public class PlayerController {
             return ResponseEntity.notFound().build();
         }
     }
-
-    // Notify the host that a new player has joined
-    @PostMapping("/notifyHost")
-    public ResponseEntity<Void> notifyHost(@RequestBody Player player) {
-        if (player.getGame() != null) {
-            System.out.println("New player joined: " + player.getPlayerId() + " in game " + player.getGame().getGameId());
-        } else {
-            System.out.println("Player's game is null.");
-            // Handle the error or exception as needed
-            return ResponseEntity.badRequest().build(); // Or any other appropriate response
-        }
-        return ResponseEntity.ok().build();
-    }
-
 }
