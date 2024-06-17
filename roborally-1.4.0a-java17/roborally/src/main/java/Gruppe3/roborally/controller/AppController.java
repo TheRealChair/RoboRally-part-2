@@ -39,6 +39,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.TextInputDialog;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -54,6 +55,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.URI;
 import Gruppe3.roborally.model.httpModels.GameRequest;
 import Gruppe3.roborally.model.httpModels.GameResponse;
+
+import javax.swing.*;
 
 /**
  * ...
@@ -100,7 +103,7 @@ public class AppController implements Observer {
             int no = result.get();
             int[] startPoints = new int[]{0, 2, 3, 6, 7, 9};
             for (int i = 0; i < no; i++) {
-                Player player = new Player(board, PLAYER_COLORS.get(i), "Player " + (i + 1), false);
+                Player player = new Player(board, PLAYER_COLORS.get(i), i+1, false);
                 board.addPlayer(player);
                 player.setSpace(board.getSpace(0, startPoints[i]));
             }
@@ -139,7 +142,7 @@ public class AppController implements Observer {
         }
     }
 
-    private GameResponse getGameFromServer(int gameId) throws IOException, InterruptedException {
+    private GameResponse getGameFromServer(long gameId) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL + "games/" + gameId)) // games is the endpoint to get a game by its ID
                 .GET() // set HTTP method to GET
@@ -159,8 +162,17 @@ public class AppController implements Observer {
     }
 
     public void joinGame(Long gameId) throws IOException, InterruptedException {
-        PlayerRequest playerRequest = new PlayerRequest();
-        playerRequest.setGameId(gameId);
+        TextInputDialog dialog = new TextInputDialog();
+        dialog.setTitle("Join Game");
+        dialog.setHeaderText("Enter Game ID");
+        Optional<String> result = dialog.showAndWait();
+
+        if (result.isPresent()) {
+            try {
+                gameId = Long.parseLong(result.get().trim());
+
+                PlayerRequest playerRequest = new PlayerRequest();
+                playerRequest.setGameId(gameId);
 
         String urlToGame = "players/games/" + gameId;
         PlayerResponse playerResponse = ClientController.sendRequestToServer(urlToGame, playerRequest, PlayerResponse.class);
@@ -168,32 +180,36 @@ public class AppController implements Observer {
         ClientController.playerId = playerResponse.getPlayerId();
 
 
-        Board board = LoadBoard.loadBoard("save");
-        gameController = new GameController(board);
-        roboRally.createBoardView(gameController);
-        displayPlayerJoinedNotification(playerResponse);
+                Board board = LoadBoard.loadBoard("save1");
+                gameController = new GameController(board);
+                roboRally.createBoardView(gameController);
+                displayPlayerJoinedNotification(playerResponse);
 
 
         // Get the game from the server
         GameResponse gameResponse = getGameFromServer(4); // 4 is the game ID
 
-        if (gameResponse != null) {
-            // Check if there is space for a new player
-            if (gameResponse.getNoOfPlayers() < 6 && gameResponse.getBoardID() ==1) {
-                // Increase the noOfPlayers in the GameResponse object
-                gameResponse.setNoOfPlayers(gameResponse.getNoOfPlayers() + 1);
+                if (gameResponse != null) {
+                    // Check if there is space for a new player
+                    if (gameResponse.getNoOfPlayers() < 6 && gameResponse.getBoardID() == 1) {
+                        // Increase the noOfPlayers in the GameResponse object
+                        gameResponse.setNoOfPlayers(gameResponse.getNoOfPlayers() + 1);
 
-                // Update the game on the server
-                updateGameOnServer(gameResponse);
+                        // Update the game on the server
+                        updateGameOnServer(gameResponse);
 
-                ClientController.startPolling(this); //start pooling for updates to startgame
-
-                System.out.println("Joined the game successfully.");
-            } else {
-                System.out.println("The game is already full. No more players can join.");
+                        ClientController.startPolling(this); //start pooling for updates to startgameSystem.out.println("Joined the game successfully.");
+                    } else {
+                        System.out.println("The game is already full. No more players can join.");
+                    }
+                } else {
+                    System.out.println("No game with the provided ID is currently running. Please start a new game first.");
+                }
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Invalid Game ID. Please enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         } else {
-            System.out.println("No game with the provided ID is currently running. Please start a new game first.");
+            JOptionPane.showMessageDialog(null, "Game ID cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -318,14 +334,5 @@ public class AppController implements Observer {
     public void update(Subject subject) {
         // XXX do nothing for now
     }
-
-    public GameController getGameController() {
-        return gameController;
-    }
-
-    public RoboRally getRoboRally() {
-        return roboRally;
-    }
-
 
 }

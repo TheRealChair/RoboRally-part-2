@@ -19,7 +19,7 @@ public class GameService {
 
     public static final Logger logger = LoggerFactory.getLogger(GameService.class);
 
-    private static PlayerRepo playerRepository = null;
+    private static PlayerRepo playerRepository;
     private static PositionRepo positionRepository;
     public GameService(PlayerRepo playerRepository, PositionRepo positionRepository){
         this.playerRepository = playerRepository;
