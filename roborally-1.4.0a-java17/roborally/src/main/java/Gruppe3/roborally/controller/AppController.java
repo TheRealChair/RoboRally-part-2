@@ -95,13 +95,16 @@ public class AppController implements Observer {
                 }
             }
 
-            Board board = new Board(BOARD_WIDTH, BOARD_HEIGHT);
+            Board board = new Board(BOARD_WIDTH ,BOARD_HEIGHT);
             gameController = new GameController(board);
             int no = result.get();
+            int[] startPoints = new int[]{0, 2, 3, 6, 7, 9};
+            for (int i = 0; i < no; i++) {
+                Player player = new Player(board, PLAYER_COLORS.get(i), "Player " + (i + 1), false);
+                board.addPlayer(player);
+                player.setSpace(board.getSpace(0, startPoints[i]));
+            }
 
-            Player player = new Player(board, PLAYER_COLORS.get(0), "Player 1", false);
-            board.addPlayer(player);
-            player.setSpace(board.getSpace(0, 0));
 
             // Prepare the game request
             GameRequest gameRequest = new GameRequest();
@@ -122,7 +125,7 @@ public class AppController implements Observer {
                 ClientController.playerId = hostPlayerResponse.getPlayerId(); // gives the client a local playerId
                 System.out.println("Player ID set to: " + ClientController.playerId);
 
-                ClientController.startPolling();    //start pooling for updates to startgame
+                ClientController.startPolling(this); ; //start pooling for updates to startgame
 
                 // Proceed with game initialization
                 gameController.startProgrammingPhase();
@@ -183,7 +186,7 @@ public class AppController implements Observer {
                 // Update the game on the server
                 updateGameOnServer(gameResponse);
 
-                ClientController.startPolling(); //start pooling for updates to startgame
+                ClientController.startPolling(this); //start pooling for updates to startgame
 
                 System.out.println("Joined the game successfully.");
             } else {
@@ -315,5 +318,14 @@ public class AppController implements Observer {
     public void update(Subject subject) {
         // XXX do nothing for now
     }
+
+    public GameController getGameController() {
+        return gameController;
+    }
+
+    public RoboRally getRoboRally() {
+        return roboRally;
+    }
+
 
 }

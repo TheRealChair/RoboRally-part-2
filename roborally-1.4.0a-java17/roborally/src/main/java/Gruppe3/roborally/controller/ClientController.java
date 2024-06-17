@@ -125,13 +125,14 @@ public class ClientController {
         }
     }
 
-    public static void startPolling() {
+    public static void startPolling(AppController appController) {
         if (pollingThread == null || !pollingThread.isAlive()) {
-            pollingTask = new ClientPolling();
+            pollingTask = new ClientPolling(appController);
             pollingThread = new Thread(pollingTask);
             pollingThread.start();
         }
     }
+
 
     public static void stopPolling() {
         if (pollingTask != null) {
