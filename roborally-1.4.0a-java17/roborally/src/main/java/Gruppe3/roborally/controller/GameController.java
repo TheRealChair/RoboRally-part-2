@@ -235,9 +235,6 @@ public class GameController {
     }
 
     private void continuePrograms() {
-        if (board.getPhase() == Phase.ACTIVATION) {
-            board.triggerConveyorBelts(this);
-        }
         do {
             executeNextStep();
         } while (board.getPhase() == Phase.ACTIVATION && !board.isStepMode());
@@ -281,6 +278,7 @@ public class GameController {
             assert false;
 
         }
+        board.triggerConveyorBelts(this);
     }
 
     public void continueFromPlayerInteraction() {
