@@ -335,4 +335,15 @@ public class AppController implements Observer {
         // XXX do nothing for now
     }
 
+    public AppController getAppController() {
+        return this;
+    }
+
+    public GameController getGameController() {
+        return gameController;
+    }
+
+    public RoboRally getRoboRally() {
+        return roboRally;
+    }
 }
