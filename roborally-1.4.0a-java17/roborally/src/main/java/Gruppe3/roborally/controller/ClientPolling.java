@@ -11,10 +11,12 @@ public class ClientPolling implements Runnable {
     private volatile boolean running = true;
     private Long myId = null; // gets updated. own player id
     private PollingTask currentTask; // Current task to execute during polling
+    private AppController appController;
 
-    public ClientPolling() {
+    public ClientPolling(AppController appController) {
         this.myId = ClientController.playerId;
         this.currentTask = this::startGame; // Initialize with startGame as default task
+        this.appController = appController; // Initialize appController
     }
 
     @Override
@@ -58,6 +60,11 @@ public class ClientPolling implements Runnable {
             // Check if the number of players in the response meets or exceeds the game size
             if (playerResponses.size() >= gameSize) {
                 System.out.println("Game is ready to start!");
+
+                // Initialize the game using AppController methods
+                appController.getGameController().startProgrammingPhase();
+                appController.getRoboRally().createBoardView(appController.getGameController());
+                System.out.println("Game created successfully.");
             } else {
                 System.out.println("Waiting for more players to join...");
             }
@@ -72,4 +79,5 @@ public class ClientPolling implements Runnable {
         System.out.println("Starting programming phase...");
     }
 }
+
 

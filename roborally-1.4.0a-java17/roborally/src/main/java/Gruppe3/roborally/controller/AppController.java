@@ -122,7 +122,7 @@ public class AppController implements Observer {
                 ClientController.playerId = hostPlayerResponse.getPlayerId(); // gives the client a local playerId
                 System.out.println("Player ID set to: " + ClientController.playerId);
 
-                ClientController.startPolling();    //start pooling for updates to startgame
+                ClientController.startPolling(this); ; //start pooling for updates to startgame
 
                 // Proceed with game initialization
                 gameController.startProgrammingPhase();
@@ -183,7 +183,7 @@ public class AppController implements Observer {
                 // Update the game on the server
                 updateGameOnServer(gameResponse);
 
-                ClientController.startPolling(); //start pooling for updates to startgame
+                ClientController.startPolling(this); //start pooling for updates to startgame
 
                 System.out.println("Joined the game successfully.");
             } else {
@@ -315,5 +315,14 @@ public class AppController implements Observer {
     public void update(Subject subject) {
         // XXX do nothing for now
     }
+
+    public GameController getGameController() {
+        return gameController;
+    }
+
+    public RoboRally getRoboRally() {
+        return roboRally;
+    }
+
 
 }
