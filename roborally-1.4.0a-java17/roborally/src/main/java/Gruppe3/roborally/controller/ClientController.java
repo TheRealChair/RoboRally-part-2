@@ -150,7 +150,7 @@ public class ClientController {
 
 
 
-    public GameStateResponse postGameState(Long playerId, Long gameId, int register, String card) {
+    public static GameStateResponse postGameState(Long playerId, Long gameId, int register, String card) {
         try {
             GameStateResponse gameStateResponse = new GameStateResponse();
             GameStateRequest gameStateRequest = new GameStateRequest();
@@ -166,7 +166,7 @@ public class ClientController {
         }
     }
 
-    public void updateGameState (Long playerId, Long gameId, int register, String card) {
+    public static void updateGameState (Long playerId, Long gameId, int register, String card) {
         try {
             GameStateRequest gameStateRequest = new GameStateRequest();
             gameStateRequest.setPlayerId(playerId);

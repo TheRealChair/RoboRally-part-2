@@ -134,6 +134,7 @@ public class AppController implements Observer {
                 gameController.startProgrammingPhase();
                 roboRally.createBoardView(gameController);
                 System.out.println("Game created successfully.");
+                ClientController.postGameState(ClientController.playerId, gameId, 0, null);
             } catch (IOException | InterruptedException e) {
                 System.out.println("Failed to create game: " + e.getMessage());
                 e.printStackTrace();
@@ -199,6 +200,16 @@ public class AppController implements Observer {
                         updateGameOnServer(gameResponse);
 
                         ClientController.startPolling(this); //start pooling for updates to startgameSystem.out.println("Joined the game successfully.");
+
+
+
+
+
+
+
+
+
+                        ClientController.postGameState(ClientController.playerId, gameId, 0, null);
                     } else {
                         System.out.println("The game is already full. No more players can join.");
                     }
