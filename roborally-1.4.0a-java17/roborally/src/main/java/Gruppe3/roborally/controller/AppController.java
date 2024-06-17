@@ -33,7 +33,6 @@ import Gruppe3.roborally.model.Player;
 
 import Gruppe3.roborally.model.httpModels.PlayerRequest;
 import Gruppe3.roborally.model.httpModels.PlayerResponse;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -174,31 +173,35 @@ public class AppController implements Observer {
                 PlayerRequest playerRequest = new PlayerRequest();
                 playerRequest.setGameId(gameId);
 
-        String urlToGame = "players/games/" + gameId;
-        PlayerResponse playerResponse = ClientController.sendRequestToServer(urlToGame, playerRequest, PlayerResponse.class);
-        System.out.println("Player joined game: " + playerResponse.getGame().getGameId() + " as player " + playerResponse.getGamePlayerID());
-        ClientController.playerId = playerResponse.getPlayerId();
+                String urlToGame = "players/games/" + gameId;
+                PlayerResponse playerResponse = ClientController.sendRequestToServer(urlToGame, playerRequest, PlayerResponse.class);
+                System.out.println("Player joined game: " + playerResponse.getGame().getGameId() + " as player " + playerResponse.getGamePlayerID());
+                ClientController.playerId = playerResponse.getPlayerId();
 
-
-                Board board = LoadBoard.loadBoard("save1");
-                gameController = new GameController(board);
-                roboRally.createBoardView(gameController);
-                displayPlayerJoinedNotification(playerResponse);
-
-
-        // Get the game from the server
-        GameResponse gameResponse = getGameFromServer(4); // 4 is the game ID
+                GameResponse gameResponse = getGameFromServer(gameId);
 
                 if (gameResponse != null) {
+                    int no = gameResponse.getNoOfPlayers();
+
                     // Check if there is space for a new player
                     if (gameResponse.getNoOfPlayers() < 6 && gameResponse.getBoardID() == 1) {
-                        // Increase the noOfPlayers in the GameResponse object
+
                         gameResponse.setNoOfPlayers(gameResponse.getNoOfPlayers() + 1);
-
-                        // Update the game on the server
                         updateGameOnServer(gameResponse);
+                        ClientController.startPolling(this); // Start polling for updates to start the game
+                        System.out.println("Joined the game successfully.");
 
-                        ClientController.startPolling(this); //start pooling for updates to startgameSystem.out.println("Joined the game successfully.");
+                        Board board = new Board(BOARD_WIDTH, BOARD_HEIGHT);
+                        gameController = new GameController(board);
+                        int[] startPoints = new int[]{0, 2, 3, 6, 7, 9};
+                        for (int i = 0; i < no; i++) {
+                            Player player = new Player(board, PLAYER_COLORS.get(i), i + 1, false);
+                            board.addPlayer(player);
+                            player.setSpace(board.getSpace(0, startPoints[i]));
+                        }
+                        roboRally.createBoardView(gameController);
+                        displayPlayerJoinedNotification(playerResponse);
+
                     } else {
                         System.out.println("The game is already full. No more players can join.");
                     }
