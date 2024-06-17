@@ -26,6 +26,7 @@ import dk.dtu.compute.se.pisd.roborally.model.*;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.Glow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -34,6 +35,11 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.text.Text;
+import javafx.animation.FadeTransition;
+import javafx.scene.shape.Line;
+import javafx.util.Duration;
+
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -52,6 +58,7 @@ public class SpaceView extends StackPane implements ViewObserver {
     private Group playerLayer;
     private Group pitLayer;
     private Group rebootLayer;
+    private Group laserLayer;
 
 
     public SpaceView(@NotNull Space space) {
@@ -69,9 +76,10 @@ public class SpaceView extends StackPane implements ViewObserver {
         playerLayer = new Group();
         pitLayer = new Group();
         rebootLayer = new Group();
+        laserLayer = new Group();
 
         // Add layers to the scene graph in the desired order
-        getChildren().addAll(pitLayer, rebootLayer, playerLayer);
+        getChildren().addAll(pitLayer, rebootLayer, playerLayer, laserLayer);
 
         if ((space.x + space.y) % 2 == 0) {
             double imageWidth = 60.0; // adjust to desired width in pixels
@@ -108,6 +116,7 @@ public class SpaceView extends StackPane implements ViewObserver {
         drawCheckpoints();
         drawPits();
         drawReboots();
+        drawLasers();
 
         Player player = space.getPlayer();
         if (player != null) {
@@ -123,6 +132,7 @@ public class SpaceView extends StackPane implements ViewObserver {
 
 
             this.getChildren().add(robotView);
+            
         }
     }
 
@@ -171,6 +181,100 @@ public class SpaceView extends StackPane implements ViewObserver {
         }
         this.getChildren().add(line);
     }
+
+
+
+
+    private void drawLasers() {
+        for (Laser laser : space.getLasers()) {
+            drawLaser(laser);
+        }
+    }
+
+    private void drawLaser(Laser laser) {
+        double laserThickness = 2;
+        Line line = new Line();
+        line.setStroke(Color.RED);
+        line.setStrokeWidth(laserThickness);
+
+        
+
+        double offset = laserThickness / 2;
+        switch (laser.getDirection()) {
+            case NORTH:
+                line.setStartX(SPACE_WIDTH / 2);
+                line.setEndX(SPACE_WIDTH / 2);
+                line.setStartY(0);
+                line.setEndY(SPACE_HEIGHT);
+                break;
+            case SOUTH:
+                line.setStartX(SPACE_WIDTH / 2);
+                line.setEndX(SPACE_WIDTH / 2);
+                line.setStartY(0);
+                line.setEndY(SPACE_HEIGHT);
+                break;
+            case EAST:
+                line.setStartX(0);
+                line.setEndX(SPACE_WIDTH);
+                line.setStartY(SPACE_HEIGHT / 2);
+                line.setEndY(SPACE_HEIGHT / 2);
+                break;
+            case WEST:
+                line.setStartX(SPACE_WIDTH);
+                line.setEndX(0);
+                line.setStartY(SPACE_HEIGHT / 2);
+                line.setEndY(SPACE_HEIGHT / 2);
+                break;
+        }
+        this.getChildren().add(line);
+    }
+
+
+    public void fireLaserEffect(Heading direction) {
+        Line laser = new Line();
+        setupLaserLine(laser, direction);
+        this.getChildren().add(laser);
+
+        
+        FadeTransition fade = new FadeTransition(Duration.seconds(0.5), laser);
+        fade.setFromValue(1.0);
+        fade.setToValue(0.0);
+        fade.setOnFinished(e -> this.getChildren().remove(laser));
+        fade.play();
+    }
+
+    
+
+
+    private void setupLaserLine(Line laser, Heading direction) {
+        laser.setStroke(Color.RED);
+        laser.setStrokeWidth(3);
+        laser.setStartX(SPACE_WIDTH / 2);
+        laser.setStartY(SPACE_HEIGHT / 2);
+        double length = Math.max(SPACE_WIDTH, SPACE_HEIGHT); 
+        switch (direction) {
+            case NORTH:
+                laser.setEndX(SPACE_WIDTH / 2);
+                laser.setEndY(-length);
+                break;
+            case SOUTH:
+                laser.setEndX(SPACE_WIDTH / 2);
+                laser.setEndY(length);
+                break;
+            case EAST:
+                laser.setEndX(length);
+                laser.setEndY(SPACE_HEIGHT / 2);
+                break;
+            case WEST:
+                laser.setEndX(-length);
+                laser.setEndY(SPACE_HEIGHT / 2);
+                break;
+        }
+    }
+
+
+
+
 
     /**
      * Draw the checkpoints on the board.

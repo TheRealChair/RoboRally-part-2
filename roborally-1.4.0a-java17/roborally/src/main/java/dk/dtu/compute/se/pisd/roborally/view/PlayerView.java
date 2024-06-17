@@ -59,6 +59,8 @@ public class PlayerView extends Tab implements ViewObserver {
     private Button stepButton;
     private Label pointLabel;
     private Label activeCheckPointLabel;
+    private Label damageLabel;
+
 
     private VBox playerInteractionPanel;
 
@@ -126,12 +128,15 @@ public class PlayerView extends Tab implements ViewObserver {
             }
         }
 
+        damageLabel = new Label("Damage: " + player.getDamage());
+
         top.getChildren().add(programLabel);
         top.getChildren().add(programPane);
         top.getChildren().add(cardsLabel);
         top.getChildren().add(cardsPane);
         top.getChildren().add(pointLabel);
         top.getChildren().add(activeCheckPointLabel);
+        top.getChildren().add(damageLabel);
 
         if (player.board != null) {
             player.board.attach(this);
@@ -166,6 +171,7 @@ public class PlayerView extends Tab implements ViewObserver {
             }
             if (player != null) {
                 pointLabel.setText("Points: " + player.getPoints());
+                damageLabel.setText("Damage: " + player.getDamage());
             }
             if (player != null) {
                 activeCheckPointLabel.setText("Active Checkpoint: " + player.getCurrentCheckpoint());

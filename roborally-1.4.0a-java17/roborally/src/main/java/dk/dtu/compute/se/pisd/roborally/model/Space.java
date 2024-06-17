@@ -45,6 +45,7 @@ public class Space extends Subject {
     private List<Checkpoint> checkpoints = new ArrayList<>();
     private List<Pits> pits = new ArrayList<>();
     private List<Reboots> reboots = new ArrayList<>();
+    private List<Laser> lasers = new ArrayList<>();
 
     public final Board board;
 
@@ -97,6 +98,17 @@ public class Space extends Subject {
             reboots.add(reboot);
             notifyChange();
         }
+    }
+
+    public void addLaser(Laser laser) {
+        if (!lasers.contains(laser)) {
+            lasers.add(laser);
+            notifyChange();
+        }
+    }
+
+    public List<Laser> getLasers() {
+        return lasers;
     }
 
     public Player getPlayer() {

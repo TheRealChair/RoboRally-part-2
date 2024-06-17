@@ -47,6 +47,7 @@ public class Player extends Subject {
     private Heading heading = EAST;
 
     private int points = 0;
+    private int damage = 0;
     private int currentCheckpoint = 1;
 
     private CommandCardField[] program;
@@ -86,6 +87,21 @@ public class Player extends Subject {
             }
         }
     }
+
+    public void takeDamage(int amount) {
+        this.damage += amount;
+        notifyChange();
+        
+        if (this.damage >= 3) {
+            this.rebootPosition();
+            this.damage = 0;        
+        }
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+
 
     public String getColor() {
         return color;

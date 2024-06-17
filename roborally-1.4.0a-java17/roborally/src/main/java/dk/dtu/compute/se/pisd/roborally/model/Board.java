@@ -28,6 +28,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static dk.dtu.compute.se.pisd.roborally.model.Phase.INITIALISATION;
+import dk.dtu.compute.se.pisd.roborally.model.Laser;
+import dk.dtu.compute.se.pisd.roborally.view.SpaceView;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.paint.Color;
 
 /**
  * ...
@@ -46,6 +51,8 @@ public class Board extends Subject {
     private static Space[][] spaces;
 
     private final List<Player> players = new ArrayList<>();
+
+    private List<Laser> lasers = new ArrayList<>();
 
     private Player current;
 
@@ -81,6 +88,7 @@ public class Board extends Subject {
         setupCheckpoints();
         setupPits();
         setupReboot();
+        setupLasers();
     }
 
     public void setupWalls() {
@@ -91,6 +99,13 @@ public class Board extends Subject {
         getSpace(6, 3).addWall(Heading.WEST);
         // Ovenfor er væggene, og der kan tilføjes flere ved bare at indtaste koordinaterne
 
+    }
+
+    public void setupLasers() {
+        addLaser(2, 2, Heading.NORTH, 1);
+        addLaser(3, 3, Heading.EAST, 1);
+        addLaser(5, 5, Heading.SOUTH, 1);
+        addLaser(6, 6, Heading.WEST, 1);
     }
 
     /**
@@ -116,6 +131,7 @@ public class Board extends Subject {
             }
         }
     }
+    
     /**
      * setup pits for json.
      * @author Victor Mazanti, Balder Jacobsen.
@@ -386,6 +402,58 @@ public class Board extends Subject {
     public Player[] getPlayers() {
         return players.toArray(new Player[0]);
     }
+
+
+    public void addLaser(int x, int y, Heading direction, int strength) {
+        if (x >= 0 && x < width && y >= 0 && y < height) {
+            Laser laser = new Laser(x, y, direction, strength);
+            lasers.add(laser);
+            getSpace(x, y).addLaser(laser);
+        } else {
+            System.out.println("Laser coordinates out of bounds: " + x + ", " + y);
+        }
+    }
+
+    public List<Laser> getLasers() {
+        return lasers;
+    }
+
+    public void fireLasers() {
+        for (Laser laser : lasers) {
+            int x = laser.getX();
+            int y = laser.getY();
+    
+            Space space = getSpace(x, y);
+            if (space != null) {
+                Player player = space.getPlayer();
+                if (player != null) {
+                    int strength = laser.getStrength();
+                    player.takeDamage(strength);
+                }
+            }
+        }
+    }
+
+    public void fireRobotLasers() {
+    for (Player shooter : players) {
+        Space currentSpace = shooter.getSpace();
+        Heading direction = shooter.getHeading();
+
+        Space nextSpace = getNeighbour(currentSpace, direction);
+        while (nextSpace != null && !hasWall(currentSpace, direction)) {
+            Player target = nextSpace.getPlayer();
+            if (target != null) {
+                target.takeDamage(1);
+                break;
+            }
+            currentSpace = nextSpace;
+            nextSpace = getNeighbour(currentSpace, direction);
+        }
+    }
+}
+
+
+    
 }
 /*
     public void initializePrePitPos() {
