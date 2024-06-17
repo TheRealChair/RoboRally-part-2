@@ -59,9 +59,6 @@ public class ClientPolling implements Runnable {
 
             // Check if the number of players in the response meets or exceeds the game size
             if (playerResponses.size() >= gameSize) {
-                System.out.println("Game is ready to start!");
-
-                // Initialize the game using AppController methods
                 appController.getGameController().startProgrammingPhase();
                 appController.getRoboRally().createBoardView(appController.getGameController());
                 System.out.println("Game created successfully.");
