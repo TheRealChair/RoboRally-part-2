@@ -29,6 +29,7 @@ import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
@@ -36,6 +37,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.springframework.web.client.RestTemplate;
 
+import javax.swing.*;
 import java.io.IOException;
 
 /**
@@ -78,9 +80,14 @@ public class RoboRally extends Application {
         // Create two buttons
         Button button1 = new Button("New Game");
         Button button2 = new Button("Join Game");
+        Label lobbyLabel = new Label("Waiting for more players...");
+        lobbyLabel.setVisible(false);
 
         button1.setOnAction(e -> {
             try {
+                lobbyLabel.setVisible(true);
+                button1.setDisable(true);
+                button2.setDisable(true);
                 appController.newGame();
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
@@ -90,6 +97,9 @@ public class RoboRally extends Application {
         });
         button2.setOnAction(e -> {
             try {
+                lobbyLabel.setVisible(true);
+                button1.setDisable(true);
+                button2.setDisable(true);
                 Long gameId = 4L; //TEMP GAME ID
                 appController.joinGame(gameId);
             } catch (IOException ex) {
@@ -106,7 +116,7 @@ public class RoboRally extends Application {
         spacer.setPrefHeight(45);
 
         // Create a HBox to hold the buttons
-        vbox1.getChildren().addAll(spacer, button1, button2);
+        vbox1.getChildren().addAll(spacer, lobbyLabel, button1, button2);
 
         vbox1.setAlignment(Pos.CENTER);
         vbox1.setSpacing(10);

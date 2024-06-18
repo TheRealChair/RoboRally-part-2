@@ -71,4 +71,8 @@ public enum Command {
         throw new IllegalArgumentException("No enum constant with display name " + displayName);
     }
 
+    @Override
+    public String toString() {
+        return displayName;
+    }
 }
