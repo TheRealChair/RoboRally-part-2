@@ -95,7 +95,7 @@ public class ClientPolling implements Runnable {
             }
 
             if (allPlayersReady) {
-                //appController.getGameController().startRegisterPhase();
+                appController.getGameController().executeStep();
                 System.out.println("All players have put in a register.");
             } else {
                 System.out.println("Waiting for all players to put in a register...");

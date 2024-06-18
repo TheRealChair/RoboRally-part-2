@@ -122,10 +122,11 @@ public class AppController implements Observer {
                 PlayerResponse hostPlayerResponse = ClientController.sendRequestToServer(endpointUrl, playerRequest, PlayerResponse.class);
                 ClientController.playerId = hostPlayerResponse.getPlayerId(); // gives the client a local playerId
                 ClientController.gamePlayerId = hostPlayerResponse.getGamePlayerID(); // gives the client a local gamePlayerId
+                ClientController.gameId = Long.parseLong(hostPlayerResponse.getGame().getGameId());
                 System.out.println("Player ID set to: " + ClientController.playerId);
 
                 ClientController.startPolling(this); ; //start pooling for updates to startgame
-                ClientController.postGameState(ClientController.playerId, gameId, 0, null);
+                ClientController.postGameState(0, null);
                 System.out.println("Game created successfully.");
             } catch (IOException | InterruptedException e) {
                 System.out.println("Failed to create game: " + e.getMessage());
@@ -179,6 +180,7 @@ public class AppController implements Observer {
                 System.out.println("Player joined game: " + playerResponse.getGame().getGameId() + " as player " + playerResponse.getGamePlayerID());
                 ClientController.playerId = playerResponse.getPlayerId();
                 ClientController.gamePlayerId = playerResponse.getGamePlayerID();
+                ClientController.gameId = Long.parseLong(playerResponse.getGame().getGameId());
 
                 GameResponse gameResponse = getGameFromServer(gameId);
 
@@ -202,7 +204,7 @@ public class AppController implements Observer {
                             player.setSpace(board.getSpace(0, startPoints[i]));
                         }
                         displayPlayerJoinedNotification(playerResponse);
-                        ClientController.postGameState(ClientController.playerId, gameId, 0, null);
+                        ClientController.postGameState(0, null);
                     } else {
                         System.out.println("The game is already full. No more players can join.");
                     }
