@@ -59,6 +59,26 @@ public class Space extends Subject {
         this.y = y;
         player = null;
         this.isPit = false;
+        this.actions = new ArrayList<>();
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void addAction(FieldAction action) {
+        if (!actions.contains(action)) {
+            actions.add(action);
+            notifyChange();
+        }
     }
 
     public void addWall(Heading heading) {
