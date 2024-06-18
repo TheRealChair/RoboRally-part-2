@@ -1,5 +1,7 @@
 package Gruppe3.roborally.controller;
 
+import Gruppe3.roborally.model.httpModels.GameStateRequest;
+import Gruppe3.roborally.model.httpModels.GameStateResponse;
 import Gruppe3.roborally.model.httpModels.PlayerResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -145,4 +147,37 @@ public class ClientController {
             }
         }
     }
+
+
+
+    public static GameStateResponse postGameState(Long playerId, Long gameId, int register, String card) {
+        try {
+            GameStateResponse gameStateResponse = new GameStateResponse();
+            GameStateRequest gameStateRequest = new GameStateRequest();
+            gameStateRequest.setPlayerId(playerId);
+            gameStateRequest.setGameId(gameId);
+            gameStateRequest.setRegister(register);
+            gameStateRequest.setCard(card);
+
+            return gameStateResponse = ClientController.sendRequestToServer("/gameState", gameStateRequest, GameStateResponse.class);
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static void updateGameState (Long playerId, Long gameId, int register, String card) {
+        try {
+            GameStateRequest gameStateRequest = new GameStateRequest();
+            gameStateRequest.setPlayerId(playerId);
+            gameStateRequest.setGameId(gameId);
+            gameStateRequest.setRegister(register);
+            gameStateRequest.setCard(card);
+
+            ClientController.sendUpdateToServer("/gameState", gameStateRequest);
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

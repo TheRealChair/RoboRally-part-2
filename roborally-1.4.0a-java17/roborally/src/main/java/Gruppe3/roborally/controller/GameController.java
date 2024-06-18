@@ -50,13 +50,12 @@ public class GameController {
     public void sendPlayerPositionUpdate(Player player) {
         try {
             Long myId = ClientController.playerId;
-            PlayerResponse playerResponse = ClientController.getRequestFromServer("/players"+myId, PlayerResponse.class);
 
-
-        PositionRequest positionRequest = new PositionRequest();
-        positionRequest.setPositionX(player.getSpace().x);
-        positionRequest.setPositionY(player.getSpace().y);
-        positionRequest.setHeading(player.getHeading().toString());
+            PositionRequest positionRequest = new PositionRequest();
+            positionRequest.setPlayerId(myId);
+            positionRequest.setPositionX(player.getSpace().x);
+            positionRequest.setPositionY(player.getSpace().y);
+            positionRequest.setHeading(player.getHeading().toString());
 
         ClientController.sendRequestToServer("positions", positionRequest, PositionResponse.class);
         } catch (IOException | InterruptedException e) {
@@ -67,7 +66,6 @@ public class GameController {
     public void movePlayerAndUpdatePosition(Player player, Space target, Heading heading){
         try{
             moveToSpace(player, target, heading);
-            sendPlayerPositionUpdate(player);
         } catch (ImpossibleMoveException e) {
 
         }
@@ -157,7 +155,6 @@ public class GameController {
         Heading heading = player.getHeading();
         Heading newHeading = heading.next();
         player.setHeading(newHeading);
-        sendPlayerPositionUpdate(player);
     }
 
     /**
@@ -170,13 +167,11 @@ public class GameController {
         Heading heading = player.getHeading();
         Heading newHeading = heading.prev();
         player.setHeading(newHeading);
-        sendPlayerPositionUpdate(player);
     }
     public void leftOrRight(@NotNull Player player) {
         Heading heading = player.getHeading();
         Heading newHeading = heading.next();
         player.setHeading(newHeading);
-        sendPlayerPositionUpdate(player);
     }
 
     /**
