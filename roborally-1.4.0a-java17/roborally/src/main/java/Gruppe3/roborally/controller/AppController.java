@@ -87,8 +87,6 @@ public class AppController implements Observer {
         dialog.setHeaderText("Select number of players");
         Optional<Integer> result = dialog.showAndWait();
 
-
-
         if (result.isPresent()) {
             if (gameController != null) {
                 if (!stopGame()) {
@@ -126,7 +124,7 @@ public class AppController implements Observer {
                 System.out.println("Player ID set to: " + ClientController.playerId);
 
                 ClientController.startPolling(this); ; //start pooling for updates to startgame
-
+                ClientController.postGameState(ClientController.playerId, gameId, 0, null);
                 System.out.println("Game created successfully.");
             } catch (IOException | InterruptedException e) {
                 System.out.println("Failed to create game: " + e.getMessage());

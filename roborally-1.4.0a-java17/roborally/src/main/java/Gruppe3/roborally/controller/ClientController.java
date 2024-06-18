@@ -152,19 +152,22 @@ public class ClientController {
 
     public static GameStateResponse postGameState(Long playerId, Long gameId, int register, String card) {
         try {
-            GameStateResponse gameStateResponse = new GameStateResponse();
             GameStateRequest gameStateRequest = new GameStateRequest();
             gameStateRequest.setPlayerId(playerId);
             gameStateRequest.setGameId(gameId);
             gameStateRequest.setRegister(register);
             gameStateRequest.setCard(card);
 
-            return gameStateResponse = ClientController.sendRequestToServer("/gameState", gameStateRequest, GameStateResponse.class);
+            // Log the request object
+            System.out.println("Sending game state request: " + gameStateRequest);
+
+            return sendRequestToServer("game-states", gameStateRequest, GameStateResponse.class);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             return null;
         }
     }
+
 
     public static void updateGameState (Long playerId, Long gameId, int register, String card) {
         try {
@@ -174,7 +177,7 @@ public class ClientController {
             gameStateRequest.setRegister(register);
             gameStateRequest.setCard(card);
 
-            ClientController.sendUpdateToServer("/gameState", gameStateRequest);
+            ClientController.sendUpdateToServer("game-states", gameStateRequest);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
