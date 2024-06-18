@@ -19,6 +19,7 @@ public class ClientController {
     private static final HttpClient httpClient = HttpClient.newHttpClient();
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final String BASE_URL = "http://localhost:8080/";
+    public static Long gameId = null;
     public static Long playerId = null;
     public static int gamePlayerId = 0;
     private static Thread pollingThread;
@@ -151,7 +152,7 @@ public class ClientController {
 
 
 
-    public static GameStateResponse postGameState(Long playerId, Long gameId, int register, String card) {
+    public static GameStateResponse postGameState(int register, String card) {
         try {
             GameStateRequest gameStateRequest = new GameStateRequest();
             gameStateRequest.setRegister(register);
@@ -168,13 +169,13 @@ public class ClientController {
     }
 
 
-    public static void updateGameState (Long playerId, Long gameId, int register, String card) {
+    public static void updateGameState (int register, String card) {
         try {
             GameStateRequest gameStateRequest = new GameStateRequest();
             gameStateRequest.setRegister(register);
             gameStateRequest.setCard(card);
 
-            ClientController.sendUpdateToServer("game-states", gameStateRequest);
+            ClientController.sendUpdateToServer("game-states/"+gameId+"/"+playerId, gameStateRequest);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }

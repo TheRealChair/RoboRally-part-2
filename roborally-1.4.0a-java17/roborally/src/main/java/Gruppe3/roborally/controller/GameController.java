@@ -257,6 +257,12 @@ public class GameController {
         continuePrograms();
     }
 
+    public void sendRegisterToServer() {
+        int register = board.getStep();
+        String card = board.getCurrentPlayer().getProgramField(board.getStep()).getCard().command.toString();
+        ClientController.updateGameState(register, card);
+    }
+
     public void executeStep() {
         board.setStepMode(true);
         continuePrograms();
