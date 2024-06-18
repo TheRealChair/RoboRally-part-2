@@ -139,8 +139,9 @@ public class ClientPolling implements Runnable {
 
                 // Execute the step using existing method
                 appController.getGameController().executeStep();
-            if(gameStateList.get(1).getRegister() == 4){
+            if(gameStateList.get(gameStateList.size()-1).getRegister() == 4){
                 setProgrammingDoneTask();
+                ClientController.sendUpdateToServer("game-states/reset/" + ClientController.gameId, null);
             }
 
         } catch (IOException | InterruptedException e) {

@@ -114,4 +114,21 @@ public class GameStateController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PostMapping("/{gameId}/reset-cards")
+    public ResponseEntity<Void> resetAllCardsToNullByGame(@PathVariable Long gameId) {
+        Optional<Game> gameOptional = gameRepository.findById(gameId);
+
+        if (gameOptional.isPresent()) {
+            List<GameState> gameStates = gameStateRepository.findByGame(gameOptional.get());
+            for (GameState gameState : gameStates) {
+                gameState.setCard(null);
+                gameState.setRegister(0);
+                gameStateRepository.save(gameState);
+            }
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
