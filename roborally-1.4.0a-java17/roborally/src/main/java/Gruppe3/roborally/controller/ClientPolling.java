@@ -52,6 +52,10 @@ public class ClientPolling implements Runnable {
         currentTask = this::runRegister;
     }
 
+    public void setProgrammingDoneTask() {
+        currentTask = this::isProgrammingDone;
+    }
+
     // Logic for polling when to start the game
     private void startGame() {
         try {
@@ -72,9 +76,34 @@ public class ClientPolling implements Runnable {
                     appController.getRoboRally().createBoardView(appController.getGameController());
                 });
                 System.out.println("Game created successfully.");
-                setRunRegisterTask();
+                setProgrammingDoneTask();
             } else {
                 System.out.println("Waiting for more players to join...");
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void isProgrammingDone() {
+        try {
+            TypeReference<List<GameStateResponse>> typeReference = new TypeReference<>() {};
+            List<GameStateResponse> gameStateList = ClientController.getRequestFromServer("game-states/by-game/" + ClientController.gameId, typeReference);
+
+            // Check if all players have submitted their registers
+            boolean allPlayersReady = true;
+            for (GameStateResponse gameState : gameStateList) {
+                if (gameState.getCard() == null) {
+                    allPlayersReady = false;
+                    break;
+                }
+            }
+
+            if (allPlayersReady) {
+                System.out.println("All players have finished programming.");
+                setRunRegisterTask(); // Set the task to run the registers
+            } else {
+                System.out.println("Waiting for all players to finish programming...");
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -88,21 +117,11 @@ public class ClientPolling implements Runnable {
             TypeReference<List<GameStateResponse>> typeReference = new TypeReference<>() {};
             List<GameStateResponse> gameStateList = ClientController.getRequestFromServer("game-states/by-game/" + ClientController.gameId, typeReference);
 
-            // Check if all players have submitted their registers
-            boolean allPlayersReady = true;
-            for (GameStateResponse gameState : gameStateList) {
-                if (gameState.getCard() == null) {
-                    allPlayersReady = false;
-                    break;
-                }
-            }
-
             // If all players have submitted their registers, execute the step
-            if (allPlayersReady) {
+                ClientController.sendRegisterToServer();
 
                 // Load cards into registers based on gameStateList
                 for (GameStateResponse gameState : gameStateList) {
-                    if(gameState.getGamePlayerId() == gamePlayerId) { continue; }
 
                     int playerGameId = gameState.getGamePlayerId();
                     int registerIndex = gameState.getRegister();
@@ -118,15 +137,12 @@ public class ClientPolling implements Runnable {
                     }
                 }
 
-                // Inform user or log
-                System.out.println("All players have put in a register.");
-
                 // Execute the step using existing method
                 appController.getGameController().executeStep();
-
-            } else {
-                System.out.println("Waiting for all players to put in a register...");
+            if(gameStateList.get(1).getRegister() == 4){
+                setProgrammingDoneTask();
             }
+
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }

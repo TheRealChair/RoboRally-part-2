@@ -273,7 +273,6 @@ public class GameController {
     }
 
     private void executeNextStep() {
-        ClientController.sendRegisterToServer();
         Player currentPlayer = board.getCurrentPlayer();
         if (board.getPhase() == Phase.ACTIVATION && currentPlayer != null) {
             int step = board.getStep();

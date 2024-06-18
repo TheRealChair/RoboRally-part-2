@@ -34,7 +34,7 @@ import java.util.List;
 public enum Command {
 
     // This is a very simplistic way of realizing different commands.
-
+    NONE("None"),
     FORWARD("Move 1"),
     RIGHT("Turn Right"),
     LEFT("Turn Left"),
