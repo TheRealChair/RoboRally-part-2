@@ -392,12 +392,18 @@ public class Board extends Subject {
      *         - Counter value from {@link #getCounter()}.
      */
     public String getStatusMessage() {
-
-        return "Phase: " + getPhase().name() +
-                ", Player: " + getCurrentPlayer().getGamePlayerID() +
-                ", Step: " + getStep() +
-                ", Counter: " + getCounter();
+        Player currentPlayer = getCurrentPlayer();
+        if (currentPlayer != null) {
+            return "Phase: " + getPhase().name() +
+                    ", Player: " + currentPlayer.getGamePlayerID() +
+                    ", Step: " + getStep() +
+                    ", Counter: " + getCounter();
+        } else {
+            return "No current player found.";
+        }
     }
+
+
 
     public void setCounter(int counter) {
         this.counter = counter;
