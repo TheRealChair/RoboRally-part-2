@@ -45,4 +45,9 @@ public class CommandCard extends Subject {
     public String getName() {
         return command.displayName;
     }
+
+    public static CommandCard toCommandCard(String displayName) {
+        Command command = Command.fromDisplayName(displayName);
+        return new CommandCard(command);
+    }
 }

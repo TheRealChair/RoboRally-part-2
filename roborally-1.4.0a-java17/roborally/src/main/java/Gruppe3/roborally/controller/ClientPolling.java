@@ -1,6 +1,10 @@
 package Gruppe3.roborally.controller;
 
 import Gruppe3.roborally.RoboRally;
+import Gruppe3.roborally.model.Command;
+import Gruppe3.roborally.model.CommandCard;
+import Gruppe3.roborally.model.CommandCardField;
+import Gruppe3.roborally.model.Player;
 import Gruppe3.roborally.model.httpModels.GameResponse;
 import Gruppe3.roborally.model.httpModels.GameStateResponse;
 import Gruppe3.roborally.model.httpModels.PlayerResponse;
@@ -80,14 +84,16 @@ public class ClientPolling implements Runnable {
 
     // Logic for polling when everybody has pressed "programming"
     private void runRegister() {
-        //fetch that all players have put a register in their game-state
         try {
+            // Fetch the game ID for the current player
             GameResponse game = ClientController.getRequestFromServer("players/game/" + myId, GameResponse.class);
             long myGameId = Long.parseLong(game.getGameId());
 
+            // Fetch game states for all players in the current game
             TypeReference<List<GameStateResponse>> typeReference = new TypeReference<>() {};
             List<GameStateResponse> gameStateList = ClientController.getRequestFromServer("game-states/by-game/" + myGameId, typeReference);
 
+            // Check if all players have submitted their registers
             boolean allPlayersReady = true;
             for (GameStateResponse gameState : gameStateList) {
                 if (gameState.getCard() == null) {
@@ -96,9 +102,28 @@ public class ClientPolling implements Runnable {
                 }
             }
 
+            // If all players have submitted their registers, execute the step
             if (allPlayersReady) {
-                appController.getGameController().executeStep();
+                // Load cards into registers based on gameStateList
+                for (GameStateResponse gameState : gameStateList) {
+                    int playerGameId = gameState.getGamePlayerId();
+                    int registerIndex = gameState.getRegister();
+                    String cardName = gameState.getCard();
+                    Command card = Command.toCommand(cardName);
+
+                    // Update the local register with the card from server
+                    CommandCardField targetField = findRegisterFieldForPlayer(playerGameId, registerIndex);
+                    if (targetField != null && card != null) {
+                        targetField.setCard(new CommandCard(card)); // Assuming CommandCard constructor exists
+                    }
+                }
+
+                // Inform user or log
                 System.out.println("All players have put in a register.");
+
+                // Execute the step using existing method
+                appController.getGameController().executeStep();
+
             } else {
                 System.out.println("Waiting for all players to put in a register...");
             }
@@ -106,6 +131,17 @@ public class ClientPolling implements Runnable {
             e.printStackTrace();
         }
     }
+
+    private CommandCardField findRegisterFieldForPlayer(int playerGameId, int registerIndex) {
+        for (Player player : appController.getGameController().getBoard().getPlayers()) {
+            if (player.getGamePlayerID() == playerGameId) {
+                return player.getProgramField(registerIndex);
+            }
+        }
+        // Player not found
+        return null;
+    }
+
 }
 
 

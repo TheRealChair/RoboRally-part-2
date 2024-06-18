@@ -175,7 +175,7 @@ public class ClientController {
             gameStateRequest.setRegister(register);
             gameStateRequest.setCard(card);
 
-            ClientController.sendUpdateToServer("game-states/"+gameId+"/"+playerId, gameStateRequest);
+            ClientController.sendUpdateToServer("game-states/"+gameId+"/"+gamePlayerId, gameStateRequest);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }

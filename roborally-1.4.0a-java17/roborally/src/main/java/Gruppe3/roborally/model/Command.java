@@ -75,4 +75,8 @@ public enum Command {
     public String toString() {
         return displayName;
     }
+
+    public static Command toCommand(String displayName) {
+        return Command.fromDisplayName(displayName);
+    }
 }

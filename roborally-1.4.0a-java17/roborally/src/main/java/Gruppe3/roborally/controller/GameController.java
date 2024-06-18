@@ -259,9 +259,17 @@ public class GameController {
 
     public void sendRegisterToServer() {
         int register = board.getStep();
-        String card = board.getCurrentPlayer().getProgramField(board.getStep()).getCard().command.toString();
-        ClientController.updateGameState(register, card);
+        board.setCurrentPlayer(board.getPlayer(ClientController.gamePlayerId));
+        Player currentPlayer = board.getCurrentPlayer();
+        if (currentPlayer != null) {
+            String card = currentPlayer.getProgramField(register).getCard().command.toString();
+            ClientController.updateGameState(register, card);
+        } else {
+            System.out.println("No current player found to send register.");
+            // Handle case where there is no current player (should not normally happen in game flow)
+        }
     }
+
 
     public void executeStep() {
         board.setStepMode(true);

@@ -7,7 +7,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GameStateResponse {
-    private Long playerId;
+    private int gamePlayerId;
     private GameResponse game;
     private int register;
     private String card;
