@@ -81,17 +81,12 @@ public class ClientPolling implements Runnable {
         }
     }
 
-
     // Logic for polling when everybody has pressed "programming"
     private void runRegister() {
         try {
+            int gamePlayerId = ClientController.gamePlayerId;
             TypeReference<List<GameStateResponse>> typeReference = new TypeReference<>() {};
             List<GameStateResponse> gameStateList = ClientController.getRequestFromServer("game-states/by-game/" + ClientController.gameId, typeReference);
-
-            Long gameId = ClientController.gameId;
-
-            GameStateResponse gameStateRestest = ClientController.getRequestFromServer("game-states/" + gameId + "/" + ClientController.gamePlayerId, GameStateResponse.class);
-            System.out.println("My GamePlayerId: "+ gameStateRestest.getGamePlayerId() +" My card: " + gameStateRestest.getCard() + " My register: " + gameStateRestest.getRegister());
 
             // Check if all players have submitted their registers
             boolean allPlayersReady = true;
@@ -107,8 +102,8 @@ public class ClientPolling implements Runnable {
 
                 // Load cards into registers based on gameStateList
                 for (GameStateResponse gameState : gameStateList) {
-                    System.out.println("Player " + gameState.getGamePlayerId() + " has put in a register."
-                            + " Register: " + gameState.getRegister() + " Card: " + gameState.getCard());
+                    if(gameState.getGamePlayerId() == gamePlayerId) { continue; }
+
                     int playerGameId = gameState.getGamePlayerId();
                     int registerIndex = gameState.getRegister();
                     String cardName = gameState.getCard();

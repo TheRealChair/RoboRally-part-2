@@ -21,6 +21,7 @@
  */
 package Gruppe3.roborally.view;
 
+import Gruppe3.roborally.controller.ClientController;
 import Gruppe3.roborally.controller.GameController;
 import Gruppe3.roborally.model.Board;
 import Gruppe3.roborally.model.Player;
@@ -47,6 +48,7 @@ public class PlayersView extends TabPane implements ViewObserver {
         playerViews = new PlayerView[board.getPlayersNumber()];
         for (int i = 0; i < board.getPlayersNumber();  i++) {
             playerViews[i] = new PlayerView(gameController, board.getPlayer(i));
+            if(i != ClientController.gamePlayerId-1) {continue;}
             this.getTabs().add(playerViews[i]);
         }
         board.attach(this);

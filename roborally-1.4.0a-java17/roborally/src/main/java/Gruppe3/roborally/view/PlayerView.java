@@ -21,6 +21,7 @@
  */
 package Gruppe3.roborally.view;
 
+import Gruppe3.roborally.controller.ClientController;
 import Gruppe3.roborally.controller.GameController;
 import Gruppe3.roborally.model.*;
 import Gruppe3.designpatterns.observer.Subject;
