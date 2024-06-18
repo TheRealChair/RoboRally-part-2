@@ -195,7 +195,7 @@ public class ClientController {
                 CommandCard card = field.getCard();
                 if (card != null) {
                     String command = card.command.toString();
-                    ClientController.updateGameState(register, command);
+                    ClientController.postGameState(register, command);
                 } else {
                     System.out.println("No card found in the program field for the current register.");
                     // Handle the case where the card is null
