@@ -22,9 +22,11 @@
 package Gruppe3.roborally.view;
 
 import Gruppe3.roborally.controller.AppController;
+import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 
@@ -101,6 +103,13 @@ public class RoboRallyMenuBar extends MenuBar {
             saveGame.setVisible(false);
             loadGame.setVisible(true);
         }
+    }
+    public void showInNewWindow() {
+        Stage newStage = new Stage();
+        Scene scene = new Scene(this, 300, 200); // adjust size as needed
+        newStage.setScene(scene);
+        newStage.setTitle("RoboRally Menu");
+        newStage.show();
     }
 
 }

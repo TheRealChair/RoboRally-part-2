@@ -23,7 +23,7 @@ public class Player {
     private Long playerId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "game_id")
+    @JoinColumn(name = "game_id", referencedColumnName = "game_id")
     private Game game;
 
     @Column(name = "game_player_id")

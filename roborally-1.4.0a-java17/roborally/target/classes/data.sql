@@ -1,4 +1,3 @@
-
 -- Insert data into games table with unique game_id values
 INSERT INTO games (no_of_players, board_id) VALUES
 (2, 1),

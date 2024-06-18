@@ -22,8 +22,14 @@
 package Gruppe3.roborally.controller;
 
 import Gruppe3.roborally.model.*;
+import Gruppe3.roborally.model.httpModels.*;
 import javafx.scene.control.Alert;
 import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * ...
@@ -53,10 +59,36 @@ public class GameController {
         return null;
     }
 
+    public void sendPlayerPositionUpdate(Player player) {
+        try {
+            Long myId = ClientController.playerId;
+            PlayerResponse playerResponse = ClientController.getRequestFromServer("/players"+myId, PlayerResponse.class);
+
+
+        PositionRequest positionRequest = new PositionRequest();
+        positionRequest.setPositionX(player.getSpace().x);
+        positionRequest.setPositionY(player.getSpace().y);
+        positionRequest.setHeading(player.getHeading().toString());
+
+        ClientController.sendRequestToServer("positions", positionRequest, PositionResponse.class);
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void movePlayerAndUpdatePosition(Player player, Space target, Heading heading){
+        try{
+            moveToSpace(player, target, heading);
+            sendPlayerPositionUpdate(player);
+        } catch (ImpossibleMoveException e) {
+
+        }
+    }
+
     /**
      * Moves the given player one step forward in the given direction.
      * @param player the player to move
-     * @param heading the direction in which to move
+     * @Author: Balder, Elias, Karl and Viktor
      */
     public void moveForward(@NotNull Player player, @NotNull Heading heading) {
         if (player.board == board) {
@@ -66,7 +98,7 @@ public class GameController {
                 Space target = board.getNeighbour(space, heading);
                 if (target != null) {
                     try {
-                        moveToSpace(player, target, heading);
+                        movePlayerAndUpdatePosition(player, target, heading);
                     } catch (ImpossibleMoveException e) {
                         // Handle exception appropriately
                     }
@@ -78,6 +110,7 @@ public class GameController {
     /**
      * Moves the given player two steps forward in the given direction.
      * @param player the player to move
+     * @Author: Balder, Elias, Karl and Viktor
      */
     public void fastForward(@NotNull Player player, @NotNull Heading heading) {
         for(int i = 0 ; i < 2 ; i++) {
@@ -87,7 +120,7 @@ public class GameController {
                 Space target1 = board.getNeighbour(space, heading);
                 if (target1 != null) {
                     try {
-                        moveToSpace(player, target1, heading);
+                        movePlayerAndUpdatePosition(player, target1, heading);
                     } catch (ImpossibleMoveException e) {
                         // Handle exception appropriately
                     }
@@ -103,6 +136,7 @@ public class GameController {
     /**
      * Moves the given player three steps forward in the given direction.
      * @param player the player to move
+     * @Author: Balder, Elias and Viktor
      */
     public void superFastForward(@NotNull Player player, @NotNull Heading heading) {
         for(int i = 0 ; i < 3 ; i++) {
@@ -112,7 +146,7 @@ public class GameController {
                 Space target1 = board.getNeighbour(space, heading);
                 if (target1 != null) {
                     try {
-                        moveToSpace(player, target1, heading);
+                        movePlayerAndUpdatePosition(player, target1, heading);
                     } catch (ImpossibleMoveException e) {
                         // Handle exception appropriately
                     }
@@ -128,21 +162,33 @@ public class GameController {
     /**
      * Turns the given player to the right.
      * @param player the player to turn
+     * @Author: Balder, Elias, Karl and Viktor
      */
+    // TODO Assignment A3
     public void turnRight(@NotNull Player player) {
         Heading heading = player.getHeading();
         Heading newHeading = heading.next();
         player.setHeading(newHeading);
+        sendPlayerPositionUpdate(player);
     }
 
     /**
      * Turns the given player to the left.
      * @param player the player to turn
+     * @Author: Balder, Elias, Karl and Viktor
      */
+    // TODO Assignment A3
     public void turnLeft(@NotNull Player player) {
         Heading heading = player.getHeading();
         Heading newHeading = heading.prev();
         player.setHeading(newHeading);
+        sendPlayerPositionUpdate(player);
+    }
+    public void leftOrRight(@NotNull Player player) {
+        Heading heading = player.getHeading();
+        Heading newHeading = heading.next();
+        player.setHeading(newHeading);
+        sendPlayerPositionUpdate(player);
     }
 
     /**
@@ -176,7 +222,8 @@ public class GameController {
 
     /**
      * Moves the current player to the given space, if the space is free.
-     * @param space the space to move the player to
+     * @param space, the space to move the player to
+     * @Author: Balder, Elias, Karl and Viktor
      */
     public void moveCurrentPlayerToSpace(Space space) {
         Player currentPlayer = board.getCurrentPlayer();
@@ -193,8 +240,6 @@ public class GameController {
             board.incrementCounter();
         }
     }
-
-    // Other methods omitted for brevity...
 
     private void makeProgramFieldsVisible(int register) {
         if (register >= 0 && register < Player.NO_REGISTERS) {
@@ -276,7 +321,6 @@ public class GameController {
         } else {
             // this should not happen
             assert false;
-
         }
         board.triggerConveyorBelts(this);
     }
@@ -439,7 +483,7 @@ public class GameController {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Game Over");
             alert.setHeaderText(null);
-            alert.setContentText(player.getName() + " has won the game!");
+            alert.setContentText(player.getGamePlayerID() + " has won the game!");
 
             alert.showAndWait();
         }

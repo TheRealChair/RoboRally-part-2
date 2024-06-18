@@ -12,7 +12,7 @@ import java.util.ArrayList;
  */
 
 public class PlayerTemplate {
-    public String name;
+    public int gamePlayerID;
     public String color;
     public int x;
     public int y;
@@ -21,7 +21,7 @@ public class PlayerTemplate {
     public List<CommandCardFieldTemplate> commandCards = new ArrayList<>();
 
     public PlayerTemplate(Player player) {
-        this.name = player.getName();
+        this.gamePlayerID = player.getGamePlayerID();
         this.color = player.getColor();
         this.x = player.getSpace().x;
         this.y = player.getSpace().y;

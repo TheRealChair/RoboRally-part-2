@@ -59,13 +59,14 @@ public class PlayerView extends Tab implements ViewObserver {
     private Button stepButton;
     private Label pointLabel;
     private Label activeCheckPointLabel;
+    private Label activePlayerLabel;
 
     private VBox playerInteractionPanel;
 
     private GameController gameController;
 
     public PlayerView(@NotNull GameController gameController, @NotNull Player player) {
-        super(player.getName());
+        super(String.valueOf(player.getGamePlayerID()));
         this.setStyle("-fx-text-base-color: " + player.getColor() + ";");
 
         top = new VBox();
@@ -112,6 +113,7 @@ public class PlayerView extends Tab implements ViewObserver {
 
         pointLabel = new Label("Points: " + player.getPoints());
         activeCheckPointLabel = new Label("Active Checkpoint: " + player.getCurrentCheckpoint());
+
 
         cardsLabel = new Label("Command Cards");
         cardsPane = new GridPane();

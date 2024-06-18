@@ -31,21 +31,44 @@ public class PlayerController {
         return ResponseEntity.ok(playerList);
     }
 
+    // Get players by gameId
+    @GetMapping("/games/{gameId}")
+    public ResponseEntity<List<Player>> getPlayersByGameId(@PathVariable Long gameId) {
+        List<Player> players = playerRepository.findByGame_GameId(gameId);
+        return ResponseEntity.ok(players);
+    }
+
+    //Get gameId from player
+    @GetMapping("/game/{playerId}")
+    public ResponseEntity<Game> getGameByPlayerId(@PathVariable Long playerId) {
+        Optional<Player> player = playerRepository.findById(playerId);
+        if (player.isPresent()) {
+            return ResponseEntity.ok(player.get().getGame());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     // Create a new player associated with a game
     @PostMapping("/games/{gameId}")
     public ResponseEntity<Player> createPlayer(@PathVariable Long gameId, @RequestBody Player player) {
         Optional<Game> gameOptional = gameRepository.findById(gameId);
         if (gameOptional.isPresent()) {
             Game game = gameOptional.get();
-            int numberOfPlayers = game.getNoOfPlayers();
-            player.setGamePlayerID(numberOfPlayers + 1);
-            player.setGame(game);
+
+            // Get the current number of players in the game
+            int numberOfPlayers = playerRepository.countByGame_GameId(gameId);
+            player.setGamePlayerID(numberOfPlayers + 1); // Assign the next available gamePlayerId
+            player.setGame(game); // Set the game association
+
             Player savedPlayer = playerRepository.save(player);
+
             return ResponseEntity.ok(savedPlayer);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
+
 
     // Get a single player by ID
     @GetMapping("/{id}")
@@ -61,12 +84,21 @@ public class PlayerController {
         Optional<Player> optionalPlayer = playerRepository.findById(id);
         if (optionalPlayer.isPresent()) {
             Player existingPlayer = optionalPlayer.get();
+
+            // Update fields from playerDetails
+            if (playerDetails.getGamePlayerID() != 0) {
+                existingPlayer.setGamePlayerID(playerDetails.getGamePlayerID());
+            }
+
+            // Save the updated player
             Player updatedPlayer = playerRepository.save(existingPlayer);
+
             return ResponseEntity.ok(updatedPlayer);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
+
 
     // Delete a player
     @DeleteMapping("/{id}")

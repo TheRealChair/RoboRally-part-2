@@ -9,8 +9,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PlayerResponse {
-    private Long playerId;
+public class PositionResponse {
     private GameResponse game;
-    private int gamePlayerID;
+    private Long playerId;
+    private int positionX;
+    private int positionY;
+    private String heading;
 }

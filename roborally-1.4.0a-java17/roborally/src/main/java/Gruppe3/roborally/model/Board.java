@@ -394,7 +394,7 @@ public class Board extends Subject {
     public String getStatusMessage() {
 
         return "Phase: " + getPhase().name() +
-                ", Player: " + getCurrentPlayer().getName() +
+                ", Player: " + getCurrentPlayer().getGamePlayerID() +
                 ", Step: " + getStep() +
                 ", Counter: " + getCounter();
     }
