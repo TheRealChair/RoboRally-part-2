@@ -121,6 +121,7 @@ public class AppController implements Observer {
                 endpointUrl = "players/games/" + gameId;
                 PlayerResponse hostPlayerResponse = ClientController.sendRequestToServer(endpointUrl, playerRequest, PlayerResponse.class);
                 ClientController.playerId = hostPlayerResponse.getPlayerId(); // gives the client a local playerId
+                ClientController.gamePlayerId = hostPlayerResponse.getGamePlayerID(); // gives the client a local gamePlayerId
                 System.out.println("Player ID set to: " + ClientController.playerId);
 
                 ClientController.startPolling(this); ; //start pooling for updates to startgame
@@ -170,6 +171,7 @@ public class AppController implements Observer {
                 PlayerResponse playerResponse = ClientController.sendRequestToServer(urlToGame, playerRequest, PlayerResponse.class);
                 System.out.println("Player joined game: " + playerResponse.getGame().getGameId() + " as player " + playerResponse.getGamePlayerID());
                 ClientController.playerId = playerResponse.getPlayerId();
+                ClientController.gamePlayerId = playerResponse.getGamePlayerID();
 
                 GameResponse gameResponse = getGameFromServer(gameId);
 

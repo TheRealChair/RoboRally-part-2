@@ -20,6 +20,7 @@ public class ClientController {
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final String BASE_URL = "http://localhost:8080/";
     public static Long playerId = null;
+    public static int gamePlayerId = 0;
     private static Thread pollingThread;
     private static ClientPolling pollingTask;
 
