@@ -96,7 +96,6 @@ public class ClientController {
 
         if (response.statusCode() >= 200 && response.statusCode() < 300) {
             System.out.println("Update successful.");
-            System.out.println("Response body for update: " + response.body());
         } else {
             System.out.println("Update failed with status code: " + response.statusCode());
             System.out.println("Response body: " + response.body());
@@ -106,7 +105,6 @@ public class ClientController {
     private static <T> T handleResponse(HttpResponse<String> response, Class<T> responseObjectClass)
             throws JsonProcessingException {
         if (response.statusCode() >= 200 && response.statusCode() < 300) {
-            System.out.println("Response body: " + response.body());
             return objectMapper.readValue(response.body(), responseObjectClass);
         } else {
             System.out.println("Request failed with status code: " + response.statusCode());
@@ -119,7 +117,6 @@ public class ClientController {
     private static <T> T handleResponse(HttpResponse<String> response, TypeReference<T> typeReference)
             throws JsonProcessingException {
         if (response.statusCode() >= 200 && response.statusCode() < 300) {
-            System.out.println("Response body: " + response.body());
             return objectMapper.readValue(response.body(), typeReference);
         } else {
             System.out.println("Request failed with status code: " + response.statusCode());
@@ -157,9 +154,6 @@ public class ClientController {
             GameStateRequest gameStateRequest = new GameStateRequest();
             gameStateRequest.setRegister(register);
             gameStateRequest.setCard(card);
-
-            // Log the request object
-            System.out.println("Sending game state request: " + gameStateRequest);
 
             return sendRequestToServer("game-states/"+gameId+"/"+playerId, gameStateRequest, GameStateResponse.class);
         } catch (IOException | InterruptedException e) {

@@ -29,7 +29,6 @@ public class ClientPolling implements Runnable {
     @Override
     public void run() {
         while (running) {
-            System.out.println("Polling server for updates...");
             try {
                 currentTask.execute(); // Execute the current task
                 Thread.sleep(2000); // Sleep for 2 seconds before the next poll

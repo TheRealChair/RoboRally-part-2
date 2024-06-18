@@ -258,15 +258,30 @@ public class GameController {
     }
 
     public void sendRegisterToServer() {
+        System.out.println("ClientController.gamePlayerId: " + ClientController.gamePlayerId);
         int register = board.getStep();
-        board.setCurrentPlayer(board.getPlayer(ClientController.gamePlayerId));
-        Player currentPlayer = board.getCurrentPlayer();
-        if (currentPlayer != null) {
-            String card = currentPlayer.getProgramField(register).getCard().command.toString();
-            ClientController.updateGameState(register, card);
+        Player myPlayer = board.getPlayer(ClientController.gamePlayerId-1);
+        System.out.println("Register: " + register);
+
+        if (myPlayer != null) {
+            System.out.println("Player: " + myPlayer.getGamePlayerID());
+            CommandCardField field = myPlayer.getProgramField(register);
+            if (field != null) {
+                CommandCard card = field.getCard();
+                if (card != null) {
+                    String command = card.command.toString();
+                    ClientController.updateGameState(register, command);
+                } else {
+                    System.out.println("No card found in the program field for the current register.");
+                    // Handle the case where the card is null
+                }
+            } else {
+                System.out.println("No program field found for the given register.");
+                // Handle the case where the program field is null
+            }
         } else {
             System.out.println("No current player found to send register.");
-            // Handle case where there is no current player (should not normally happen in game flow)
+            // Handle the case where there is no current player (should not normally happen in game flow)
         }
     }
 
@@ -423,14 +438,19 @@ public class GameController {
 
     public boolean moveCards(@NotNull CommandCardField source, @NotNull CommandCardField target) {
         CommandCard sourceCard = source.getCard();
-        CommandCard targetCard = target.getCard();
-        if (sourceCard != null && targetCard == null) {
-            target.setCard(sourceCard);
+        boolean success = moveCardToTarget(sourceCard, target);
+        if (success) {
             source.setCard(null);
-            return true;
-        } else {
-            return false;
         }
+        return success;
+    }
+
+    private boolean moveCardToTarget(CommandCard sourceCard, CommandCardField target) {
+        if (sourceCard != null && target.getCard() == null) {
+            target.setCard(sourceCard);
+            return true;
+        }
+        return false;
     }
 
 

@@ -20,7 +20,7 @@ public class GameStateController {
     private final GameRepo gameRepository;
     private final PlayerRepo playerRepository;
 
-    public GameStateController(GameStateRepo     gameStateRepository, GameRepo gameRepository, PlayerRepo playerRepository) {
+    public GameStateController(GameStateRepo gameStateRepository, GameRepo gameRepository, PlayerRepo playerRepository) {
         this.gameStateRepository = gameStateRepository;
         this.gameRepository = gameRepository;
         this.playerRepository = playerRepository;
@@ -49,10 +49,11 @@ public class GameStateController {
                                                      @PathVariable int gamePlayerId,
                                                      @RequestBody GameState gameState) {
         Optional<Game> gameOptional = gameRepository.findById(gameId);
+        Optional<Player> playerOptional = playerRepository.findById((long) gamePlayerId); // Fetch the player
 
-        if (gameOptional.isPresent()) {
+        if (gameOptional.isPresent() && playerOptional.isPresent()) { // Check if both game and player exist
             gameState.setGame(gameOptional.get());
-            gameState.setGamePlayerID(gamePlayerId);
+            gameState.setGamePlayerID(playerOptional.get().getGamePlayerID()); // Set gamePlayerID from the player
 
             GameState savedGameState = gameStateRepository.save(gameState);
             return ResponseEntity.ok(savedGameState);
@@ -113,5 +114,4 @@ public class GameStateController {
             return ResponseEntity.notFound().build();
         }
     }
-
 }
