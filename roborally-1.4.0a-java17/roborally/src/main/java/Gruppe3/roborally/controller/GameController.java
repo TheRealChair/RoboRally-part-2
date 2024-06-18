@@ -97,11 +97,7 @@ public class GameController {
             if (!board.hasWall(space, heading)) {
                 Space target = board.getNeighbour(space, heading);
                 if (target != null) {
-                    try {
-                        movePlayerAndUpdatePosition(player, target, heading);
-                    } catch (ImpossibleMoveException e) {
-                        // Handle exception appropriately
-                    }
+                    movePlayerAndUpdatePosition(player, target, heading);
                 }
             }
         }
@@ -119,11 +115,7 @@ public class GameController {
 
                 Space target1 = board.getNeighbour(space, heading);
                 if (target1 != null) {
-                    try {
-                        movePlayerAndUpdatePosition(player, target1, heading);
-                    } catch (ImpossibleMoveException e) {
-                        // Handle exception appropriately
-                    }
+                    movePlayerAndUpdatePosition(player, target1, heading);
                 }
             }
             if(player.hasBeenInPit){
@@ -145,11 +137,7 @@ public class GameController {
 
                 Space target1 = board.getNeighbour(space, heading);
                 if (target1 != null) {
-                    try {
-                        movePlayerAndUpdatePosition(player, target1, heading);
-                    } catch (ImpossibleMoveException e) {
-                        // Handle exception appropriately
-                    }
+                    movePlayerAndUpdatePosition(player, target1, heading);
                 }
             }
             if(player.hasBeenInPit){
