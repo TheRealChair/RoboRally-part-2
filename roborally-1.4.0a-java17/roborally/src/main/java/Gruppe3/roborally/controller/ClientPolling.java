@@ -1,5 +1,6 @@
 package Gruppe3.roborally.controller;
 
+import Gruppe3.roborally.RoboRally;
 import Gruppe3.roborally.model.httpModels.GameResponse;
 import Gruppe3.roborally.model.httpModels.GameStateResponse;
 import Gruppe3.roborally.model.httpModels.PlayerResponse;
@@ -58,6 +59,7 @@ public class ClientPolling implements Runnable {
             List<PlayerResponse> playerResponses = ClientController.getRequestFromServer("players/games/" + myGameId, typeReference);
 
             int gameSize = game.getNoOfPlayers();
+            RoboRally.setLobbyLabel("Waiting for players... : " + playerResponses.size() + "/" + gameSize);
             // Check if the number of players in the response meets or exceeds the game size
             if (playerResponses.size() >= gameSize) {
                 appController.getGameController().startProgrammingPhase();

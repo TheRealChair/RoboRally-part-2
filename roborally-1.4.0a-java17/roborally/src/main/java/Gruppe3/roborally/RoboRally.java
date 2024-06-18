@@ -26,6 +26,7 @@ import Gruppe3.roborally.controller.GameController;
 import Gruppe3.roborally.view.BoardView;
 import Gruppe3.roborally.view.RoboRallyMenuBar;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -59,9 +60,12 @@ public class RoboRally extends Application {
         super.init();
     }
 
+    public static Label lobbyLabel;
+
     @Override
     public void start(Stage primaryStage) {
         stage = primaryStage;
+        lobbyLabel = new Label();
 
 
         RestTemplate restTemplate = new RestTemplate();
@@ -80,7 +84,8 @@ public class RoboRally extends Application {
         // Create two buttons
         Button button1 = new Button("New Game");
         Button button2 = new Button("Join Game");
-        Label lobbyLabel = new Label("Waiting for more players...");
+
+        lobbyLabel.setText("Waiting for more players...");
         lobbyLabel.setVisible(false);
 
         button1.setOnAction(e -> {
@@ -134,6 +139,12 @@ public class RoboRally extends Application {
         stage.setResizable(false);
         stage.sizeToScene();
         stage.show();
+    }
+
+    public static void setLobbyLabel(String str) {
+        Platform.runLater(() ->{
+        lobbyLabel.setText(str);
+        });
     }
 
     public void createBoardView(GameController gameController) {
