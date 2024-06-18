@@ -59,6 +59,8 @@ public class RoboRally extends Application {
         super.init();
     }
 
+    static Label lobbyLabel = new Label();
+
     @Override
     public void start(Stage primaryStage) {
         stage = primaryStage;
@@ -80,7 +82,8 @@ public class RoboRally extends Application {
         // Create two buttons
         Button button1 = new Button("New Game");
         Button button2 = new Button("Join Game");
-        Label lobbyLabel = new Label("Waiting for more players...");
+
+        lobbyLabel.setText("Waiting for more players...");
         lobbyLabel.setVisible(false);
 
         button1.setOnAction(e -> {
@@ -134,6 +137,10 @@ public class RoboRally extends Application {
         stage.setResizable(false);
         stage.sizeToScene();
         stage.show();
+    }
+
+    public static void setLobbyLabel(String str) {
+        lobbyLabel.setText(str);
     }
 
     public void createBoardView(GameController gameController) {
