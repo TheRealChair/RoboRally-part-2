@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface GameStateRepo extends JpaRepository<GameState, GameId_GamePlayerId> {
+public interface GameStateRepo extends JpaRepository<GameState, Long> {
     Optional<GameState> findByGameAndPlayer(Game game, Player player);
 }
+

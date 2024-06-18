@@ -11,4 +11,14 @@ public class GameStateRequest {
     private Long gameId;
     private int register;
     private String card;
+
+    @Override
+    public String toString() {
+        return "GameStateRequest{" +
+                "playerId=" + playerId +
+                ", gameId=" + gameId +
+                ", register=" + register +
+                ", card='" + card + '\'' +
+                '}';
+    }
 }
