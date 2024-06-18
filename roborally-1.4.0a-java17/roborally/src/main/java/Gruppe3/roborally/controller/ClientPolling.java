@@ -63,7 +63,7 @@ public class ClientPolling implements Runnable {
             List<PlayerResponse> playerResponses = ClientController.getRequestFromServer("players/games/" + myGameId, typeReference);
 
             int gameSize = game.getNoOfPlayers();
-            RoboRally.setLobbyLabel("Waiting for players... : " + playerResponses.size() + "/" + gameSize);
+            RoboRally.setLobbyLabel("Waiting for players... : " + playerResponses.size() + "/" + gameSize+"     Game ID: "+myGameId);
             // Check if the number of players in the response meets or exceeds the game size
             if (playerResponses.size() >= gameSize) {
                 appController.getGameController().startProgrammingPhase();
