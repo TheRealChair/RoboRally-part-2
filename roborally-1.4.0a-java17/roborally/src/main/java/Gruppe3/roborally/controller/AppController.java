@@ -136,13 +136,6 @@ public class AppController implements Observer {
         }
     }
 
-    private void updateLobbyLabel() {
-        GameResponse gemeRes = new GameResponse();
-        GameRequest gameReq = new GameRequest();
-        //gemeRes = ClientController.getRequestFromServer("games/"+1 , gameReq, GameResponse.class);
-        RoboRally.setLobbyLabel("test");
-    }
-
     private GameResponse getGameFromServer(long gameId) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(BASE_URL + "games/" + gameId)) // games is the endpoint to get a game by its ID
