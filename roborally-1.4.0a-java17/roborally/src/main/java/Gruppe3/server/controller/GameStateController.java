@@ -113,4 +113,17 @@ public class GameStateController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/by-game/{gameId}")
+    public ResponseEntity<List<GameState>> getGameStatesByGame(@PathVariable Long gameId) {
+        Optional<Game> gameOptional = gameRepository.findById(gameId);
+
+        if (gameOptional.isPresent()) {
+            List<GameState> gameStateList = gameStateRepository.findByGame(gameOptional.get());
+            return ResponseEntity.ok(gameStateList);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

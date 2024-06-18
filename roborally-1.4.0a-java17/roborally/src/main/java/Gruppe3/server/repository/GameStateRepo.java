@@ -6,9 +6,11 @@ import Gruppe3.server.model.CompositeKeys.GameId_GamePlayerId;
 import Gruppe3.server.model.Player;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface GameStateRepo extends JpaRepository<GameState, Long> {
     Optional<GameState> findByGameAndPlayer(Game game, Player player);
+    List<GameState> findByGame(Game game);
 }
 
