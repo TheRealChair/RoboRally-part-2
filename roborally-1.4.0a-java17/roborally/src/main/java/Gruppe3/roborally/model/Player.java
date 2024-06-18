@@ -141,7 +141,7 @@ public class Player extends Subject {
             playerAtReboot = this.board.getSpace(Reboots.getX(), Reboots.getY()).getPlayer();
             if (playerAtReboot != null) {
                 GameController gameController = new GameController(board);
-                gameController.moveForward(playerAtReboot);
+                gameController.moveForward(playerAtReboot, SOUTH);
             }
         }
         clearRegisters();

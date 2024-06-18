@@ -1,11 +1,11 @@
 package Gruppe3.server.controller;
 
-import Gruppe3.server.model.CompositeKeys.GameId_GamePlayerId;
 import Gruppe3.server.model.Game;
 import Gruppe3.server.model.GameState;
 import Gruppe3.server.model.Player;
+import Gruppe3.server.repository.GameRepo;
 import Gruppe3.server.repository.GameStateRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import Gruppe3.server.repository.PlayerRepo;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,10 +17,13 @@ import java.util.Optional;
 public class GameStateController {
 
     private final GameStateRepo gameStateRepository;
+    private final GameRepo gameRepository;
+    private final PlayerRepo playerRepository;
 
-    @Autowired
-    public GameStateController(GameStateRepo gameStateRepository) {
+    public GameStateController(GameStateRepo gameStateRepository, GameRepo gameRepository, PlayerRepo playerRepository) {
         this.gameStateRepository = gameStateRepository;
+        this.gameRepository = gameRepository;
+        this.playerRepository = playerRepository;
     }
 
     @GetMapping
@@ -29,62 +32,98 @@ public class GameStateController {
         return ResponseEntity.ok(gameStateList);
     }
 
-    @PostMapping
-    public ResponseEntity<GameState> createGameState(@RequestBody GameState gameState) {
-        GameState savedGameState = gameStateRepository.save(gameState);
-        return ResponseEntity.ok(savedGameState);
+    @GetMapping("/{gameId}/{playerId}")
+    public ResponseEntity<GameState> getGameStateByGameAndPlayer(@PathVariable Long gameId, @PathVariable Long playerId) {
+        Optional<Game> gameOptional = gameRepository.findById(gameId);
+        Optional<Player> playerOptional = playerRepository.findById(playerId);
+
+        if (gameOptional.isPresent() && playerOptional.isPresent()) {
+            Optional<GameState> gameState = gameStateRepository.findByGameAndPlayer(gameOptional.get(), playerOptional.get());
+            return gameState.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    @GetMapping("/{gameId}/{playerId}")
-    public ResponseEntity<GameState> getGameStateById(@PathVariable("gameId") Long gameId, @PathVariable("playerId") Long playerId) {
-        Game game = new Game();
-        game.setGameId(gameId);
+    @PostMapping("/{gameId}/{playerId}")
+    public ResponseEntity<GameState> createGameState(@PathVariable Long gameId,
+                                                     @PathVariable Long playerId,
+                                                     @RequestBody GameState gameState) {
+        Optional<Game> gameOptional = gameRepository.findById(gameId);
+        Optional<Player> playerOptional = playerRepository.findById(playerId);
 
-        Player player = new Player();
-        player.setPlayerId(playerId);
+        if (gameOptional.isPresent() && playerOptional.isPresent()) {
+            Game game = gameOptional.get();
+            Player player = playerOptional.get();
 
-        Optional<GameState> gameState = gameStateRepository.findByGameAndPlayer(game, player);
-        return gameState.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+            Optional<GameState> existingGameState = gameStateRepository.findByGameAndPlayer(game, player);
+
+            if (existingGameState.isPresent()) {
+                return ResponseEntity.badRequest().build();
+            } else {
+                gameState.setGame(game);
+                gameState.setPlayer(player);
+                GameState savedGameState = gameStateRepository.save(gameState);
+                return ResponseEntity.ok(savedGameState);
+            }
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PutMapping("/{gameId}/{playerId}")
-    public ResponseEntity<GameState> updateGameState(@PathVariable("gameId") Long gameId,
-                                                     @PathVariable("playerId") Long playerId,
+    public ResponseEntity<GameState> updateGameState(@PathVariable Long gameId,
+                                                     @PathVariable Long playerId,
                                                      @RequestBody GameState gameStateDetails) {
-        Game game = new Game();
-        game.setGameId(gameId);
+        Optional<Game> gameOptional = gameRepository.findById(gameId);
+        Optional<Player> playerOptional = playerRepository.findById(playerId);
 
-        Player player = new Player();
-        player.setPlayerId(playerId);
+        if (gameOptional.isPresent() && playerOptional.isPresent()) {
+            GameState existingGameState = gameStateRepository.findByGameAndPlayer(gameOptional.get(), playerOptional.get())
+                    .orElse(null);
 
-        Optional<GameState> optionalGameState = gameStateRepository.findByGameAndPlayer(game, player);
-        if (optionalGameState.isPresent()) {
-            GameState existingGameState = optionalGameState.get();
-            existingGameState.setRegister(gameStateDetails.getRegister());
-            existingGameState.setCard(gameStateDetails.getCard());
+            if (existingGameState != null) {
+                existingGameState.setRegister(gameStateDetails.getRegister());
+                existingGameState.setCard(gameStateDetails.getCard());
 
-            GameState updatedGameState = gameStateRepository.save(existingGameState);
-            return ResponseEntity.ok(updatedGameState);
+                GameState updatedGameState = gameStateRepository.save(existingGameState);
+                return ResponseEntity.ok(updatedGameState);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
     @DeleteMapping("/{gameId}/{playerId}")
-    public ResponseEntity<Void> deleteGameState(@PathVariable("gameId") Long gameId, @PathVariable("playerId") Long playerId) {
-        Game game = new Game();
-        game.setGameId(gameId);
+    public ResponseEntity<Void> deleteGameState(@PathVariable Long gameId, @PathVariable Long playerId) {
+        Optional<Game> gameOptional = gameRepository.findById(gameId);
+        Optional<Player> playerOptional = playerRepository.findById(playerId);
 
-        Player player = new Player();
-        player.setPlayerId(playerId);
-
-        Optional<GameState> optionalGameState = gameStateRepository.findByGameAndPlayer(game, player);
-        if (optionalGameState.isPresent()) {
-            gameStateRepository.delete(optionalGameState.get());
-            return ResponseEntity.noContent().build();
+        if (gameOptional.isPresent() && playerOptional.isPresent()) {
+            Optional<GameState> gameStateOptional = gameStateRepository.findByGameAndPlayer(gameOptional.get(), playerOptional.get());
+            if (gameStateOptional.isPresent()) {
+                gameStateRepository.delete(gameStateOptional.get());
+                return ResponseEntity.noContent().build();
+            } else {
+                return ResponseEntity.notFound().build();
+            }
         } else {
             return ResponseEntity.notFound().build();
         }
     }
-}
 
+    @GetMapping("/by-game/{gameId}")
+    public ResponseEntity<List<GameState>> getGameStatesByGame(@PathVariable Long gameId) {
+        Optional<Game> gameOptional = gameRepository.findById(gameId);
+
+        if (gameOptional.isPresent()) {
+            List<GameState> gameStateList = gameStateRepository.findByGame(gameOptional.get());
+            return ResponseEntity.ok(gameStateList);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+}

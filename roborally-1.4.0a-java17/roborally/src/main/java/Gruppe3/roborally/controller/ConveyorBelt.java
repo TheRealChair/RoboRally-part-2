@@ -21,8 +21,12 @@
  */
 package Gruppe3.roborally.controller;
 
-import Gruppe3.roborally.model.Heading;
 import Gruppe3.roborally.model.Space;
+import Gruppe3.roborally.model.Player;
+import Gruppe3.roborally.model.Heading;
+import Gruppe3.roborally.model.Board;
+import Gruppe3.roborally.model.Reboots;
+import Gruppe3.roborally.model.Command;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -32,20 +36,39 @@ import org.jetbrains.annotations.NotNull;
  *
  */
 public class ConveyorBelt extends FieldAction {
+    private final Heading direction;
+    private final int speed;
 
-    private Heading heading;
-
-    public Heading getHeading() {
-        return heading;
+    public ConveyorBelt(Heading direction, int speed) {
+        this.direction = direction;
+        this.speed = speed;
     }
 
-    public void setHeading(Heading heading) {
-        this.heading = heading;
+    public Heading getDirection() {
+        return direction;
+    }
+
+    public int getSpeed() {
+        return speed;
     }
 
     @Override
-    public boolean doAction(@NotNull GameController gameController, @NotNull Space space) {
-        // TODO needs to be implemented
+    public boolean doAction(GameController gameController, Space space) {
+        Player player = gameController.getPlayerOnSpace(space);
+        if (player != null) {
+            switch (speed) {
+                case (1):
+                    gameController.moveForward(player, direction);
+                    break;
+                case (2):
+                    gameController.fastForward(player, direction);
+                    break;
+                case (3):
+                    gameController.superFastForward(player, direction);
+                    break;
+            }
+            return true;
+        }
         return false;
     }
 

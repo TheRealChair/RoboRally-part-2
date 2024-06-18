@@ -87,8 +87,6 @@ public class AppController implements Observer {
         dialog.setHeaderText("Select number of players");
         Optional<Integer> result = dialog.showAndWait();
 
-
-
         if (result.isPresent()) {
             if (gameController != null) {
                 if (!stopGame()) {
@@ -123,10 +121,11 @@ public class AppController implements Observer {
                 endpointUrl = "players/games/" + gameId;
                 PlayerResponse hostPlayerResponse = ClientController.sendRequestToServer(endpointUrl, playerRequest, PlayerResponse.class);
                 ClientController.playerId = hostPlayerResponse.getPlayerId(); // gives the client a local playerId
+                ClientController.gamePlayerId = hostPlayerResponse.getGamePlayerID(); // gives the client a local gamePlayerId
                 System.out.println("Player ID set to: " + ClientController.playerId);
 
                 ClientController.startPolling(this); ; //start pooling for updates to startgame
-
+                ClientController.postGameState(ClientController.playerId, gameId, 0, null);
                 System.out.println("Game created successfully.");
             } catch (IOException | InterruptedException e) {
                 System.out.println("Failed to create game: " + e.getMessage());
@@ -172,6 +171,7 @@ public class AppController implements Observer {
                 PlayerResponse playerResponse = ClientController.sendRequestToServer(urlToGame, playerRequest, PlayerResponse.class);
                 System.out.println("Player joined game: " + playerResponse.getGame().getGameId() + " as player " + playerResponse.getGamePlayerID());
                 ClientController.playerId = playerResponse.getPlayerId();
+                ClientController.gamePlayerId = playerResponse.getGamePlayerID();
 
                 GameResponse gameResponse = getGameFromServer(gameId);
 

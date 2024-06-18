@@ -21,10 +21,13 @@
  */
 package Gruppe3.roborally.view;
 
+import Gruppe3.roborally.controller.ConveyorBelt;
+import Gruppe3.roborally.controller.FieldAction;
 import Gruppe3.roborally.model.*;
 import Gruppe3.designpatterns.observer.Subject;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
@@ -99,6 +102,7 @@ public class SpaceView extends StackPane implements ViewObserver {
         drawCheckpoints();
         drawPits();
         drawReboots();
+        drawConveyorBelts();
 
         Player player = space.getPlayer();
         if (player != null) {
@@ -259,5 +263,25 @@ public class SpaceView extends StackPane implements ViewObserver {
         Image image = new Image(imagePath);
         BackgroundImage backgroundImage = new BackgroundImage(image, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, backgroundSize);
         this.setBackground(new Background(backgroundImage));
+    }
+
+    public void drawConveyorBelts() {
+        for (FieldAction action : space.getActions()) {
+            if (action instanceof ConveyorBelt) {
+                drawConveyorBelt((ConveyorBelt) action);
+            }
+        }
+    }
+
+    public void drawConveyorBelt(ConveyorBelt conveyorBelt) {
+        String imagePath = conveyorBelt.getSpeed() == 1? "BoardPics/greenBelt.png" : "BoardPics/blueBelt.png";
+        Image conveyorBeltImage = new Image(imagePath);
+        ImageView conveyorBeltView = new ImageView(conveyorBeltImage);
+        conveyorBeltView.setFitWidth(SPACE_WIDTH);
+        conveyorBeltView.setFitHeight(SPACE_HEIGHT);
+
+
+        conveyorBeltView.setRotate(180 + 90 * conveyorBelt.getDirection().ordinal() % 360);
+        this.getChildren().add(conveyorBeltView);
     }
 }

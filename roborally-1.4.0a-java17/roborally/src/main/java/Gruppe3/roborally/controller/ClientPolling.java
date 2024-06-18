@@ -1,6 +1,7 @@
 package Gruppe3.roborally.controller;
 
 import Gruppe3.roborally.model.httpModels.GameResponse;
+import Gruppe3.roborally.model.httpModels.GameStateResponse;
 import Gruppe3.roborally.model.httpModels.PlayerResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
 import javafx.application.Platform;
@@ -42,8 +43,8 @@ public class ClientPolling implements Runnable {
         currentTask = this::startGame;
     }
 
-    public void setStartProgrammingTask() {
-        currentTask = this::startProgramming;
+    public void setRunRegisterTask() {
+        currentTask = this::runRegister;
     }
 
     // Logic for polling when to start the game
@@ -65,7 +66,7 @@ public class ClientPolling implements Runnable {
                     appController.getRoboRally().createBoardView(appController.getGameController());
                 });
                 System.out.println("Game created successfully.");
-                setStartProgrammingTask();
+                setRunRegisterTask();
             } else {
                 System.out.println("Waiting for more players to join...");
             }
@@ -76,9 +77,32 @@ public class ClientPolling implements Runnable {
 
 
     // Logic for polling when everybody has pressed "programming"
-    private void startProgramming() {
-        // Implement your logic for starting programming phase
-        System.out.println("Starting programming phase...");
+    private void runRegister() {
+        //fetch that all players have put a register in their game-state
+        try {
+            GameResponse game = ClientController.getRequestFromServer("players/game/" + myId, GameResponse.class);
+            long myGameId = Long.parseLong(game.getGameId());
+
+            TypeReference<List<GameStateResponse>> typeReference = new TypeReference<>() {};
+            List<GameStateResponse> gameStateList = ClientController.getRequestFromServer("game-states/by-game/" + myGameId, typeReference);
+
+            boolean allPlayersReady = true;
+            for (GameStateResponse gameState : gameStateList) {
+                if (gameState.getCard() == null) {
+                    allPlayersReady = false;
+                    break;
+                }
+            }
+
+            if (allPlayersReady) {
+                //appController.getGameController().startRegisterPhase();
+                System.out.println("All players have put in a register.");
+            } else {
+                System.out.println("Waiting for all players to put in a register...");
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
 

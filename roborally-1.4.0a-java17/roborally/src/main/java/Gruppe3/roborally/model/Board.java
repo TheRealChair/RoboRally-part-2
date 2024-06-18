@@ -24,6 +24,11 @@ package Gruppe3.roborally.model;
 import Gruppe3.designpatterns.observer.Subject;
 import org.jetbrains.annotations.NotNull;
 
+import Gruppe3.roborally.controller.FieldAction;
+import Gruppe3.roborally.controller.GameController;
+import Gruppe3.roborally.controller.ConveyorBelt;
+
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,6 +84,7 @@ public class Board extends Subject {
         setupCheckpoints();
         setupPits();
         setupReboot();
+        setupConveyorBelts();
     }
 
     public void setupWalls() {
@@ -90,6 +96,30 @@ public class Board extends Subject {
         // Ovenfor er væggene, og der kan tilføjes flere ved bare at indtaste koordinaterne
 
     }
+
+    public void setupConveyorBelts() {
+        // Example setup
+        getSpace(2, 2).addAction(new ConveyorBelt(Heading.EAST, 1));
+        getSpace(3, 2).addAction(new ConveyorBelt(Heading.NORTH, 1));
+        getSpace(3, 1).addAction(new ConveyorBelt(Heading.EAST, 2));
+
+        // Add more conveyor belts as needed
+    }
+
+    public void triggerConveyorBelts(GameController gameController) {
+        for (Player player : players) {
+            Space space = player.getSpace();
+            if (space != null) {
+                for (FieldAction action : space.getActions()) {
+                    if (action instanceof ConveyorBelt) {
+                        action.doAction(gameController, space);
+                    }
+                }
+            }
+        }
+    }
+
+
 
     /**
      * Sets up the checkpoints on the board.
