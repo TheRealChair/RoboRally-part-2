@@ -96,6 +96,7 @@ public class AppController implements Observer {
 
             Board board = new Board(BOARD_WIDTH ,BOARD_HEIGHT);
             gameController = new GameController(board);
+            ClientController.setGameController(gameController);
             int no = result.get();
             int[] startPoints = new int[]{0, 2, 3, 6, 7, 9};
             for (int i = 0; i < no; i++) {
@@ -121,12 +122,11 @@ public class AppController implements Observer {
                 endpointUrl = "players/games/" + gameId;
                 PlayerResponse hostPlayerResponse = ClientController.sendRequestToServer(endpointUrl, playerRequest, PlayerResponse.class);
                 ClientController.playerId = hostPlayerResponse.getPlayerId(); // gives the client a local playerId
-                ClientController.gamePlayerId = hostPlayerResponse.getGamePlayerID(); // gives the client a local gamePlayerId
+                ClientController.gamePlayerId = hostPlayerResponse.getGamePlayerID();
                 ClientController.gameId = Long.parseLong(hostPlayerResponse.getGame().getGameId());
-                System.out.println("Player ID set to: " + ClientController.playerId);
+                ClientController.postGameState(0, null);
 
                 ClientController.startPolling(this); ; //start pooling for updates to startgame
-                ClientController.postGameState(0, null);
                 System.out.println("Game created successfully.");
             } catch (IOException | InterruptedException e) {
                 System.out.println("Failed to create game: " + e.getMessage());
@@ -185,11 +185,13 @@ public class AppController implements Observer {
 
                         gameResponse.setNoOfPlayers(gameResponse.getNoOfPlayers() + 1);
                         updateGameOnServer(gameResponse);
+                        ClientController.postGameState(0, null);
                         ClientController.startPolling(this); // Start polling for updates to start the game
                         System.out.println("Joined the game successfully.");
 
                         Board board = new Board(BOARD_WIDTH, BOARD_HEIGHT);
                         gameController = new GameController(board);
+                        ClientController.setGameController(gameController);
                         int[] startPoints = new int[]{0, 2, 3, 6, 7, 9};
                         for (int i = 0; i < no; i++) {
                             Player player = new Player(board, PLAYER_COLORS.get(i), i + 1, false);
@@ -197,7 +199,6 @@ public class AppController implements Observer {
                             player.setSpace(board.getSpace(0, startPoints[i]));
                         }
                         displayPlayerJoinedNotification(playerResponse);
-                        ClientController.postGameState(0, null);
                     } else {
                         System.out.println("The game is already full. No more players can join.");
                     }

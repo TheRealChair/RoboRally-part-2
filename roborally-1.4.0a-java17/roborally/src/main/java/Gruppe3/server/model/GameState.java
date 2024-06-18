@@ -29,7 +29,7 @@ public class GameState {
 
     @Id
     @Column(name = "game_player_id")
-    private int gamePlayerID; // Changed to int
+    private int gamePlayerId;
 
     private int register;
     private String card;

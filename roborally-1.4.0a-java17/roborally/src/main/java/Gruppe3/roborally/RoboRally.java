@@ -64,6 +64,7 @@ public class RoboRally extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+
         stage = primaryStage;
         lobbyLabel = new Label();
 

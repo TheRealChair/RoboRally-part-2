@@ -7,21 +7,20 @@ public class GameStateId implements Serializable {
 
     private Long game; // Corresponds to Game entity's gameId
 
-    private int gamePlayerID; // Changed to int
+    private int gamePlayerId; // Changed to int
 
     // Constructors, getters, setters
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GameStateId that = (GameStateId) o;
         return Objects.equals(game, that.game) &&
-                Objects.equals(gamePlayerID, that.gamePlayerID);
+                gamePlayerId == that.gamePlayerId;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(game, gamePlayerID);
+        return Objects.hash(game, gamePlayerId);
     }
 }

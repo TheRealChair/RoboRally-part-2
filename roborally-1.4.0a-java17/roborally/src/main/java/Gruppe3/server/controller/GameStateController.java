@@ -37,7 +37,7 @@ public class GameStateController {
         Optional<Game> gameOptional = gameRepository.findById(gameId);
 
         if (gameOptional.isPresent()) {
-            Optional<GameState> gameState = gameStateRepository.findByGameAndGamePlayerID(gameOptional.get(), gamePlayerId);
+            Optional<GameState> gameState = gameStateRepository.findByGameAndGamePlayerId(gameOptional.get(), gamePlayerId);
             return gameState.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
         } else {
             return ResponseEntity.notFound().build();
@@ -53,7 +53,7 @@ public class GameStateController {
 
         if (gameOptional.isPresent() && playerOptional.isPresent()) { // Check if both game and player exist
             gameState.setGame(gameOptional.get());
-            gameState.setGamePlayerID(playerOptional.get().getGamePlayerID()); // Set gamePlayerID from the player
+            gameState.setGamePlayerId(playerOptional.get().getGamePlayerID()); // Set gamePlayerID from the player
 
             GameState savedGameState = gameStateRepository.save(gameState);
             return ResponseEntity.ok(savedGameState);
@@ -69,7 +69,7 @@ public class GameStateController {
         Optional<Game> gameOptional = gameRepository.findById(gameId);
 
         if (gameOptional.isPresent()) {
-            GameState existingGameState = gameStateRepository.findByGameAndGamePlayerID(gameOptional.get(), gamePlayerId)
+            GameState existingGameState = gameStateRepository.findByGameAndGamePlayerId(gameOptional.get(), gamePlayerId)
                     .orElse(null);
 
             if (existingGameState != null) {
@@ -91,7 +91,7 @@ public class GameStateController {
         Optional<Game> gameOptional = gameRepository.findById(gameId);
 
         if (gameOptional.isPresent()) {
-            Optional<GameState> gameStateOptional = gameStateRepository.findByGameAndGamePlayerID(gameOptional.get(), gamePlayerId);
+            Optional<GameState> gameStateOptional = gameStateRepository.findByGameAndGamePlayerId(gameOptional.get(), gamePlayerId);
             if (gameStateOptional.isPresent()) {
                 gameStateRepository.delete(gameStateOptional.get());
                 return ResponseEntity.noContent().build();

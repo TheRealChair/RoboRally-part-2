@@ -1,5 +1,8 @@
 package Gruppe3.roborally.controller;
 
+import Gruppe3.roborally.model.CommandCard;
+import Gruppe3.roborally.model.CommandCardField;
+import Gruppe3.roborally.model.Player;
 import Gruppe3.roborally.model.httpModels.GameStateRequest;
 import Gruppe3.roborally.model.httpModels.GameStateResponse;
 import Gruppe3.roborally.model.httpModels.PlayerResponse;
@@ -19,12 +22,17 @@ public class ClientController {
     private static final HttpClient httpClient = HttpClient.newHttpClient();
     private static final ObjectMapper objectMapper = new ObjectMapper();
     private static final String BASE_URL = "http://localhost:8080/";
-    public static Long gameId = null;
-    public static Long playerId = null;
-    public static int gamePlayerId = 0;
+    public static Long gameId;
+    public static Long playerId;
+    public static int gamePlayerId;
     private static Thread pollingThread;
     private static ClientPolling pollingTask;
+    private static GameController gameController;
 
+
+    public static void setGameController(GameController controller) {
+        gameController = controller;
+    }
     // Send a request to server with an endpointPath ("player"), requestObject (PlayerRequest)
     // And get back (PlayerResponse), which is the object of type RespondObjectClass
     // object returned is a generic type (can be any type)
@@ -152,10 +160,11 @@ public class ClientController {
     public static GameStateResponse postGameState(int register, String card) {
         try {
             GameStateRequest gameStateRequest = new GameStateRequest();
+            gameStateRequest.setGamePlayerId(gamePlayerId);
             gameStateRequest.setRegister(register);
             gameStateRequest.setCard(card);
 
-            return sendRequestToServer("game-states/"+gameId+"/"+playerId, gameStateRequest, GameStateResponse.class);
+            return sendRequestToServer("game-states/"+gameId+"/"+gamePlayerId, gameStateRequest, GameStateResponse.class);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             return null;
@@ -172,6 +181,32 @@ public class ClientController {
             ClientController.sendUpdateToServer("game-states/"+gameId+"/"+gamePlayerId, gameStateRequest);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
+        }
+    }
+
+
+    public static void sendRegisterToServer() {
+        int register = gameController.getBoard().getStep();
+        Player myPlayer = gameController.getBoard().getPlayer(ClientController.gamePlayerId-1);
+
+        if (myPlayer != null) {
+            CommandCardField field = myPlayer.getProgramField(register);
+            if (field != null) {
+                CommandCard card = field.getCard();
+                if (card != null) {
+                    String command = card.command.toString();
+                    ClientController.updateGameState(register, command);
+                } else {
+                    System.out.println("No card found in the program field for the current register.");
+                    // Handle the case where the card is null
+                }
+            } else {
+                System.out.println("No program field found for the given register.");
+                // Handle the case where the program field is null
+            }
+        } else {
+            System.out.println("No current player found to send register.");
+            // Handle the case where there is no current player (should not normally happen in game flow)
         }
     }
 
