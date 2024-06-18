@@ -23,6 +23,7 @@ package dk.dtu.compute.se.pisd.roborally.view;
 
 import dk.dtu.compute.se.pisd.designpatterns.observer.Subject;
 import dk.dtu.compute.se.pisd.roborally.model.*;
+import javafx.animation.PauseTransition;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -36,8 +37,6 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.text.Text;
-import javafx.animation.FadeTransition;
-import javafx.scene.shape.Line;
 import javafx.util.Duration;
 
 import org.jetbrains.annotations.NotNull;
@@ -63,6 +62,7 @@ public class SpaceView extends StackPane implements ViewObserver {
 
     public SpaceView(@NotNull Space space) {
         this.space = space;
+
 
         // XXX the following styling should better be done with styles
         this.setPrefWidth(SPACE_WIDTH);
@@ -182,9 +182,6 @@ public class SpaceView extends StackPane implements ViewObserver {
         this.getChildren().add(line);
     }
 
-
-
-
     private void drawLasers() {
         for (Laser laser : space.getLasers()) {
             drawLaser(laser);
@@ -197,7 +194,8 @@ public class SpaceView extends StackPane implements ViewObserver {
         line.setStroke(Color.RED);
         line.setStrokeWidth(laserThickness);
 
-        
+        Glow glow = new Glow(0.8);
+        line.setEffect(glow);
 
         double offset = laserThickness / 2;
         switch (laser.getDirection()) {
@@ -228,53 +226,6 @@ public class SpaceView extends StackPane implements ViewObserver {
         }
         this.getChildren().add(line);
     }
-
-
-    public void fireLaserEffect(Heading direction) {
-        Line laser = new Line();
-        setupLaserLine(laser, direction);
-        this.getChildren().add(laser);
-
-        
-        FadeTransition fade = new FadeTransition(Duration.seconds(0.5), laser);
-        fade.setFromValue(1.0);
-        fade.setToValue(0.0);
-        fade.setOnFinished(e -> this.getChildren().remove(laser));
-        fade.play();
-    }
-
-    
-
-
-    private void setupLaserLine(Line laser, Heading direction) {
-        laser.setStroke(Color.RED);
-        laser.setStrokeWidth(3);
-        laser.setStartX(SPACE_WIDTH / 2);
-        laser.setStartY(SPACE_HEIGHT / 2);
-        double length = Math.max(SPACE_WIDTH, SPACE_HEIGHT); 
-        switch (direction) {
-            case NORTH:
-                laser.setEndX(SPACE_WIDTH / 2);
-                laser.setEndY(-length);
-                break;
-            case SOUTH:
-                laser.setEndX(SPACE_WIDTH / 2);
-                laser.setEndY(length);
-                break;
-            case EAST:
-                laser.setEndX(length);
-                laser.setEndY(SPACE_HEIGHT / 2);
-                break;
-            case WEST:
-                laser.setEndX(-length);
-                laser.setEndY(SPACE_HEIGHT / 2);
-                break;
-        }
-    }
-
-
-
-
 
     /**
      * Draw the checkpoints on the board.
@@ -311,7 +262,25 @@ public class SpaceView extends StackPane implements ViewObserver {
             updatePit();
             //updateReboot();
             updatePlayer();
+            if (((Space) subject).isLaserFired()) {
+                showLaserEffect();  
+                ((Space) subject).resetLaserFired(); 
+            }
         }
+    }
+
+    private void showLaserEffect() {
+        Line laserLine = new Line(); 
+        laserLine.setStartX(0);
+        laserLine.setEndX(SPACE_WIDTH); 
+        laserLine.setStartY(SPACE_HEIGHT / 2);
+        laserLine.setEndY(SPACE_HEIGHT / 2);
+
+        laserLine.setStroke(Color.RED);
+        laserLine.setStrokeWidth(3); 
+        laserLine.setEffect(new Glow(0.8));
+        this.getChildren().add(laserLine);
+
     }
 
     public void updatePit() {

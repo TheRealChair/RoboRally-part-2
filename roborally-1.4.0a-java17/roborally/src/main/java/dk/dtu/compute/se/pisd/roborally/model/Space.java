@@ -53,6 +53,7 @@ public class Space extends Subject {
     public final int y;
 
     private boolean isPit;
+    private boolean laserFired = false;
 
     public Space(Board board, int x, int y) {
         this.board = board;
@@ -100,7 +101,7 @@ public class Space extends Subject {
         }
     }
 
-    public void addLaser(Laser laser) {
+     public void addLaser(Laser laser) {
         if (!lasers.contains(laser)) {
             lasers.add(laser);
             notifyChange();
@@ -109,6 +110,20 @@ public class Space extends Subject {
 
     public List<Laser> getLasers() {
         return lasers;
+    }
+
+    public void fireLaser() {
+        this.laserFired = true;
+        notifyChange();  
+    }
+
+    public boolean isLaserFired() {
+        return laserFired;
+    }
+
+    public void resetLaserFired() {
+        laserFired = false;
+        notifyChange(); 
     }
 
     public Player getPlayer() {

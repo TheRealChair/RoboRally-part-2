@@ -41,7 +41,6 @@ public class GameController {
     }
 
 
-
     /**
      * Moves the given player one step forward in the direction it is facing.
      * @param player the player to move
@@ -68,9 +67,11 @@ public class GameController {
     }
 
     private void fireLasersAndHandleInteractions() {
-        board.fireLasers();
-        board.fireRobotLasers();
+
+    board.fireLasers();
+    board.fireRobotLasers();
     }
+
 
     /**
      * Moves the given player two steps forward in the direction it is facing.
