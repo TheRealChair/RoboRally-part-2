@@ -55,12 +55,17 @@ public class RoboRally extends Application {
     private Stage stage;
     private BorderPane boardRoot;
 
+    private Button button1;
+    private Button button2;
+    private static Label lobbyLabel;
+
+
     @Override
     public void init() throws Exception {
         super.init();
     }
 
-    public static Label lobbyLabel;
+
 
     @Override
     public void start(Stage primaryStage) {
@@ -83,17 +88,15 @@ public class RoboRally extends Application {
         Scene primaryScene = new Scene(vbox);
 
         // Create two buttons
-        Button button1 = new Button("New Game");
-        Button button2 = new Button("Join Game");
+        button1 = new Button("New Game");
+        button2 = new Button("Join Game");
+
 
         lobbyLabel.setText("Waiting for more players...");
         lobbyLabel.setVisible(false);
 
         button1.setOnAction(e -> {
             try {
-                lobbyLabel.setVisible(true);
-                button1.setDisable(true);
-                button2.setDisable(true);
                 appController.newGame();
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
@@ -103,9 +106,6 @@ public class RoboRally extends Application {
         });
         button2.setOnAction(e -> {
             try {
-                lobbyLabel.setVisible(true);
-                button1.setDisable(true);
-                button2.setDisable(true);
                 Long gameId = 4L; //TEMP GAME ID
                 appController.joinGame(gameId);
             } catch (IOException ex) {
@@ -119,7 +119,7 @@ public class RoboRally extends Application {
 
         // Create a region to act as a spacer
         Region spacer = new Region();
-        spacer.setPrefHeight(45);
+        spacer.setPrefHeight(25);
 
         // Create a HBox to hold the buttons
         vbox1.getChildren().addAll(spacer, lobbyLabel, button1, button2);
@@ -169,6 +169,18 @@ public class RoboRally extends Application {
         //     but right now the only way for the user to exit the app
         //     is delegated to the exit() method in the AppController,
         //     so that the AppController can take care of that.
+    }
+
+    public Button getButton1() {
+        return button1;
+    }
+
+    public Button getButton2() {
+        return button2;
+    }
+
+    public Label getLobbyLabel() {
+        return lobbyLabel;
     }
 
     public static void main(String[] args) {
