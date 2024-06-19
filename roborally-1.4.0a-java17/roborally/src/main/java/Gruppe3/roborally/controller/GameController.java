@@ -287,14 +287,7 @@ public class GameController {
                     if (nextPlayerNumber < board.getPlayersNumber()) {
                         board.setCurrentPlayer(board.getPlayer(nextPlayerNumber));
                     } else {
-                        step++;
-                        if (step < Player.NO_REGISTERS) {
-                            makeProgramFieldsVisible(step);
-                            board.setStep(step);
-                            board.setCurrentPlayer(board.getPlayer(0));
-                        } else {
-                            startProgrammingPhase();
-                        }
+                        nextRegister();
                     }
                 }
             } else {
@@ -305,7 +298,23 @@ public class GameController {
             // this should not happen
             assert false;
         }
+    }
+
+    private void nextRegister() {
+        int step = board.getStep();
+        step++;
+        if (step < Player.NO_REGISTERS) {
+            makeProgramFieldsVisible(step);
+            board.setStep(step);
+            board.setCurrentPlayer(board.getPlayer(0));
+        } else {
+            startProgrammingPhase();
+        }
+
+        // Trigger conveyor belts and other end-of-register actions
         board.triggerConveyorBelts(this);
+        // Add more actions here as needed
+        // Example: board.triggerLasers(this);
     }
 
     public void continueFromPlayerInteraction() {
