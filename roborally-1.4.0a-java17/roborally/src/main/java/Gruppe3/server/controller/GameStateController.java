@@ -66,25 +66,28 @@ public class GameStateController {
     public ResponseEntity<GameState> updateGameState(@PathVariable Long gameId,
                                                      @PathVariable int gamePlayerId,
                                                      @RequestBody GameState gameStateDetails) {
+        System.out.println("Attempting to update GameState for Game ID: " + gameId + ", Player ID: " + gamePlayerId + " with Register: " + gameStateDetails.getRegister() + " and Card: " + gameStateDetails.getCard());
         Optional<Game> gameOptional = gameRepository.findById(gameId);
-
-        if (gameOptional.isPresent()) {
-            GameState existingGameState = gameStateRepository.findByGameAndGamePlayerId(gameOptional.get(), gamePlayerId)
-                    .orElse(null);
-
-            if (existingGameState != null) {
-                existingGameState.setRegister(gameStateDetails.getRegister());
-                existingGameState.setCard(gameStateDetails.getCard());
-
-                GameState updatedGameState = gameStateRepository.save(existingGameState);
-                return ResponseEntity.ok(updatedGameState);
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } else {
+        if (!gameOptional.isPresent()) {
+            System.out.println("Game not found with ID: " + gameId);
             return ResponseEntity.notFound().build();
         }
+
+        GameState existingGameState = gameStateRepository.findByGameAndGamePlayerId(gameOptional.get(), gamePlayerId)
+                .orElse(null);
+        if (existingGameState == null) {
+            System.out.println("GameState not found for player: " + gamePlayerId);
+            return ResponseEntity.notFound().build();
+        }
+
+        existingGameState.setRegister(gameStateDetails.getRegister());
+        existingGameState.setCard(gameStateDetails.getCard());
+        gameStateRepository.save(existingGameState);
+        System.out.println("GameState updated successfully for player: " + gamePlayerId);
+        return ResponseEntity.ok(existingGameState);
     }
+
+
 
     @DeleteMapping("/{gameId}/{gamePlayerId}")
     public ResponseEntity<Void> deleteGameState(@PathVariable Long gameId, @PathVariable int gamePlayerId) {
@@ -115,8 +118,8 @@ public class GameStateController {
         }
     }
 
-    @PostMapping("/{gameId}/reset-cards")
-    public ResponseEntity<Void> resetAllCardsToNullByGame(@PathVariable Long gameId) {
+    @PostMapping("/{gameId}/reset-all")
+    public ResponseEntity<Void> resetAllByGame(@PathVariable Long gameId) {
         Optional<Game> gameOptional = gameRepository.findById(gameId);
 
         if (gameOptional.isPresent()) {
@@ -124,6 +127,22 @@ public class GameStateController {
             for (GameState gameState : gameStates) {
                 gameState.setCard(null);
                 gameState.setRegister(0);
+                gameStateRepository.save(gameState);
+            }
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/{gameId}/reset-cards")
+    public ResponseEntity<Void> resetCardsByGame(@PathVariable Long gameId) {
+        Optional<Game> gameOptional = gameRepository.findById(gameId);
+
+        if (gameOptional.isPresent()) {
+            List<GameState> gameStates = gameStateRepository.findByGame(gameOptional.get());
+            for (GameState gameState : gameStates) {
+                gameState.setCard(null);
                 gameStateRepository.save(gameState);
             }
             return ResponseEntity.noContent().build();

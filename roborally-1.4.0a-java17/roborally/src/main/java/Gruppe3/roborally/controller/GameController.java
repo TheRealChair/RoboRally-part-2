@@ -461,9 +461,6 @@ public class GameController {
                 totalCheckpoints += board.getSpace(x, y).getCheckpoints().size();
             }
         }
-        // Print the player's points and total checkpoints for debugging
-        System.out.println("Player's points: " + player.getPoints());
-        System.out.println("Total checkpoints: " + totalCheckpoints);
 
 
         // If the player's points are equal to the total number of checkpoints, the player has won
