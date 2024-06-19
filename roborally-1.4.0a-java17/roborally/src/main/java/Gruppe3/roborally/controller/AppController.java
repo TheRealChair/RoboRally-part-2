@@ -93,6 +93,8 @@ public class AppController implements Observer {
                     return;
                 }
             }
+            roboRally.getButton1().setDisable(true);
+            roboRally.getButton2().setDisable(true);
 
             Board board = new Board(BOARD_WIDTH ,BOARD_HEIGHT);
             gameController = new GameController(board);
@@ -176,6 +178,9 @@ public class AppController implements Observer {
                 ClientController.gameId = Long.parseLong(playerResponse.getGame().getGameId());
 
                 GameResponse gameResponse = getGameFromServer(gameId);
+                roboRally.getButton1().setDisable(true);
+                roboRally.getButton2().setDisable(true);
+                roboRally.getLobbyLabel().setVisible(true);
 
                 if (gameResponse != null) {
                     int no = gameResponse.getNoOfPlayers();
