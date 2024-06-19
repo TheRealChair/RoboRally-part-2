@@ -95,6 +95,7 @@ public class AppController implements Observer {
             }
             roboRally.getButton1().setDisable(true);
             roboRally.getButton2().setDisable(true);
+            roboRally.getLobbyLabel().setVisible(true);
 
             Board board = new Board(BOARD_WIDTH ,BOARD_HEIGHT);
             gameController = new GameController(board);
