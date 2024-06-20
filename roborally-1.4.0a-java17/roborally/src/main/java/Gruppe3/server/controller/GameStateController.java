@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -47,7 +48,7 @@ public class GameStateController {
         Optional<GameState> gameState = gameStateRepository.findByGameAndGamePlayerIdAndRegister(gameOptional.get(), gamePlayerId, register);
         if (gameState.isPresent()) {
             GameState gs = gameState.get();
-            gs.setLastPolled(LocalDateTime.now());  // Set the current time when the game state is polled
+            gs.setLastPolled(new Date());  // Set the current time when the game state is polled
             gameStateRepository.save(gs);  // Save the updated game state
 
             // Optionally trigger resets based on conditions
@@ -119,49 +120,54 @@ public class GameStateController {
 
     @GetMapping("/by-game/{gameId}/register/{register}")
     public ResponseEntity<List<GameState>> getGameStatesByGameAndRegister(@PathVariable Long gameId, @PathVariable int register) {
+        System.out.println("Getting with GameId and Register");
         Optional<Game> gameOptional = gameRepository.findById(gameId);
-        return gameOptional.map(game -> ResponseEntity.ok(gameStateRepository.findByGameAndRegister(game, register)))
-                .orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    @PostMapping("/by-game/{gameId}/reset-all")
-    public ResponseEntity<Void> resetAllGameStatesByGame(@PathVariable Long gameId) {
-        List<GameState> gameStates = gameStateRepository.findByGame(gameRepository.getOne(gameId));
-        if (gameStates.isEmpty()) {
+        if (!gameOptional.isPresent()) {
             return ResponseEntity.notFound().build();
         }
 
-        List<GameState> toDelete = gameStates.stream()
-                .filter(gs -> gs.getRegister() != 0)
-                .collect(Collectors.toList());
+        List<GameState> gameStates = gameStateRepository.findByGameAndRegister(gameOptional.get(), register);
+        gameStates.forEach(gs -> {
+            gs.setLastPolled(new Date());  // Set the current time when the game state is polled
+            gameStateRepository.save(gs);  // Save the updated game state
+        });
 
-        if (!toDelete.isEmpty()) {
-            gameStateRepository.deleteAll(toDelete);
+
+        if (register == 4 && gameStates.stream().allMatch(gs -> gs.getLastPolled() != null)) {
+            resetAllGameStatesByGame(gameId);
         }
 
+        return ResponseEntity.ok(gameStates);
+    }
+
+    @PostMapping("/by-game/{gameId}/reset-all")
+    public void resetAllGameStatesByGame(@PathVariable Long gameId) {
+        System.out.println("Resetting all game states for game ID: " + gameId);
+        List<GameState> gameStates = gameStateRepository.findByGame(gameRepository.getOne(gameId));
+        if (gameStates.isEmpty()) {
+            ResponseEntity.notFound().build();
+            return;
+        }
+
+        // Manually delete each game state
+        for (GameState gameState : gameStates) {
+            gameStateRepository.delete(gameState);
+        }
+
+        // Create a new game state with null card for each player
         gameStates.stream()
                 .collect(Collectors.groupingBy(GameState::getGamePlayerId))
                 .forEach((playerId, list) -> {
-                    Optional<GameState> registerZeroState = list.stream()
-                            .filter(gs -> gs.getRegister() == 0)
-                            .findFirst();
-                    if (registerZeroState.isPresent()) {
-                        GameState gs = registerZeroState.get();
-                        gs.setCard(null);
-                        gameStateRepository.save(gs);
-                    } else {
-                        // Create a new GameState with register 0 and card null
-                        GameState newGameState = new GameState();
-                        Game game = new Game();  // Create a new game instance
-                        game.setGameId(gameId);  // Set the gameId manually
-                        newGameState.setGame(game);
-                        newGameState.setGamePlayerId(playerId);
-                        newGameState.setRegister(0);
-                        newGameState.setCard(null);
-                        gameStateRepository.save(newGameState);
-                    }
+                    GameState newGameState = new GameState();
+                    Game game = new Game();  // Create a new game instance
+                    game.setGameId(gameId);  // Set the gameId manually
+                    newGameState.setGame(game);
+                    newGameState.setGamePlayerId(playerId);
+                    newGameState.setRegister(0);
+                    newGameState.setCard(null);
+                    gameStateRepository.save(newGameState);
                 });
 
-        return ResponseEntity.noContent().build();
+        ResponseEntity.noContent().build();
     }
 }

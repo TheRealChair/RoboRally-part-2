@@ -1,8 +1,7 @@
 package Gruppe3.roborally.model.httpModels;
 
 import lombok.*;
-
-import java.time.LocalDateTime;  // Import LocalDateTime
+import java.util.Date;  // Import Date
 
 @Getter
 @Setter
@@ -13,5 +12,5 @@ public class GameStateResponse {
     private GameResponse game;
     private int register;
     private String card;
-    private LocalDateTime lastPolled;  // Add this field
+    private Date lastPolled;
 }

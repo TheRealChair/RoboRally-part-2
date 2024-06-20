@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "game-states")
@@ -26,10 +27,10 @@ public class GameState {
 
     @Id
     @Column(name = "register")
-    private int register; // Now part of the primary key
+    private int register;
 
     private String card;
 
     @Column(name = "last_polled", nullable = true)
-    private LocalDateTime lastPolled;
+    private Date lastPolled;
 }
