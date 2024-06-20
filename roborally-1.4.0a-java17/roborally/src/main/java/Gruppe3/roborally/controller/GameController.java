@@ -89,15 +89,23 @@ public class GameController {
      * @Author: Balder, Elias, Karl and Viktor
      */
     public void moveForward(@NotNull Player player, @NotNull Heading heading) {
-        if (player.board == board) {
-            Space space = player.getSpace();
+        heading = player.getHeading();
+        Space currentSpace = player.getSpace();
+        Space nextSpace = board.getNeighbour(currentSpace, heading);
 
-            if (!board.hasWall(space, heading)) {
-                Space target = board.getNeighbour(space, heading);
-                if (target != null) {
-                    movePlayerAndUpdatePosition(player, target, heading);
-                }
+        // System.out.println("Attempting to move " + player.getName() + " forward facing " + heading);
+
+        if (nextSpace != null) {
+            try {
+                moveToSpace(player, nextSpace, heading);
+            } catch (ImpossibleMoveException e) {
+                System.out.println(e.getMessage());
             }
+        } else {
+            // System.out.println(player.getName() + " moved out of bounds and will reboot.");
+            player.hasBeenInPit = true;
+            player.rebootPosition();
+            // System.out.println("After reboot, " + player.getName() + " has been in pit (out of bounds): " + player.hasBeenInPit);
         }
     }
 
@@ -107,16 +115,9 @@ public class GameController {
      * @Author: Balder, Elias, Karl and Viktor
      */
     public void fastForward(@NotNull Player player, @NotNull Heading heading) {
-        for(int i = 0 ; i < 2 ; i++) {
-            if (player.board == board) {
-                Space space = player.getSpace();
-
-                Space target1 = board.getNeighbour(space, heading);
-                if (target1 != null) {
-                    movePlayerAndUpdatePosition(player, target1, heading);
-                }
-            }
-            if(player.hasBeenInPit){
+        for (int i = 0; i < 2; i++) {
+            moveForward(player, heading);
+            if (player.hasBeenInPit) {
                 player.hasBeenInPit = false;
                 break;
             }
@@ -129,16 +130,9 @@ public class GameController {
      * @Author: Balder, Elias and Viktor
      */
     public void superFastForward(@NotNull Player player, @NotNull Heading heading) {
-        for(int i = 0 ; i < 3 ; i++) {
-            if (player.board == board) {
-                Space space = player.getSpace();
-
-                Space target1 = board.getNeighbour(space, heading);
-                if (target1 != null) {
-                    movePlayerAndUpdatePosition(player, target1, heading);
-                }
-            }
-            if(player.hasBeenInPit){
+        for (int i = 0; i < 3; i++) {
+            moveForward(player, heading);
+            if (player.hasBeenInPit) {
                 player.hasBeenInPit = false;
                 break;
             }
@@ -183,24 +177,49 @@ public class GameController {
      */
     void moveToSpace(@NotNull Player player, @NotNull Space space, @NotNull Heading heading) throws ImpossibleMoveException {
         assert board.getNeighbour(player.getSpace(), heading) == space; // make sure the move to here is possible in principle
+
+        // System.out.println("Attempting to move " + player.getName() + " facing " + heading);
+
         Player other = space.getPlayer();
-        if (other != null){
+        if (other != null) {
+            // System.out.println(player.getName() + " found " + other.getName() + " in the target space");
             Space target = board.getNeighbour(space, heading);
+            // System.out.println("Target space coordinates: " + (target != null ? target.x + ", " + target.y : "Null"));
+
             if (target != null) {
-                // XXX Note that there might be additional problems with
-                //     infinite recursion here (in some special cases)!
-                //     We will come back to that!
+                // System.out.println(player.getName() + " is pushing " + other.getName() + " into space");
+
+                // Push the other robot
                 moveToSpace(other, target, heading);
 
-                // Note that we do NOT embed the above statement in a try catch block, since
-                // the thrown exception is supposed to be passed on to the caller
+                if (target.isPit()) {
+                    // System.out.println(other.getName() + " was pushed into a pit and will reboot.");
+                    other.hasBeenInPit = true;
+                    other.rebootPosition();
+                    // System.out.println("After reboot, " + other.getName() + " has been in pit: " + other.hasBeenInPit);
+                }
 
                 assert target.getPlayer() == null : target; // make sure target is free now
             } else {
-                throw new ImpossibleMoveException(player, space, heading);
+                // System.out.println("Target space for pushing " + other.getName() + " is null (out of bounds).");
+                other.hasBeenInPit = true;
+                other.rebootPosition();
+                // System.out.println("After reboot, " + other.getName() + " has been in pit (out of bounds): " + other.hasBeenInPit);
             }
+        } else {
+            // System.out.println("Target space is empty.");
         }
-        player.setSpace(space);
+
+        // Move the original player into the space if it is not a pit
+        if (!space.isPit()) {
+            // System.out.println(player.getName() + " moving to space.");
+            player.setSpace(space);
+        } else {
+            // System.out.println(player.getName() + " has moved into a pit and will reboot.");
+            player.hasBeenInPit = true;
+            player.rebootPosition();
+            // System.out.println("After reboot, " + player.getName() + " has been in pit: " + player.hasBeenInPit);
+        }
     }
 
     /**

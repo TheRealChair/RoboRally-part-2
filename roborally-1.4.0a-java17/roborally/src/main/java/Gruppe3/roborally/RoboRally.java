@@ -75,6 +75,8 @@ public class RoboRally extends Application {
         lobbyLabel = new Label();
 
 
+
+
         RestTemplate restTemplate = new RestTemplate();
         AppController appController = new AppController(this, restTemplate);
 

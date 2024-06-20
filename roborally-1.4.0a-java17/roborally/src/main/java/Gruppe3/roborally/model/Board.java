@@ -322,13 +322,6 @@ public class Board extends Subject {
         if (space.getWalls().contains(heading)) {
             return null;
         }
-        // TODO needs to be implemented based on the actual spaces
-        //      and obstacles and walls placed there. For now it,
-        //      just calculates the next space in the respective
-        //      direction in a cyclic way.
-
-        // XXX an other option (not for now) would be that null represents a hole
-        //     or the edge of the board in which the players can fall
 
         int x = space.x;
         int y = space.y;
@@ -349,14 +342,7 @@ public class Board extends Subject {
 
         // Check if the new position is within bounds
         if (x < 0 || x >= width || y < 0 || y >= height) {
-            // Treat out-of-bounds movement as falling into a pit
-            Player player = space.getPlayer();
-            if (player != null) {
-                player.hasBeenInPit = true;
-                System.out.println("player out of bounds");
-                player.rebootPosition(); // Reset player position
-            }
-            return null;
+            return null; // Treat out-of-bounds as null
         }
 
         Heading reverse = Heading.values()[(heading.ordinal() + 2) % Heading.values().length];
@@ -365,18 +351,8 @@ public class Board extends Subject {
             return null; // Hit a wall on the other side
         }
 
-        // Check if the new position is a pit
-        if (result != null && result.isPit()) {
-            Player player = space.getPlayer();
-            if (player != null) {
-                player.hasBeenInPit = true;
-                player.rebootPosition(); // Reset player position
-            }
-            return null;
-        }
         return result;
     }
-
 
     /**
      * Constructs a status message that summarizes the current state of the game or process.
