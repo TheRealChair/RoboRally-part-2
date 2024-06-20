@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -118,7 +119,10 @@ public class GameStateController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/by-game/{gameId}/register/{register}")
+
+    private List<Integer> playersPolled = new ArrayList<>();
+
+    @GetMapping("/by-game/{gameId}/register/{register}/player/{gamePlayerId}")
     public ResponseEntity<List<GameState>> getGameStatesByGameAndRegister(@PathVariable Long gameId, @PathVariable int register) {
         System.out.println("Getting with GameId and Register");
         Optional<Game> gameOptional = gameRepository.findById(gameId);
@@ -128,13 +132,16 @@ public class GameStateController {
 
         List<GameState> gameStates = gameStateRepository.findByGameAndRegister(gameOptional.get(), register);
         gameStates.forEach(gs -> {
-            gs.setTimesPolled(gs.getTimesPolled()+1);  // Set the current time when the game state is polled
-            gameStateRepository.save(gs);  // Save the updated game state
+            if (!playersPolled.contains(gs.getGamePlayerId())) {
+                gs.setTimesPolled(gs.getTimesPolled()+1);  // Set the current time when the game state is polled
+                gameStateRepository.save(gs);  // Save the updated game state
+                playersPolled.add(gs.getGamePlayerId()); // Add the player's id to the list
+            }
         });
-
 
         if (register == 4 && gameStates.stream().allMatch(gs -> gs.getTimesPolled() == gameOptional.get().getNoOfPlayers())) {
             resetAllGameStatesByGame(gameId);
+            playersPolled.clear(); // Clear the list when all players have polled
         }
 
         return ResponseEntity.ok(gameStates);

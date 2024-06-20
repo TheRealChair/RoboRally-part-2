@@ -22,7 +22,6 @@ public class ClientPolling implements Runnable {
     private Long myId = null; // gets updated. own player id
     private PollingTask currentTask; // Current task to execute during polling
     private AppController appController;
-    private int register = 0;
     private boolean isReady = false;
 
     public ClientPolling(AppController appController) {
@@ -36,7 +35,7 @@ public class ClientPolling implements Runnable {
         while (running) {
             try {
                 currentTask.execute(); // Execute the current task
-                Thread.sleep(2000); // Sleep for 2 seconds before the next poll
+                Thread.sleep(1000); // Sleep for 2 seconds before the next poll
             } catch (InterruptedException | IOException e) {
                 e.printStackTrace();
                 Thread.currentThread().interrupt(); // Restore the interrupted status
@@ -48,8 +47,8 @@ public class ClientPolling implements Runnable {
         running = false;
     }
 
-    public void setRunRegisterTask() {
-        currentTask = this::runRegister;
+    public void setplaceInRegisterTast() {
+        currentTask = this::placeInRegister;
     }
 
     public void setProgrammingDoneTask() {
@@ -58,6 +57,10 @@ public class ClientPolling implements Runnable {
 
     public void setSendToServerTask() throws IOException, InterruptedException{
         currentTask = this::sendToServer;
+    }
+
+    public void setExecuteRegistersTask() {
+        currentTask = this::executeRegisters;
     }
 
     public void setReady(boolean ready) {
@@ -94,12 +97,7 @@ public class ClientPolling implements Runnable {
     }
 
     private void sendToServer() throws IOException, InterruptedException{
-        System.out.println("Waiting for client to send its registers");
-        if(register>=5){
-            register = 0;
-            isReady = false;
-        }
-        else if(isReady) {
+        if(isReady) {
             ClientController.sendRegisterToServer();
             setProgrammingDoneTask();
         }
@@ -107,35 +105,24 @@ public class ClientPolling implements Runnable {
 
     private void isProgrammingDone() {
         try {
+            int gamePlayerId = ClientController.gamePlayerId;
             TypeReference<List<GameStateResponse>> typeReference = new TypeReference<>() {};
-            List<GameStateResponse> gameStateList = ClientController.getRequestFromServer("game-states/by-game/" + ClientController.gameId + "/register/"+register, typeReference);
+            List<GameStateResponse> gameStateList = ClientController.getRequestFromServer(
+                    "game-states/by-game/" + ClientController.gameId, typeReference);
 
             // Check if all players have submitted their registers
             boolean allPlayersReady = true;
             for(GameStateResponse gameState : gameStateList){
-                // Skip the current player's game state
-                if (gameState.getGamePlayerId() == ClientController.gamePlayerId) {
-                    continue;
-                }
-
-                System.out.println("Player "+gameState.getGamePlayerId()+" has card: "+gameState.getCard()+" at register "+gameState.getRegister());
-                if(register<1) {
-                    if (gameState.getCard() == null) {
-                        allPlayersReady = false;
-                        break;
-                    }
-                }
-                if((register>=1)){
-                    if (gameState.getRegister()!=register) {
-                        System.out.println("GAMESTATE REGISTER: " + gameState.getRegister() + " REGISTER: " + register);
-                        allPlayersReady = false;
-                        break;
-                    }
+                System.out.println("gameStateList.size(): "+  gameStateList.size()+" gameState.getGame().getNoOfPlayers()*5: "+
+                        + gameState.getGame().getNoOfPlayers() * 5 );
+                if (gameStateList.size() < gameState.getGame().getNoOfPlayers()*5) {
+                    allPlayersReady = false;
+                    break;
                 }
             }
             if (allPlayersReady) {
                 System.out.println("All players have finished programming.");
-                setRunRegisterTask(); // Set the task to run the registers
+                setplaceInRegisterTast();
             } else {
                 System.out.println("Waiting for all players to finish programming...");
             }
@@ -145,16 +132,16 @@ public class ClientPolling implements Runnable {
     }
 
     // Logic for polling when everybody has pressed "programming"
-    private void runRegister() {
+    private void placeInRegister() {
         try {
             int gamePlayerId = ClientController.gamePlayerId;
             TypeReference<List<GameStateResponse>> typeReference = new TypeReference<>() {};
-            List<GameStateResponse> gameStateList = ClientController.getRequestFromServer("game-states/by-game/" + ClientController.gameId + "/register/"+register, typeReference);
-                // Load cards into registers based on gameStateList
+            List<GameStateResponse> gameStateList = ClientController.getRequestFromServer("game-states/by-game/" + ClientController.gameId, typeReference);
+            // Load cards into registers based on gameStateList
             for (GameStateResponse gameState : gameStateList) {
                 int playerGameId = gameState.getGamePlayerId();
                 String cardName = gameState.getCard();
-                if(!(Objects.equals(cardName, "NULL") || gamePlayerId == playerGameId)){
+                if(!Objects.equals(cardName, "NULL")){ // Removed the condition to check for the client's gamePlayerId
                     Command card = Command.toCommand(cardName);
                     int tempRegister = gameState.getRegister();
                     System.out.print("Player " + playerGameId + " has card: " + cardName + " at register " + tempRegister + "\n");
@@ -164,14 +151,17 @@ public class ClientPolling implements Runnable {
                         appController.getGameController().moveCardToTarget(new CommandCard(card), targetField);
                     }
                 }
-                appController.getGameController().executeStep();
             }
-            register++;
-            sendToServer();
+            isReady = false;
+            setExecuteRegistersTask();
 
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    private void executeRegisters() {
+        appController.getGameController().executeStep();
     }
 
 

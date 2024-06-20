@@ -127,7 +127,6 @@ public class AppController implements Observer {
                 ClientController.playerId = hostPlayerResponse.getPlayerId(); // gives the client a local playerId
                 ClientController.gamePlayerId = hostPlayerResponse.getGamePlayerID();
                 ClientController.gameId = Long.parseLong(hostPlayerResponse.getGame().getGameId());
-                ClientController.postGameState(0, null);
 
                 ClientController.startPolling(this); ; //start pooling for updates to startgame
                 System.out.println("Game created successfully.");
@@ -191,7 +190,6 @@ public class AppController implements Observer {
 
                         gameResponse.setNoOfPlayers(gameResponse.getNoOfPlayers() + 1);
                         updateGameOnServer(gameResponse);
-                        ClientController.postGameState(0, null);
                         ClientController.startPolling(this); // Start polling for updates to start the game
                         System.out.println("Joined the game successfully.");
 

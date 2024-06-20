@@ -203,18 +203,19 @@ public class ClientController {
 
     public static void sendRegisterToServer() throws InterruptedException {
         Player myPlayer = gameController.getBoard().getPlayer(ClientController.gamePlayerId-1);
-        int register = gameController.getBoard().getStep();
 
         if (myPlayer != null) {
-            CommandCardField field = myPlayer.getProgramField(register);
-            CommandCard card = null;
-            if (field != null) {
-                card = field.getCard();
-            }
+            for (int register = 0; register < 5; register++) {
+                CommandCardField field = myPlayer.getProgramField(register);
+                CommandCard card = null;
+                if (field != null) {
+                    card = field.getCard();
+                }
 
-            String command = (card != null) ? card.command.toString() : "NULL";
-            ClientController.postGameState(register, command);
-            System.out.println("Player " + myPlayer.getGamePlayerID() + " sent register " + register + " with card " + command + " to server.");
+                String command = (card != null) ? card.command.toString() : "NULL";
+                ClientController.postGameState(register, command);
+                System.out.println("Player " + myPlayer.getGamePlayerID() + " sent register " + register + " with card " + command + " to server.");
+            }
         } else {
             System.out.println("No current player found to send register.");
         }
