@@ -96,6 +96,10 @@ public class SpaceView extends StackPane implements ViewObserver {
         update(space);
     }
 
+    /**
+     * Places a robot on a space if a player is on that space.
+     * @author Viktor
+     */
     private void updatePlayer() {
         this.getChildren().clear();
         drawWalls();
@@ -106,17 +110,18 @@ public class SpaceView extends StackPane implements ViewObserver {
 
         Player player = space.getPlayer();
         if (player != null) {
-            Polygon arrow = new Polygon(0.0, 0.0,
-                    10.0, 20.0,
-                    20.0, 0.0 );
-            try {
-                arrow.setFill(Color.valueOf(player.getColor()));
-            } catch (Exception e) {
-                arrow.setFill(Color.MEDIUMPURPLE);
-            }
+            Image robotImage = new Image("RobotPics/" + player.getColor() + ".png");
+            ImageView robotView = new ImageView(robotImage);
 
-            arrow.setRotate((90*player.getHeading().ordinal())%360);
-            this.getChildren().add(arrow);
+            robotView.setRotate((180 + 90 * player.getHeading().ordinal()) % 360);
+
+            robotView.setFitWidth(SPACE_WIDTH);
+            robotView.setFitHeight(SPACE_HEIGHT);
+            robotView.setLayoutX((SPACE_WIDTH - robotView.getBoundsInLocal().getWidth()) / 2);
+            robotView.setLayoutY((SPACE_HEIGHT - robotView.getBoundsInLocal().getHeight()) / 2);
+
+
+            this.getChildren().add(robotView);
         }
     }
 
