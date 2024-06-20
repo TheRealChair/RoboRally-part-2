@@ -454,10 +454,11 @@ public class GameController {
         }
     }
 
+    //generates random cards for each player
     private CommandCard generateRandomCommandCard() {
         Command[] commands = Command.values();
         int random = (int) (Math.random() * commands.length);
-        if( random ==7) random=0;
+        if( random ==7) random=0;   // THIS REMOVES THE OPTION_LEFT_RIGHT COMMAND FROM THE RANDOM COMMANDS!!!
         return new CommandCard(commands[random]);
     }
 
