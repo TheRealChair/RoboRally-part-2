@@ -211,7 +211,7 @@ public class ClientController {
             }
 
             String command = (card != null) ? card.command.toString() : "NULL";
-            ClientController.updateGameState(register, command);
+            ClientController.postGameState(register, command);
             System.out.println("Player " + myPlayer.getGamePlayerID() + " sent register " + register + " with card " + command + " to server.");
         } else {
             System.out.println("No current player found to send register.");

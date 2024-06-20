@@ -36,7 +36,7 @@ public class ClientPolling implements Runnable {
         while (running) {
             try {
                 currentTask.execute(); // Execute the current task
-                Thread.sleep(1000); // Sleep for 2 seconds before the next poll
+                Thread.sleep(2000); // Sleep for 2 seconds before the next poll
             } catch (InterruptedException | IOException e) {
                 e.printStackTrace();
                 Thread.currentThread().interrupt(); // Restore the interrupted status
@@ -110,7 +110,7 @@ public class ClientPolling implements Runnable {
     private void isProgrammingDone() {
         try {
             TypeReference<List<GameStateResponse>> typeReference = new TypeReference<>() {};
-            List<GameStateResponse> gameStateList = ClientController.getRequestFromServer("game-states/by-game/" + ClientController.gameId, typeReference);
+            List<GameStateResponse> gameStateList = ClientController.getRequestFromServer("game-states/by-game/" + ClientController.gameId + "/register/"+register, typeReference);
 
             // Check if all players have submitted their registers
             boolean allPlayersReady = true;
@@ -146,7 +146,7 @@ public class ClientPolling implements Runnable {
         try {
             int gamePlayerId = ClientController.gamePlayerId;
             TypeReference<List<GameStateResponse>> typeReference = new TypeReference<>() {};
-            List<GameStateResponse> gameStateList = ClientController.getRequestFromServer("game-states/by-game/" + ClientController.gameId, typeReference);
+            List<GameStateResponse> gameStateList = ClientController.getRequestFromServer("game-states/by-game/" + ClientController.gameId + "/register/"+register, typeReference);
                 // Load cards into registers based on gameStateList
                 for (GameStateResponse gameState : gameStateList) {
 

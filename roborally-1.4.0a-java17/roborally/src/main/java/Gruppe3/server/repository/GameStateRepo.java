@@ -14,5 +14,6 @@ public interface GameStateRepo extends JpaRepository<GameState, GameStateId> {
     Optional<GameState> findByGameAndGamePlayerIdAndRegister(Game game, int gamePlayerId, int register);
     List<GameState> findByGameAndGamePlayerId(Game game, int gamePlayerId);
     List<GameState> findByGame(Game game);
+    List<GameState> findByGameAndRegister(Game game, int register);
 }
 

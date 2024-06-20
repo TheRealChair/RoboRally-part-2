@@ -90,4 +90,12 @@ public class GameStateController {
         return gameOptional.map(game -> ResponseEntity.ok(gameStateRepository.findByGame(game)))
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+
+    @GetMapping("/by-game/{gameId}/register/{register}")
+    public ResponseEntity<List<GameState>> getGameStatesByGameAndRegister(@PathVariable Long gameId, @PathVariable int register) {
+        Optional<Game> gameOptional = gameRepository.findById(gameId);
+        return gameOptional.map(game -> ResponseEntity.ok(gameStateRepository.findByGameAndRegister(game, register)))
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
 }
