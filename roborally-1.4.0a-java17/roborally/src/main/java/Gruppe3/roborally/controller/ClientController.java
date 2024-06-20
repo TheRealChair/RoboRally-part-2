@@ -11,6 +11,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -33,25 +34,34 @@ public class ClientController {
     public static void setGameController(GameController controller) {
         gameController = controller;
     }
-    // Send a request to server with an endpointPath ("player"), requestObject (PlayerRequest)
-    // And get back (PlayerResponse), which is the object of type RespondObjectClass
-    // object returned is a generic type (can be any type)
     public static <T> T sendRequestToServer(String endpointPath, Object requestObject, Class<T> responseObjectClass)
             throws IOException, InterruptedException {
         String baseUrl = BASE_URL + endpointPath;
-        String requestJson = objectMapper.writeValueAsString(requestObject);  // Converts object to JSON string
-        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);   // Makes it ignore unknown properties
+        HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
+                .uri(URI.create(baseUrl))
+                .header("Content-Type", "application/json");
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(baseUrl))                                   // Begins building the request
-                .header("Content-Type", "application/json")     // Sets the URL and content type
-                .POST(HttpRequest.BodyPublishers.ofString(requestJson))     // Sets the method to POST and adds the JSON String
-                .build();                                                   // Builds the object
+        // Conditionally set the request body if requestObject is not null
+        if (requestObject != null) {
+            String requestJson = objectMapper.writeValueAsString(requestObject); // Converts object to JSON string
+            requestBuilder.POST(HttpRequest.BodyPublishers.ofString(requestJson)); // Sets the method to POST and adds the JSON String
+        } else {
+            // If requestObject is null, send an empty POST request
+            requestBuilder.POST(HttpRequest.BodyPublishers.noBody());
+        }
+
+        HttpRequest request = requestBuilder.build(); // Builds the HttpRequest object
 
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString()); // Sends the request and gets the response
 
-        return handleResponse(response, responseObjectClass);   // Handles the response, returns an object deserialized from the response
+        // Conditionally handle the response based on if responseObjectClass is not null
+        if (responseObjectClass != null) {
+            return handleResponse(response, responseObjectClass); // Handles the response, returns an object deserialized from the response
+        } else {
+            return null; // Return null if responseObjectClass is null
+        }
     }
+
 
     public static <T> T getRequestFromServer(String endpointPath, Class<T> responseObjectClass)
             throws IOException, InterruptedException {
@@ -91,6 +101,7 @@ public class ClientController {
         // Convert the request object to JSON string
         String requestBody = objectMapper.writeValueAsString(requestObject);
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
 
         // Build the HTTP PUT request
         HttpRequest request = HttpRequest.newBuilder()
@@ -164,7 +175,7 @@ public class ClientController {
             gameStateRequest.setRegister(register);
             gameStateRequest.setCard(card);
 
-            return sendRequestToServer("game-states/"+gameId+"/"+gamePlayerId, gameStateRequest, GameStateResponse.class);
+            return sendRequestToServer("game-states/" + gameId + "/" + gamePlayerId + "/" + register, gameStateRequest, GameStateResponse.class);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             return null;
@@ -172,42 +183,47 @@ public class ClientController {
     }
 
 
-    public static void updateGameState (int register, String card) {
+    public static void updateGameState(int register, String card) {
         try {
             GameStateRequest gameStateRequest = new GameStateRequest();
             gameStateRequest.setRegister(register);
             gameStateRequest.setCard(card);
+            gameStateRequest.setGamePlayerId(gamePlayerId);
 
-            ClientController.sendUpdateToServer("game-states/"+gameId+"/"+gamePlayerId, gameStateRequest);
+            // Update the URL to include the register in the path as per the new server-side routing
+            sendUpdateToServer("game-states/" + gameId + "/" + gamePlayerId + "/" + register, gameStateRequest);
+            System.out.println("Updated game state for Game ID: " + gameId + ", Player ID: " + gamePlayerId + ", Register: " + register + " with card: " + card);
         } catch (IOException | InterruptedException e) {
+            System.err.println("Error updating game state: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
 
-    public static void sendRegisterToServer() {
-        int register = gameController.getBoard().getStep();
+
+    public static void sendRegisterToServer() throws InterruptedException {
         Player myPlayer = gameController.getBoard().getPlayer(ClientController.gamePlayerId-1);
 
         if (myPlayer != null) {
-            CommandCardField field = myPlayer.getProgramField(register);
-            if (field != null) {
-                CommandCard card = field.getCard();
-                if (card != null) {
-                    String command = card.command.toString();
-                    ClientController.postGameState(register, command);
-                } else {
-                    System.out.println("No card found in the program field for the current register.");
-                    // Handle the case where the card is null
+            for (int register = 0; register < 5; register++) {
+                CommandCardField field = myPlayer.getProgramField(register);
+                CommandCard card = null;
+                if (field != null) {
+                    card = field.getCard();
                 }
-            } else {
-                System.out.println("No program field found for the given register.");
-                // Handle the case where the program field is null
+
+                String command = (card != null) ? card.command.toString() : "NULL";
+                ClientController.postGameState(register, command);
+                System.out.println("Player " + myPlayer.getGamePlayerID() + " sent register " + register + " with card " + command + " to server.");
             }
         } else {
             System.out.println("No current player found to send register.");
-            // Handle the case where there is no current player (should not normally happen in game flow)
         }
+    }
+
+
+    public static void isReady() {
+        pollingTask.setReady(true);
     }
 
 }

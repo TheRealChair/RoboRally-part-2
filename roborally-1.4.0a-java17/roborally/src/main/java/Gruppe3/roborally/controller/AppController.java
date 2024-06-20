@@ -93,6 +93,9 @@ public class AppController implements Observer {
                     return;
                 }
             }
+            roboRally.getButton1().setDisable(true);
+            roboRally.getButton2().setDisable(true);
+            roboRally.getLobbyLabel().setVisible(true);
 
             Board board = new Board(BOARD_WIDTH ,BOARD_HEIGHT);
             gameController = new GameController(board);
@@ -124,7 +127,6 @@ public class AppController implements Observer {
                 ClientController.playerId = hostPlayerResponse.getPlayerId(); // gives the client a local playerId
                 ClientController.gamePlayerId = hostPlayerResponse.getGamePlayerID();
                 ClientController.gameId = Long.parseLong(hostPlayerResponse.getGame().getGameId());
-                ClientController.postGameState(0, null);
 
                 ClientController.startPolling(this); ; //start pooling for updates to startgame
                 System.out.println("Game created successfully.");
@@ -176,6 +178,9 @@ public class AppController implements Observer {
                 ClientController.gameId = Long.parseLong(playerResponse.getGame().getGameId());
 
                 GameResponse gameResponse = getGameFromServer(gameId);
+                roboRally.getButton1().setDisable(true);
+                roboRally.getButton2().setDisable(true);
+                roboRally.getLobbyLabel().setVisible(true);
 
                 if (gameResponse != null) {
                     int no = gameResponse.getNoOfPlayers();
@@ -185,7 +190,6 @@ public class AppController implements Observer {
 
                         gameResponse.setNoOfPlayers(gameResponse.getNoOfPlayers() + 1);
                         updateGameOnServer(gameResponse);
-                        ClientController.postGameState(0, null);
                         ClientController.startPolling(this); // Start polling for updates to start the game
                         System.out.println("Joined the game successfully.");
 
