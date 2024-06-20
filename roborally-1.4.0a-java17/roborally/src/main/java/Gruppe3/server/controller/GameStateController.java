@@ -160,22 +160,5 @@ public class GameStateController {
         for (GameState gameState : gameStates) {
             gameStateRepository.delete(gameState);
         }
-
-        // Create a new game state with null card for each player
-        gameStates.stream()
-                .collect(Collectors.groupingBy(GameState::getGamePlayerId))
-                .forEach((playerId, list) -> {
-                    GameState newGameState = new GameState();
-                    Game game = new Game();  // Create a new game instance
-                    game.setGameId(gameId);  // Set the gameId manually
-                    newGameState.setGame(game);
-                    newGameState.setGamePlayerId(playerId);
-                    newGameState.setRegister(0);
-                    newGameState.setCard(null);
-                    newGameState.setTimesPolled(0);
-                    gameStateRepository.save(newGameState);
-                });
-
-        ResponseEntity.noContent().build();
     }
 }

@@ -160,8 +160,13 @@ public class ClientPolling implements Runnable {
         }
     }
 
-    private void executeRegisters() {
+    private void executeRegisters() throws IOException, InterruptedException {
         appController.getGameController().executeStep();
+        if(appController.getGameController().getBoard().getStep() == 4) {
+            ClientController.sendRequestToServer("game-states/by-game/" + ClientController.gameId + "/reset-all", null, null);
+            appController.getGameController().startProgrammingPhase();
+            setSendToServerTask();
+        }
     }
 
 
