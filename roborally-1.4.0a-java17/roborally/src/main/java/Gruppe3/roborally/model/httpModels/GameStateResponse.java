@@ -12,5 +12,5 @@ public class GameStateResponse {
     private GameResponse game;
     private int register;
     private String card;
-    private Date lastPolled;
+    private int timesPolled = 0;
 }

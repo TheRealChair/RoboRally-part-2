@@ -48,7 +48,7 @@ public class GameStateController {
         Optional<GameState> gameState = gameStateRepository.findByGameAndGamePlayerIdAndRegister(gameOptional.get(), gamePlayerId, register);
         if (gameState.isPresent()) {
             GameState gs = gameState.get();
-            gs.setLastPolled(new Date());  // Set the current time when the game state is polled
+            gs.setTimesPolled(gs.getTimesPolled()+1);  // Set the current time when the game state is polled
             gameStateRepository.save(gs);  // Save the updated game state
 
             // Optionally trigger resets based on conditions
@@ -67,7 +67,7 @@ public class GameStateController {
         // Check if all game states with register 4 have been polled at least once
         return gameStates.stream()
                 .filter(gs -> gs.getRegister() == 4)
-                .allMatch(gs -> gs.getLastPolled() != null);
+                .allMatch(gs -> gs.getTimesPolled() == 4);
     }
 
     @PostMapping("/{gameId}/{gamePlayerId}/{register}")
@@ -94,7 +94,7 @@ public class GameStateController {
                 .map(existingGameState -> {
                     existingGameState.setCard(gameStateDetails.getCard());
                     existingGameState.setRegister(gameStateDetails.getRegister());
-                    existingGameState.setLastPolled(gameStateDetails.getLastPolled()); // Ensure lastPolled is also updated if needed
+                    existingGameState.setTimesPolled(gameStateDetails.getTimesPolled()+1); // Ensure lastPolled is also updated if needed
                     GameState updatedGameState = gameStateRepository.save(existingGameState);
                     return ResponseEntity.ok(updatedGameState);
                 })
@@ -128,12 +128,12 @@ public class GameStateController {
 
         List<GameState> gameStates = gameStateRepository.findByGameAndRegister(gameOptional.get(), register);
         gameStates.forEach(gs -> {
-            gs.setLastPolled(new Date());  // Set the current time when the game state is polled
+            gs.setTimesPolled(gs.getTimesPolled()+1);  // Set the current time when the game state is polled
             gameStateRepository.save(gs);  // Save the updated game state
         });
 
 
-        if (register == 4 && gameStates.stream().allMatch(gs -> gs.getLastPolled() != null)) {
+        if (register == 4 && gameStates.stream().allMatch(gs -> gs.getTimesPolled() == gameOptional.get().getNoOfPlayers())) {
             resetAllGameStatesByGame(gameId);
         }
 
@@ -165,6 +165,7 @@ public class GameStateController {
                     newGameState.setGamePlayerId(playerId);
                     newGameState.setRegister(0);
                     newGameState.setCard(null);
+                    newGameState.setTimesPolled(0);
                     gameStateRepository.save(newGameState);
                 });
 

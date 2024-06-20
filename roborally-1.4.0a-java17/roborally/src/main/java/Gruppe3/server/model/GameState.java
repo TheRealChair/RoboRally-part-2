@@ -31,6 +31,6 @@ public class GameState {
 
     private String card;
 
-    @Column(name = "last_polled", nullable = true)
-    private Date lastPolled;
+    @Column(name = "times_polled")
+    private int timesPolled = 0;
 }

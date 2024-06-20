@@ -113,6 +113,11 @@ public class ClientPolling implements Runnable {
             // Check if all players have submitted their registers
             boolean allPlayersReady = true;
             for(GameStateResponse gameState : gameStateList){
+                // Skip the current player's game state
+                if (gameState.getGamePlayerId() == ClientController.gamePlayerId) {
+                    continue;
+                }
+
                 System.out.println("Player "+gameState.getGamePlayerId()+" has card: "+gameState.getCard()+" at register "+gameState.getRegister());
                 if(register<1) {
                     if (gameState.getCard() == null) {
@@ -146,22 +151,21 @@ public class ClientPolling implements Runnable {
             TypeReference<List<GameStateResponse>> typeReference = new TypeReference<>() {};
             List<GameStateResponse> gameStateList = ClientController.getRequestFromServer("game-states/by-game/" + ClientController.gameId + "/register/"+register, typeReference);
                 // Load cards into registers based on gameStateList
-                for (GameStateResponse gameState : gameStateList) {
+            for (GameStateResponse gameState : gameStateList) {
+                int playerGameId = gameState.getGamePlayerId();
+                String cardName = gameState.getCard();
+                if(!(Objects.equals(cardName, "NULL") || gamePlayerId == playerGameId)){
+                    Command card = Command.toCommand(cardName);
+                    int tempRegister = gameState.getRegister();
+                    System.out.print("Player " + playerGameId + " has card: " + cardName + " at register " + tempRegister + "\n");
 
-                    int playerGameId = gameState.getGamePlayerId();
-                    String cardName = gameState.getCard();
-                    if(!Objects.equals(cardName, "NULL")){
-                        Command card = Command.toCommand(cardName);
-                        int tempRegister = gameState.getRegister();
-                        System.out.print("Player " + playerGameId + " has card: " + cardName + " at register " + tempRegister + "\n");
-
-                        CommandCardField targetField = findRegisterFieldForPlayer(playerGameId, tempRegister);
-                        if (targetField != null && card != null) {
-                            appController.getGameController().moveCardToTarget(new CommandCard(card), targetField);
-                        }
+                    CommandCardField targetField = findRegisterFieldForPlayer(playerGameId, tempRegister);
+                    if (targetField != null && card != null) {
+                        appController.getGameController().moveCardToTarget(new CommandCard(card), targetField);
                     }
-                    appController.getGameController().executeStep();
                 }
+                appController.getGameController().executeStep();
+            }
             register++;
             sendToServer();
 
