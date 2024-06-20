@@ -105,7 +105,7 @@ public class ClientPolling implements Runnable {
                 ClientController.sendRegisterToServer(register);
                 for (GameStateResponse gameState : gameStateList) {
                     System.out.println("Game States Register have value:" +gameState.getRegister());
-                    if (gameState.getRegister()==register) {
+                    if (gameState.getRegister()!=register) {
                         allPlayersReady = false;
                         break;
                     }
@@ -128,8 +128,6 @@ public class ClientPolling implements Runnable {
             int gamePlayerId = ClientController.gamePlayerId;
             TypeReference<List<GameStateResponse>> typeReference = new TypeReference<>() {};
             List<GameStateResponse> gameStateList = ClientController.getRequestFromServer("game-states/by-game/" + ClientController.gameId, typeReference);
-            // If all players have submitted their registers, execute the step
-                System.out.println("GameState List length is : " + gameStateList.size());
                 // Load cards into registers based on gameStateList
                 for (GameStateResponse gameState : gameStateList) {
 
