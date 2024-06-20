@@ -40,6 +40,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.swing.*;
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * ...
@@ -87,6 +88,14 @@ public class RoboRally extends Application {
         vbox.setMinHeight(MIN_APP_HEIGHT);
         Scene primaryScene = new Scene(vbox);
 
+        try {
+            String css = getClass().getResource("/Style.css").toExternalForm();
+            primaryScene.getStylesheets().add(css);
+        } catch (NullPointerException e) {
+            System.err.println("Error: Could not load CSS file.");
+            e.printStackTrace();
+        }
+
         // Create two buttons
         button1 = new Button("New Game");
         button2 = new Button("Join Game");
@@ -129,6 +138,8 @@ public class RoboRally extends Application {
 
         // Set the HBox to the center of the BorderPane
         boardRoot.setCenter(vbox1);
+
+        vbox.getStyleClass().add("root");
 
 
         stage.setScene(primaryScene);
