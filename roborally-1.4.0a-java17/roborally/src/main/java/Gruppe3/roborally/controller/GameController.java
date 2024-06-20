@@ -457,6 +457,7 @@ public class GameController {
     private CommandCard generateRandomCommandCard() {
         Command[] commands = Command.values();
         int random = (int) (Math.random() * commands.length);
+        if( random ==7) random=0;
         return new CommandCard(commands[random]);
     }
 
