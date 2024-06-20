@@ -116,6 +116,7 @@ public class AppController implements Observer {
             try {
                 // Send the request to the server
                 String endpointUrl = "games";
+
                 GameResponse gameResponse = ClientController.sendRequestToServer(endpointUrl, gameRequest, GameResponse.class);
                 Long gameId = Long.parseLong(gameResponse.getGameId());
 
@@ -132,6 +133,9 @@ public class AppController implements Observer {
                 System.out.println("Game created successfully.");
             } catch (IOException | InterruptedException e) {
                 System.out.println("Failed to create game: " + e.getMessage());
+                roboRally.setLobbyLabel("Failed to create game. Check if the server is running.");
+                roboRally.getButton1().setDisable(false);
+                roboRally.getButton2().setDisable(false);
                 e.printStackTrace();
                 // Handle the exception as needed
             }
@@ -211,9 +215,13 @@ public class AppController implements Observer {
                 }
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, "Invalid Game ID. Please enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
+                roboRally.setLobbyLabel("Invalid Game ID. Please enter a valid number.");
+                roboRally.getButton1().setDisable(false);
+                roboRally.getButton2().setDisable(false);
             }
         } else {
             JOptionPane.showMessageDialog(null, "Game ID cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
+            roboRally.setLobbyLabel("Invalid Game ID. Please enter a valid number.");
         }
     }
 
