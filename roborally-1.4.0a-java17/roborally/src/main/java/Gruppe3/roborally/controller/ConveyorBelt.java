@@ -30,10 +30,9 @@ import Gruppe3.roborally.model.Command;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * ...
+ * The conveyorbelt function that moves a player if they stand on the belt after a register.
  *
- * @author Ekkart Kindler, ekki@dtu.dk
- *
+ * @author Elias Mortensen
  */
 public class ConveyorBelt extends FieldAction {
     private final Heading direction;

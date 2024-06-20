@@ -310,8 +310,6 @@ public class GameController {
         } else {
             startProgrammingPhase();
         }
-
-        // Trigger conveyor belts and other end-of-register actions
         board.triggerConveyorBelts(this);
         // Add more actions here as needed
         // Example: board.triggerLasers(this);
