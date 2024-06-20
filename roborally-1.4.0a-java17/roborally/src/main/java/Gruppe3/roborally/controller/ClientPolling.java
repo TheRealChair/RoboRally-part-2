@@ -36,7 +36,7 @@ public class ClientPolling implements Runnable {
         while (running) {
             try {
                 currentTask.execute(); // Execute the current task
-                Thread.sleep(2000); // Sleep for 2 seconds before the next poll
+                Thread.sleep(1000); // Sleep for 2 seconds before the next poll
             } catch (InterruptedException | IOException e) {
                 e.printStackTrace();
                 Thread.currentThread().interrupt(); // Restore the interrupted status
@@ -102,7 +102,7 @@ public class ClientPolling implements Runnable {
             System.out.println("Gamestates was reset for all players");
         }
         else if(isReady) {
-            ClientController.sendRegisterToServer(register);
+            ClientController.sendRegisterToServer();
             setProgrammingDoneTask();
         }
     }
@@ -117,15 +117,12 @@ public class ClientPolling implements Runnable {
             for(GameStateResponse gameState : gameStateList){
                 System.out.println("Player "+gameState.getGamePlayerId()+" has card: "+gameState.getCard()+" at register "+gameState.getRegister());
                 if(register<1) {
-                    System.out.println("REGISTER IS 0 ");
                     if (gameState.getCard() == null) {
-                        System.out.println("CARD IS NULL IN REGISTER 0");
                         allPlayersReady = false;
                         break;
                     }
                 }
                 if((register>=1)){
-                    System.out.println("REGISTER IS 1 OR MORE");
                     if (gameState.getRegister()!=register) {
                         System.out.println("GAMESTATE REGISTER: " + gameState.getRegister() + " REGISTER: " + register);
                         allPlayersReady = false;
@@ -162,7 +159,7 @@ public class ClientPolling implements Runnable {
 
                         CommandCardField targetField = findRegisterFieldForPlayer(playerGameId, tempRegister);
                         if (targetField != null && card != null) {
-                            appController.getGameController().moveCardToTarget(new CommandCard(card), targetField); // Utilize moveCardToTarget
+                            appController.getGameController().moveCardToTarget(new CommandCard(card), targetField);
                         }
                     }
                     appController.getGameController().executeStep();

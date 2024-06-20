@@ -173,7 +173,7 @@ public class ClientController {
             gameStateRequest.setRegister(register);
             gameStateRequest.setCard(card);
 
-            return sendRequestToServer("game-states/"+gameId+"/"+gamePlayerId, gameStateRequest, GameStateResponse.class);
+            return sendRequestToServer("game-states/" + gameId + "/" + gamePlayerId + "/" + register, gameStateRequest, GameStateResponse.class);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             return null;
@@ -188,8 +188,9 @@ public class ClientController {
             gameStateRequest.setCard(card);
             gameStateRequest.setGamePlayerId(gamePlayerId);
 
-            sendUpdateToServer("game-states/" + gameId + "/" + gamePlayerId, gameStateRequest);
-            System.out.println("Updated game state for register " + register + " with card " + card);
+            // Update the URL to include the register in the path as per the new server-side routing
+            sendUpdateToServer("game-states/" + gameId + "/" + gamePlayerId + "/" + register, gameStateRequest);
+            System.out.println("Updated game state for Game ID: " + gameId + ", Player ID: " + gamePlayerId + ", Register: " + register + " with card: " + card);
         } catch (IOException | InterruptedException e) {
             System.err.println("Error updating game state: " + e.getMessage());
             e.printStackTrace();
@@ -198,8 +199,10 @@ public class ClientController {
 
 
 
-    public static void sendRegisterToServer(int register) {
+    public static void sendRegisterToServer() throws InterruptedException {
         Player myPlayer = gameController.getBoard().getPlayer(ClientController.gamePlayerId-1);
+        int register = gameController.getBoard().getStep();
+
         if (myPlayer != null) {
             CommandCardField field = myPlayer.getProgramField(register);
             CommandCard card = null;
