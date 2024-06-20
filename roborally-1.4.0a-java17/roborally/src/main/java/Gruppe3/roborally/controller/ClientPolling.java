@@ -1,10 +1,7 @@
 package Gruppe3.roborally.controller;
 
 import Gruppe3.roborally.RoboRally;
-import Gruppe3.roborally.model.Command;
-import Gruppe3.roborally.model.CommandCard;
-import Gruppe3.roborally.model.CommandCardField;
-import Gruppe3.roborally.model.Player;
+import Gruppe3.roborally.model.*;
 import Gruppe3.roborally.model.httpModels.GameResponse;
 import Gruppe3.roborally.model.httpModels.GameStateRequest;
 import Gruppe3.roborally.model.httpModels.GameStateResponse;
@@ -61,6 +58,10 @@ public class ClientPolling implements Runnable {
 
     public void setExecuteRegistersTask() {
         currentTask = this::executeRegisters;
+    }
+
+    public void setPollPlayerInteractionPhaseTask() {
+        currentTask = this::pollPlayerInteractionPhase;
     }
 
     public void setReady(boolean ready) {
@@ -162,12 +163,19 @@ public class ClientPolling implements Runnable {
 
     private void executeRegisters() throws IOException, InterruptedException {
         appController.getGameController().executeStep();
+
+        //If register is 4 after, reset all game states
         if(appController.getGameController().getBoard().getStep() == 4) {
             ClientController.sendRequestToServer("game-states/by-game/" + ClientController.gameId + "/reset-all", null, null);
             appController.getGameController().startProgrammingPhase();
             setSendToServerTask();
         }
     }
+
+    private void pollPlayerInteractionPhase() {
+
+    }
+
 
 
 
