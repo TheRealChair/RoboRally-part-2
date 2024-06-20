@@ -96,10 +96,8 @@ public class ClientPolling implements Runnable {
     private void sendToServer() throws IOException, InterruptedException{
         System.out.println("Waiting for client to send its registers");
         if(register>=5){
-            ClientController.sendRequestToServer("game-states/"+ClientController.gameId+"/reset-all", null, null);
             register = 0;
             isReady = false;
-            System.out.println("Gamestates was reset for all players");
         }
         else if(isReady) {
             ClientController.sendRegisterToServer();

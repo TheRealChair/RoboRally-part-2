@@ -4,6 +4,8 @@ import Gruppe3.server.model.CompositeKeys.GameStateId;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "game-states")
 @Getter
@@ -27,4 +29,7 @@ public class GameState {
     private int register; // Now part of the primary key
 
     private String card;
+
+    @Column(name = "last_polled", nullable = true)
+    private LocalDateTime lastPolled;
 }
