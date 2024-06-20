@@ -208,7 +208,7 @@ public class ClientController {
                 if (card != null) {
                     String command = card.command.toString();
                     ClientController.updateGameState(register, command);
-                    System.out.println("Sent register " + register + " with card " + command + " to server.");
+                    System.out.println("Player "+ myPlayer.getGamePlayerID()+" sent register " + register + " with card " + command + " to server.");
                 } else {
                     System.out.println("No card found in the program field for the current register.");
                 }
@@ -218,6 +218,10 @@ public class ClientController {
         } else {
             System.out.println("No current player found to send register.");
         }
+    }
+
+    public static void isReady() {
+        pollingTask.setReady(true);
     }
 
 }
