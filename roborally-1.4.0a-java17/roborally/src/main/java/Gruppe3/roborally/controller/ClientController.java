@@ -200,25 +200,21 @@ public class ClientController {
 
     public static void sendRegisterToServer(int register) {
         Player myPlayer = gameController.getBoard().getPlayer(ClientController.gamePlayerId-1);
-
         if (myPlayer != null) {
             CommandCardField field = myPlayer.getProgramField(register);
+            CommandCard card = null;
             if (field != null) {
-                CommandCard card = field.getCard();
-                if (card != null) {
-                    String command = card.command.toString();
-                    ClientController.updateGameState(register, command);
-                    System.out.println("Player "+ myPlayer.getGamePlayerID()+" sent register " + register + " with card " + command + " to server.");
-                } else {
-                    System.out.println("No card found in the program field for the current register.");
-                }
-            } else {
-                System.out.println("No program field found for the given register.");
+                card = field.getCard();
             }
+
+            String command = (card != null) ? card.command.toString() : "NULL";
+            ClientController.updateGameState(register, command);
+            System.out.println("Player " + myPlayer.getGamePlayerID() + " sent register " + register + " with card " + command + " to server.");
         } else {
             System.out.println("No current player found to send register.");
         }
     }
+
 
     public static void isReady() {
         pollingTask.setReady(true);

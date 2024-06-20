@@ -15,6 +15,7 @@ import javafx.application.Platform;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 public class ClientPolling implements Runnable {
     private volatile boolean running = true;
@@ -36,7 +37,7 @@ public class ClientPolling implements Runnable {
             try {
                 currentTask.execute(); // Execute the current task
                 Thread.sleep(2000); // Sleep for 2 seconds before the next poll
-            } catch (InterruptedException e) {
+            } catch (InterruptedException | IOException e) {
                 e.printStackTrace();
                 Thread.currentThread().interrupt(); // Restore the interrupted status
             }
@@ -55,7 +56,7 @@ public class ClientPolling implements Runnable {
         currentTask = this::isProgrammingDone;
     }
 
-    public void setSendToServerTask() {
+    public void setSendToServerTask() throws IOException, InterruptedException{
         currentTask = this::sendToServer;
     }
 
@@ -92,9 +93,15 @@ public class ClientPolling implements Runnable {
         }
     }
 
-    private void sendToServer() {
+    private void sendToServer() throws IOException, InterruptedException{
         System.out.println("Waiting for client to send its registers");
-        if(isReady) {
+        if(register>=5){
+            ClientController.sendRequestToServer("game-states/"+ClientController.gameId+"/reset-all", null, null);
+            register = 0;
+            isReady = false;
+            System.out.println("Gamestates was reset for all players");
+        }
+        else if(isReady) {
             ClientController.sendRegisterToServer(register);
             setProgrammingDoneTask();
         }
@@ -109,14 +116,18 @@ public class ClientPolling implements Runnable {
             boolean allPlayersReady = true;
             for(GameStateResponse gameState : gameStateList){
                 System.out.println("Player "+gameState.getGamePlayerId()+" has card: "+gameState.getCard()+" at register "+gameState.getRegister());
-                if(register==0) {
+                if(register<1) {
+                    System.out.println("REGISTER IS 0 ");
                     if (gameState.getCard() == null) {
+                        System.out.println("CARD IS NULL IN REGISTER 0");
                         allPlayersReady = false;
                         break;
                     }
                 }
-                if((register>=1 && register<=4)){
+                if((register>=1)){
+                    System.out.println("REGISTER IS 1 OR MORE");
                     if (gameState.getRegister()!=register) {
+                        System.out.println("GAMESTATE REGISTER: " + gameState.getRegister() + " REGISTER: " + register);
                         allPlayersReady = false;
                         break;
                     }
@@ -144,26 +155,19 @@ public class ClientPolling implements Runnable {
 
                     int playerGameId = gameState.getGamePlayerId();
                     String cardName = gameState.getCard();
-                    Command card = Command.toCommand(cardName);
-                    int tempRegister = gameState.getRegister();
-                    System.out.print("Player " + playerGameId + " has card: " + cardName + " at register " + tempRegister + "\n");
+                    if(!Objects.equals(cardName, "NULL")){
+                        Command card = Command.toCommand(cardName);
+                        int tempRegister = gameState.getRegister();
+                        System.out.print("Player " + playerGameId + " has card: " + cardName + " at register " + tempRegister + "\n");
 
-                    // Update the local register with the card from server
-                    CommandCardField targetField = findRegisterFieldForPlayer(playerGameId, tempRegister);
-                    if (targetField != null && card != null) {
-                        appController.getGameController().moveCardToTarget(new CommandCard(card), targetField); // Utilize moveCardToTarget
+                        CommandCardField targetField = findRegisterFieldForPlayer(playerGameId, tempRegister);
+                        if (targetField != null && card != null) {
+                            appController.getGameController().moveCardToTarget(new CommandCard(card), targetField); // Utilize moveCardToTarget
+                        }
                     }
                     appController.getGameController().executeStep();
                 }
             register++;
-
-
-            if(register==5){
-                ClientController.sendRequestToServer("game-states/"+ClientController.gameId+"/reset-all", null, null);
-                register = 0;
-                isReady = false;
-                System.out.println("Gamestates was reset for all players");
-            }
             sendToServer();
 
         } catch (IOException | InterruptedException e) {
