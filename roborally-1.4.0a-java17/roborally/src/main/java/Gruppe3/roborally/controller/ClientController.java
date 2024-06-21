@@ -11,6 +11,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -101,6 +102,7 @@ public class ClientController {
         String requestBody = objectMapper.writeValueAsString(requestObject);
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
+
         // Build the HTTP PUT request
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(baseUrl))
@@ -173,7 +175,7 @@ public class ClientController {
             gameStateRequest.setRegister(register);
             gameStateRequest.setCard(card);
 
-            return sendRequestToServer("game-states/"+gameId+"/"+gamePlayerId, gameStateRequest, GameStateResponse.class);
+            return sendRequestToServer("game-states/" + gameId + "/" + gamePlayerId + "/" + register, gameStateRequest, GameStateResponse.class);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             return null;
@@ -188,8 +190,9 @@ public class ClientController {
             gameStateRequest.setCard(card);
             gameStateRequest.setGamePlayerId(gamePlayerId);
 
-            sendUpdateToServer("game-states/" + gameId + "/" + gamePlayerId, gameStateRequest);
-            System.out.println("Updated game state for register " + register + " with card " + card);
+            // Update the URL to include the register in the path as per the new server-side routing
+            sendUpdateToServer("game-states/" + gameId + "/" + gamePlayerId + "/" + register, gameStateRequest);
+            System.out.println("Updated game state for Game ID: " + gameId + ", Player ID: " + gamePlayerId + ", Register: " + register + " with card: " + card);
         } catch (IOException | InterruptedException e) {
             System.err.println("Error updating game state: " + e.getMessage());
             e.printStackTrace();
@@ -198,26 +201,29 @@ public class ClientController {
 
 
 
-    public static void sendRegisterToServer(int register) {
+    public static void sendRegisterToServer() throws InterruptedException {
         Player myPlayer = gameController.getBoard().getPlayer(ClientController.gamePlayerId-1);
 
         if (myPlayer != null) {
-            CommandCardField field = myPlayer.getProgramField(register);
-            if (field != null) {
-                CommandCard card = field.getCard();
-                if (card != null) {
-                    String command = card.command.toString();
-                    ClientController.updateGameState(register, command);
-                    System.out.println("Sent register " + register + " with card " + command + " to server.");
-                } else {
-                    System.out.println("No card found in the program field for the current register.");
+            for (int register = 0; register < 5; register++) {
+                CommandCardField field = myPlayer.getProgramField(register);
+                CommandCard card = null;
+                if (field != null) {
+                    card = field.getCard();
                 }
-            } else {
-                System.out.println("No program field found for the given register.");
+
+                String command = (card != null) ? card.command.toString() : "NULL";
+                ClientController.postGameState(register, command);
+                System.out.println("Player " + myPlayer.getGamePlayerID() + " sent register " + register + " with card " + command + " to server.");
             }
         } else {
             System.out.println("No current player found to send register.");
         }
+    }
+
+
+    public static void isReady() {
+        pollingTask.setReady(true);
     }
 
 }

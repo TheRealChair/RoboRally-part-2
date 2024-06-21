@@ -1,26 +1,12 @@
-package Gruppe3.server.model.CompositeKeys;
-
+package Gruppe3.server.model.CompositeKeys;// Composite key class must also be updated to include the new field
 import java.io.Serializable;
-import java.util.Objects;
+import lombok.*;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class GameStateId implements Serializable {
-
-    private Long game; // Corresponds to Game entity's gameId
-
-    private int gamePlayerId; // Changed to int
-
-    // Constructors, getters, setters
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        GameStateId that = (GameStateId) o;
-        return Objects.equals(game, that.game) &&
-                gamePlayerId == that.gamePlayerId;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(game, gamePlayerId);
-    }
+    private Long game;  // Change from int to Long to match Game ID type
+    private int gamePlayerId;
+    private int register;
 }

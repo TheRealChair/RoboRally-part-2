@@ -100,8 +100,8 @@ public class PlayerView extends Tab implements ViewObserver {
        // executeButton = new Button("Execute Program");
        // executeButton.setOnAction( e-> gameController.executePrograms());
 
-        stepButton = new Button("Initiate Activation Phase");
-        stepButton.setOnAction( e-> ClientController.sendRegisterToServer(0));
+        stepButton = new Button("Execute Current Register");
+        stepButton.setOnAction( e-> ClientController.isReady());
 
         buttonPanel = new VBox(finishButton, stepButton); //executeButton
         buttonPanel.setAlignment(Pos.CENTER_LEFT);

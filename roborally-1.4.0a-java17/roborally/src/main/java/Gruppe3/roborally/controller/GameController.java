@@ -306,14 +306,7 @@ public class GameController {
                     if (nextPlayerNumber < board.getPlayersNumber()) {
                         board.setCurrentPlayer(board.getPlayer(nextPlayerNumber));
                     } else {
-                        step++;
-                        if (step < Player.NO_REGISTERS) {
-                            makeProgramFieldsVisible(step);
-                            board.setStep(step);
-                            board.setCurrentPlayer(board.getPlayer(0));
-                        } else {
-                            startProgrammingPhase();
-                        }
+                        nextRegister();
                     }
                 }
             } else {
@@ -324,7 +317,21 @@ public class GameController {
             // this should not happen
             assert false;
         }
+    }
+
+    private void nextRegister() {
+        int step = board.getStep();
+        step++;
+        if (step < Player.NO_REGISTERS) {
+            makeProgramFieldsVisible(step);
+            board.setStep(step);
+            board.setCurrentPlayer(board.getPlayer(0));
+        } else {
+            startProgrammingPhase();
+        }
         board.triggerConveyorBelts(this);
+        // Add more actions here as needed
+        // Example: board.triggerLasers(this);
     }
 
     public void continueFromPlayerInteraction() {
@@ -466,9 +473,11 @@ public class GameController {
         }
     }
 
+    //generates random cards for each player
     private CommandCard generateRandomCommandCard() {
         Command[] commands = Command.values();
         int random = (int) (Math.random() * commands.length);
+        if( random ==7) random=0;   // THIS REMOVES THE OPTION_LEFT_RIGHT COMMAND FROM THE RANDOM COMMANDS!!!
         return new CommandCard(commands[random]);
     }
 

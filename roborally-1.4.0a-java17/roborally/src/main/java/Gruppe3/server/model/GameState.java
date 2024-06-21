@@ -1,17 +1,11 @@
 package Gruppe3.server.model;
-import Gruppe3.server.model.CompositeKeys.GameId_GamePlayerId;
+
 import Gruppe3.server.model.CompositeKeys.GameStateId;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "game-states")
@@ -19,7 +13,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@IdClass(GameStateId.class) // Specify the composite key class
+@IdClass(GameStateId.class) // Specify the updated composite key class
 public class GameState {
 
     @Id
@@ -31,7 +25,12 @@ public class GameState {
     @Column(name = "game_player_id")
     private int gamePlayerId;
 
+    @Id
+    @Column(name = "register")
     private int register;
-    private String card;
-}
 
+    private String card;
+
+    @Column(name = "times_polled")
+    private int timesPolled = 0;
+}

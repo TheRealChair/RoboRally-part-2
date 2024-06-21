@@ -66,7 +66,7 @@ public class AppController implements Observer {
     final private List<Integer> PLAYER_NUMBER_OPTIONS = Arrays.asList(2, 3, 4, 5, 6);
     final private List<String> PLAYER_COLORS = Arrays.asList("red", "green", "blue", "yellow", "purple", "cyan");
     final private int BOARD_WIDTH = 12;
-    final private int BOARD_HEIGHT = 5;
+    final private int BOARD_HEIGHT = 10;
     final private RoboRally roboRally;
     private HttpClient httpClient;
     private ObjectMapper objectMapper;
@@ -116,6 +116,7 @@ public class AppController implements Observer {
             try {
                 // Send the request to the server
                 String endpointUrl = "games";
+
                 GameResponse gameResponse = ClientController.sendRequestToServer(endpointUrl, gameRequest, GameResponse.class);
                 Long gameId = Long.parseLong(gameResponse.getGameId());
 
@@ -127,12 +128,14 @@ public class AppController implements Observer {
                 ClientController.playerId = hostPlayerResponse.getPlayerId(); // gives the client a local playerId
                 ClientController.gamePlayerId = hostPlayerResponse.getGamePlayerID();
                 ClientController.gameId = Long.parseLong(hostPlayerResponse.getGame().getGameId());
-                ClientController.postGameState(0, null);
 
                 ClientController.startPolling(this); ; //start pooling for updates to startgame
                 System.out.println("Game created successfully.");
             } catch (IOException | InterruptedException e) {
                 System.out.println("Failed to create game: " + e.getMessage());
+                roboRally.setLobbyLabel("Failed to create game. Check if the server is running.");
+                roboRally.getButton1().setDisable(false);
+                roboRally.getButton2().setDisable(false);
                 e.printStackTrace();
                 // Handle the exception as needed
             }
@@ -191,7 +194,6 @@ public class AppController implements Observer {
 
                         gameResponse.setNoOfPlayers(gameResponse.getNoOfPlayers() + 1);
                         updateGameOnServer(gameResponse);
-                        ClientController.postGameState(0, null);
                         ClientController.startPolling(this); // Start polling for updates to start the game
                         System.out.println("Joined the game successfully.");
 
@@ -213,9 +215,13 @@ public class AppController implements Observer {
                 }
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, "Invalid Game ID. Please enter a valid number.", "Error", JOptionPane.ERROR_MESSAGE);
+                roboRally.setLobbyLabel("Invalid Game ID. Please enter a valid number.");
+                roboRally.getButton1().setDisable(false);
+                roboRally.getButton2().setDisable(false);
             }
         } else {
             JOptionPane.showMessageDialog(null, "Game ID cannot be empty.", "Error", JOptionPane.ERROR_MESSAGE);
+            roboRally.setLobbyLabel("Invalid Game ID. Please enter a valid number.");
         }
     }
 

@@ -88,20 +88,47 @@ public class Board extends Subject {
     }
 
     public void setupWalls() {
-        getSpace(1, 1).addWall(Heading.NORTH);
-        getSpace(1, 1).addWall(Heading.EAST);
-        getSpace(4, 4).addWall(Heading.SOUTH);
-        getSpace(4, 4).addWall(Heading.WEST);
-        getSpace(6, 3).addWall(Heading.WEST);
+        getSpace(8, 0).addWall(Heading.EAST);
+        getSpace(8, 1).addWall(Heading.EAST);
+        getSpace(8, 2).addWall(Heading.EAST);
         // Ovenfor er væggene, og der kan tilføjes flere ved bare at indtaste koordinaterne
 
     }
 
     public void setupConveyorBelts() {
         // Example setup
-        getSpace(2, 2).addAction(new ConveyorBelt(Heading.EAST, 1));
-        getSpace(3, 2).addAction(new ConveyorBelt(Heading.NORTH, 1));
-        getSpace(3, 1).addAction(new ConveyorBelt(Heading.EAST, 2));
+        getSpace(2, 4).addAction(new ConveyorBelt(Heading.EAST, 1));
+        getSpace(3, 4).addAction(new ConveyorBelt(Heading.EAST, 1));
+        getSpace(4, 4).addAction(new ConveyorBelt(Heading.EAST, 1));
+        getSpace(7, 4).addAction(new ConveyorBelt(Heading.WEST, 1));
+        getSpace(8, 4).addAction(new ConveyorBelt(Heading.WEST, 1));
+        getSpace(9, 4).addAction(new ConveyorBelt(Heading.WEST, 1));
+        getSpace(10, 4).addAction(new ConveyorBelt(Heading.WEST, 2));
+        getSpace(11, 4).addAction(new ConveyorBelt(Heading.WEST, 2));
+        getSpace(2, 5).addAction(new ConveyorBelt(Heading.EAST, 1));
+        getSpace(3, 5).addAction(new ConveyorBelt(Heading.EAST, 1));
+        getSpace(4, 5).addAction(new ConveyorBelt(Heading.EAST, 1));
+        getSpace(7, 5).addAction(new ConveyorBelt(Heading.WEST, 1));
+        getSpace(8, 5).addAction(new ConveyorBelt(Heading.WEST, 1));
+        getSpace(9, 5).addAction(new ConveyorBelt(Heading.WEST, 1));
+        getSpace(10, 5).addAction(new ConveyorBelt(Heading.WEST, 2));
+        getSpace(11, 5).addAction(new ConveyorBelt(Heading.WEST, 2));
+        getSpace(5, 0).addAction(new ConveyorBelt(Heading.SOUTH, 2));
+        getSpace(5, 1).addAction(new ConveyorBelt(Heading.SOUTH, 1));
+        getSpace(5, 2).addAction(new ConveyorBelt(Heading.SOUTH, 1));
+        getSpace(5, 3).addAction(new ConveyorBelt(Heading.SOUTH, 1));
+        getSpace(5, 6).addAction(new ConveyorBelt(Heading.NORTH, 1));
+        getSpace(5, 7).addAction(new ConveyorBelt(Heading.NORTH, 1));
+        getSpace(5, 8).addAction(new ConveyorBelt(Heading.NORTH, 1));
+        getSpace(5, 9).addAction(new ConveyorBelt(Heading.NORTH, 2));
+        getSpace(6, 0).addAction(new ConveyorBelt(Heading.SOUTH, 2));
+        getSpace(6, 1).addAction(new ConveyorBelt(Heading.SOUTH, 1));
+        getSpace(6, 2).addAction(new ConveyorBelt(Heading.SOUTH, 1));
+        getSpace(6, 3).addAction(new ConveyorBelt(Heading.SOUTH, 1));
+        getSpace(6, 6).addAction(new ConveyorBelt(Heading.NORTH, 1));
+        getSpace(6, 7).addAction(new ConveyorBelt(Heading.NORTH, 1));
+        getSpace(6, 8).addAction(new ConveyorBelt(Heading.NORTH, 1));
+        getSpace(6, 9).addAction(new ConveyorBelt(Heading.NORTH, 2));
 
         // Add more conveyor belts as needed
     }
@@ -128,10 +155,10 @@ public class Board extends Subject {
 */
     public void setupCheckpoints() {
         int[][] checkpointPositions = {
-                {1, 1},
-                {4, 4},
-                {7, 8},
-                {6, 9}
+                {9, 9},
+                {2, 1},
+                {8, 0},
+                {2, 7}
         };
 
         for (int i = 0; i < checkpointPositions.length; i++) {
@@ -150,10 +177,10 @@ public class Board extends Subject {
      */
     public void setupPits() {
         int[][] pitPositions = {
-                {2, 3},
-                {4, 6},
-                {6, 1},
-                {8, 8}
+                {5, 4},
+                {5, 5},
+                {6, 4},
+                {6, 5}
         };
         for(int i = 0; i < pitPositions.length; i++){
             int x = pitPositions[i][0];
@@ -172,7 +199,7 @@ public class Board extends Subject {
      */
     public void setupReboot (){
         int[][] rebootPosition = {
-                {7, 0}
+                {11, 0}
         };
         for(int i = 0; i < rebootPosition.length; i++){
             int x = rebootPosition[i][0];
