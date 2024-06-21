@@ -93,21 +93,52 @@ public class GameController {
         Space currentSpace = player.getSpace();
         Space nextSpace = board.getNeighbour(currentSpace, heading);
 
-        // System.out.println("Attempting to move " + player.getName() + " forward facing " + heading);
+        // Check if there is a wall in the direction the player is trying to move from the current space
+        if (board.hasWall(currentSpace, heading)) {
+            return;
+        }
 
-        if (nextSpace != null) {
-            try {
-                moveToSpace(player, nextSpace, heading);
-            } catch (ImpossibleMoveException e) {
-                System.out.println(e.getMessage());
+        // If nextSpace is null, log the reason
+        if (nextSpace == null) {
+            // Determine the new coordinates based on the heading
+            int x = currentSpace.getX();
+            int y = currentSpace.getY();
+            switch (heading) {
+                case SOUTH:
+                    y++;
+                    break;
+                case WEST:
+                    x--;
+                    break;
+                case NORTH:
+                    y--;
+                    break;
+                case EAST:
+                    x++;
+                    break;
             }
-        } else {
-            // System.out.println(player.getName() + " moved out of bounds and will reboot.");
+
+            // Check if next space has a wall in the opposite direction
+            Heading reverseHeading = heading.next().next();
+            Space potentialNextSpace = board.getSpace(x, y);
+            if (potentialNextSpace != null && potentialNextSpace.getWalls().contains(reverseHeading)) {
+                return;
+            }
+
+            // If we reach here, it means the space is null due to an unexpected reason or out of bounds
             player.hasBeenInPit = true;
             player.rebootPosition();
-            // System.out.println("After reboot, " + player.getName() + " has been in pit (out of bounds): " + player.hasBeenInPit);
+            return;
+        }
+
+        // Attempt to move to the next space
+        try {
+            moveToSpace(player, nextSpace, heading);
+        } catch (ImpossibleMoveException e) {
+            System.out.println(e.getMessage());
         }
     }
+
 
     /**
      * Moves the given player two steps forward in the given direction.
@@ -180,6 +211,8 @@ public class GameController {
 
         // System.out.println("Attempting to move " + player.getName() + " facing " + heading);
 
+
+
         Player other = space.getPlayer();
         if (other != null) {
             // System.out.println(player.getName() + " found " + other.getName() + " in the target space");
@@ -214,7 +247,7 @@ public class GameController {
         if (!space.isPit()) {
             // System.out.println(player.getName() + " moving to space.");
             player.setSpace(space);
-        } else {
+        }  else {
             // System.out.println(player.getName() + " has moved into a pit and will reboot.");
             player.hasBeenInPit = true;
             player.rebootPosition();
