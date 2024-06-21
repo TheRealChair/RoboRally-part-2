@@ -25,12 +25,14 @@ import Gruppe3.roborally.model.*;
 import Gruppe3.roborally.model.httpModels.*;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Optional;
 
 /**
  * ...
@@ -532,7 +534,10 @@ public class GameController {
                 alert.setHeaderText(null);
                 alert.setContentText(player.getGamePlayerID() + " has won the game!");
 
-                alert.showAndWait();
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.isPresent() && result.get() == ButtonType.OK) {
+                    Platform.exit();
+                }
             });
         }
     }
