@@ -5,7 +5,7 @@ package Gruppe3.roborally.model;
  */
 public class Reboots {
 
-    private static int x = 7;
+    private static int x = 11;
     private static int y = 0;
 
     public static int getX() {

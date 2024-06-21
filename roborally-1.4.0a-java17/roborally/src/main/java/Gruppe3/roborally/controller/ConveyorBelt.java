@@ -70,5 +70,4 @@ public class ConveyorBelt extends FieldAction {
         }
         return false;
     }
-
 }
