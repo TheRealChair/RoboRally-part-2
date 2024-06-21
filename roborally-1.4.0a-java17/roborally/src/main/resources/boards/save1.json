@@ -1,0 +1,153 @@
+{
+  "width": 12,
+  "height": 5,
+  "spaces": [
+    {
+      "walls": [
+        "NORTH",
+        "EAST"
+      ],
+      "actions": [],
+      "reboot": [],
+      "checkpoints": [
+        {
+          "id": 1,
+          "observers": []
+        }
+      ],
+      "pits": [],
+      "x": 1,
+      "y": 1
+    },
+    {
+      "walls": [],
+      "actions": [],
+      "reboot": [],
+      "checkpoints": [],
+      "pits": [
+        {
+          "x": 0,
+          "y": 0
+        }
+      ],
+      "x": 2,
+      "y": 3
+    },
+    {
+      "walls": [
+        "SOUTH",
+        "WEST"
+      ],
+      "actions": [],
+      "reboot": [],
+      "checkpoints": [
+        {
+          "id": 2,
+          "observers": []
+        }
+      ],
+      "pits": [],
+      "x": 4,
+      "y": 4
+    },
+    {
+      "walls": [],
+      "actions": [],
+      "reboot": [],
+      "checkpoints": [],
+      "pits": [
+        {
+          "x": 0,
+          "y": 0
+        }
+      ],
+      "x": 6,
+      "y": 1
+    },
+    {
+      "walls": [
+        "WEST"
+      ],
+      "actions": [],
+      "reboot": [],
+      "checkpoints": [],
+      "pits": [],
+      "x": 6,
+      "y": 3
+    },
+    {
+      "walls": [],
+      "actions": [],
+      "reboot": [
+        {}
+      ],
+      "checkpoints": [],
+      "pits": [],
+      "x": 7,
+      "y": 0
+    }
+  ],
+  "players": [
+    {
+      "name": "Player 1",
+      "color": "red",
+      "x": 0,
+      "y": 0,
+      "heading": "EAST",
+      "programmingCards": [
+        {
+          "visible": true
+        },
+        {
+          "visible": true
+        },
+        {
+          "visible": true
+        },
+        {
+          "visible": true
+        },
+        {
+          "visible": true
+        }
+      ],
+      "commandCards": [
+        {
+          "card": "Again",
+          "visible": true
+        },
+        {
+          "card": "Turn Left",
+          "visible": true
+        },
+        {
+          "card": "Turn Left",
+          "visible": true
+        },
+        {
+          "card": "Turn Left",
+          "visible": true
+        },
+        {
+          "card": "Left OR Right",
+          "visible": true
+        },
+        {
+          "card": "U-Turn",
+          "visible": true
+        },
+        {
+          "card": "Turn Left",
+          "visible": true
+        },
+        {
+          "card": "Again",
+          "visible": true
+        }
+      ]
+    }
+  ],
+  "currentPhase": "PROGRAMMING",
+  "currentStep": 0,
+  "currentPlayer": 0
+}
