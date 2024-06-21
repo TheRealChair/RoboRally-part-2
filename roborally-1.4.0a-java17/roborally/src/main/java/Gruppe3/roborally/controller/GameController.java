@@ -90,7 +90,6 @@ public class GameController {
      * @Author: Balder, Elias, Karl and Viktor
      */
     public void moveForward(@NotNull Player player, @NotNull Heading heading) {
-        heading = player.getHeading();
         Space currentSpace = player.getSpace();
         Space nextSpace = board.getNeighbour(currentSpace, heading);
 
