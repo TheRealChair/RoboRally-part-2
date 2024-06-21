@@ -23,6 +23,7 @@ package Gruppe3.roborally.controller;
 
 import Gruppe3.roborally.model.*;
 import Gruppe3.roborally.model.httpModels.*;
+import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import org.jetbrains.annotations.NotNull;
 
@@ -493,12 +494,14 @@ public class GameController {
 
         // If the player's points are equal to the total number of checkpoints, the player has won
         if (player.getPoints() == totalCheckpoints) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Game Over");
-            alert.setHeaderText(null);
-            alert.setContentText(player.getGamePlayerID() + " has won the game!");
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Game Over");
+                alert.setHeaderText(null);
+                alert.setContentText(player.getGamePlayerID() + " has won the game!");
 
-            alert.showAndWait();
+                alert.showAndWait();
+            });
         }
     }
 
