@@ -9,6 +9,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+
+
+/**
+ * REST controller for managing game data.
+ * This controller provides endpoints for CRUD operations on games,
+ * allowing clients to create, retrieve, update, and delete game information.
+ *
+ * @author Karl, Victor, Kasparas
+ */
 @RestController
 @RequestMapping("/games")
 public class GameController {

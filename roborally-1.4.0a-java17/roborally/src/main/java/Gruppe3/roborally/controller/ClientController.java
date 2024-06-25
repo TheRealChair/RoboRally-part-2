@@ -18,6 +18,14 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
+
+/**
+ * Manages all client-server interactions for the game, handling requests and responses
+ * to and from the server. This includes sending and retrieving game state updates,
+ * and controlling the polling mechanism for ongoing game updates.
+ *
+ * @author Karl
+ */
 public class ClientController {
 
     private static final HttpClient httpClient = HttpClient.newHttpClient();
@@ -34,27 +42,33 @@ public class ClientController {
     public static void setGameController(GameController controller) {
         gameController = controller;
     }
+
+
+    /**
+     * Sends a POST request to the server with optional request body and returns a response of the specified type.
+     *
+     * @param endpointPath        The endpoint URL to send the request to.
+     * @param requestObject       The object to be sent as the request body, can be null.
+     * @param responseObjectClass The class of the response object expected.
+     * @return The response object of type T, or null if responseObjectClass is null.
+     * @throws IOException          If there is an issue with network communication.
+     * @throws InterruptedException If the thread execution is interrupted.
+     */
     public static <T> T sendRequestToServer(String endpointPath, Object requestObject, Class<T> responseObjectClass)
             throws IOException, InterruptedException {
         String baseUrl = BASE_URL + endpointPath;
         HttpRequest.Builder requestBuilder = HttpRequest.newBuilder()
                 .uri(URI.create(baseUrl))
                 .header("Content-Type", "application/json");
-
-        // Conditionally set the request body if requestObject is not null
         if (requestObject != null) {
             String requestJson = objectMapper.writeValueAsString(requestObject); // Converts object to JSON string
             requestBuilder.POST(HttpRequest.BodyPublishers.ofString(requestJson)); // Sets the method to POST and adds the JSON String
         } else {
-            // If requestObject is null, send an empty POST request
             requestBuilder.POST(HttpRequest.BodyPublishers.noBody());
         }
-
         HttpRequest request = requestBuilder.build(); // Builds the HttpRequest object
-
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString()); // Sends the request and gets the response
 
-        // Conditionally handle the response based on if responseObjectClass is not null
         if (responseObjectClass != null) {
             return handleResponse(response, responseObjectClass); // Handles the response, returns an object deserialized from the response
         } else {
@@ -63,6 +77,15 @@ public class ClientController {
     }
 
 
+    /**
+     * Sends a GET request to the server and returns a response of the specified type.
+     *
+     * @param endpointPath        The endpoint URL to send the request to.
+     * @param responseObjectClass The class of the response object expected.
+     * @return The response object of type T.
+     * @throws IOException          If there is an issue with network communication.
+     * @throws InterruptedException If the thread execution is interrupted.
+     */
     public static <T> T getRequestFromServer(String endpointPath, Class<T> responseObjectClass)
             throws IOException, InterruptedException {
         String requestUrl = BASE_URL + endpointPath;
@@ -93,7 +116,14 @@ public class ClientController {
         return handleResponse(response, typeReference);
     }
 
-    // Simplified method to send an update request to the server
+    /**
+     * Sends a PUT request to the server to update game state information.
+     *
+     * @param endpointPath  The endpoint URL to send the request to.
+     * @param requestObject The object to be sent as the request body.
+     * @throws IOException          If there is an issue with network communication.
+     * @throws InterruptedException If the thread execution is interrupted.
+     */
     public static void sendUpdateToServer(String endpointPath, Object requestObject)
             throws IOException, InterruptedException {
         String baseUrl = BASE_URL + endpointPath;
@@ -175,7 +205,8 @@ public class ClientController {
             gameStateRequest.setRegister(register);
             gameStateRequest.setCard(card);
 
-            return sendRequestToServer("game-states/" + gameId + "/" + gamePlayerId + "/" + register, gameStateRequest, GameStateResponse.class);
+            return sendRequestToServer("game-states/" + gameId
+                    + "/" + gamePlayerId + "/" + register, gameStateRequest, GameStateResponse.class);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             return null;
@@ -203,7 +234,6 @@ public class ClientController {
 
     public static void sendRegisterToServer() throws InterruptedException {
         Player myPlayer = gameController.getBoard().getPlayer(ClientController.gamePlayerId-1);
-
         if (myPlayer != null) {
             for (int register = 0; register < 5; register++) {
                 CommandCardField field = myPlayer.getProgramField(register);
@@ -214,13 +244,13 @@ public class ClientController {
 
                 String command = (card != null) ? card.command.toString() : "NULL";
                 ClientController.postGameState(register, command);
-                System.out.println("Player " + myPlayer.getGamePlayerID() + " sent register " + register + " with card " + command + " to server.");
+                System.out.println("Player " + myPlayer.getGamePlayerID() + " sent register "
+                        + register + " with card " + command + " to server.");
             }
         } else {
             System.out.println("No current player found to send register.");
         }
     }
-
 
     public static void isReady() {
         pollingTask.setReady(true);

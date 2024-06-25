@@ -11,6 +11,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+
+/**
+ * REST controller for managing player data.
+ * Provides CRUD operations on players, facilitating the retrieval, creation, update, and deletion of player information
+ * linked to specific games.
+ *
+ * @author Karl, Balder
+ */
 @RestController
 @RequestMapping("/players")
 public class PlayerController {

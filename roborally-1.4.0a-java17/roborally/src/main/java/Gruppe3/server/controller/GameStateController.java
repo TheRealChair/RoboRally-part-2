@@ -14,6 +14,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+
+/**
+ * REST controller for managing game state data.
+ * This controller provides endpoints for CRUD operations on game states,
+ * facilitating the retrieval and manipulation of game state information across different game instances.
+ *
+ * @author Karl
+ */
 @RestController
 @RequestMapping("/game-states")
 public class GameStateController {

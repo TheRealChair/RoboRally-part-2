@@ -14,6 +14,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+
+/**
+ * Controller for managing position data of players in games.
+ * Provides endpoints for CRUD operations on positions, allowing retrieval, creation, updating, and deletion
+ * of position data, as well as special logging functionality for player positions.
+ * @Author Karl, Viktor
+ */
 @RestController
 @RequestMapping("/positions")
 public class PositionController {

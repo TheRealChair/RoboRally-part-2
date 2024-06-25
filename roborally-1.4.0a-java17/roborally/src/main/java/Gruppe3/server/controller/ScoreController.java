@@ -11,6 +11,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Controller for managing score data of players in games.
+ * Provides RESTful endpoints for CRUD operations on scores, allowing for the retrieval,
+ * creation, updating, and deletion of score data associated with players and games.
+ * @Author Karl, Elias
+ */
 @RestController
 @RequestMapping("/scores")
 public class ScoreController {
